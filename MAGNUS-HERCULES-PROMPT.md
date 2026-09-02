@@ -1,6 +1,8 @@
 Build a multi-tenant operations platform for Magnus Renewable Tech Corp, a solar engineering, procurement and construction company in the Philippines running approximately fifty megawatt-peak of commercial and industrial projects with about sixty people across offices, project sites and three regional warehouses in Laguna, Sorsogon and Dumaguete.
 
-You choose the technology stack, the framework, the user interface library and the hosting. Two requirements in section 2 name a layer rather than a product, and those two are not negotiable.
+**The backend is Convex.** You choose the frontend framework, the user interface library and the hosting. Section 2 states two requirements that Convex cannot satisfy in the usual database way, and gives the exact mechanism that satisfies them on this stack. Those two are not negotiable.
+
+**This is a single, complete instruction. Build the entire platform from it without waiting to be prompted between modules.** Section 18 tells you how to verify your own work at each milestone and when — and only when — to stop and ask.
 
 Read this entire instruction before writing any code. Where this instruction states a rule, implement the rule exactly and do not substitute a simpler equivalent. Where this instruction is silent, ask rather than decide. An invented decision that looks reasonable is the most expensive defect this project can produce, precisely because nobody will notice it.
 
@@ -31,13 +33,23 @@ This is delivery, not automation: the push fires in the same transaction as the 
 
 ---
 
-# 2. THE TWO REQUIREMENTS THAT NAME A LAYER
+# 2. THE TWO REQUIREMENTS THAT NAME A LAYER — AND HOW CONVEX MEETS THEM
 
-**Tenant isolation is enforced at the database row level.** Every table carries `tenant_id` from the first migration. Isolation is implemented with database row-level security policies, never with a filter added in application code. A query written without an application-layer filter must return no rows belonging to another tenant. An application filter passes every test until one query is written without it, at which point one organisation sees another's data.
+In a relational database these two would be row-level security policies and table constraints. **Convex has neither, and no code may pretend otherwise.** The intent is met by a single chokepoint that every database access passes through, proven by build-failing tests.
 
-**The audit log is append-only, enforced by database constraints.** The audit table rejects `UPDATE` and `DELETE` at the database level, for every role including the database owner and including you. A log protected only by application code that declines to offer a delete button is not immutable — it is inconvenient.
+**2.1 · Tenant isolation.** Every table carries `tenant_id` from the first schema. **One wrapper surrounds every database read and write.** It takes the authenticated person, injects the tenant filter on every read, stamps `tenant_id` on every insert, and refuses any patch, replace or delete whose target document belongs to another tenant. **No query, mutation or action anywhere in the codebase may call `ctx.db` directly — all access goes through the wrapper.** An automated test fails the build if the string `ctx.db` appears in any file other than the wrapper. A function called by a person of one tenant with a document identifier from another returns nothing and writes nothing. An application filter written per function passes every test until one function is written without it, at which point one organisation sees another's data; **the wrapper plus the test is what makes that impossible rather than unlikely.**
 
-Everything else is your decision.
+**2.2 · Audit log immutability.** The same wrapper **permits insert** on the audit table — stamped with the acting person's `tenant_id`, through the wrapper like every other write, never bypassing it — and **throws on patch, replace or delete against the audit table for every caller with no exception for any role.** Because the dashboard and a deploy key can still edit any document, **the hash chain is the control that detects it**: each entry carries the hash of the previous entry, and a paginated verification action walks the chain and reports intact or broken. Dashboard and deploy-key access is restricted to the two console holders. A log protected only by application code that declines to offer a delete button is not immutable — it is inconvenient; **a log whose every edit breaks a chain that a console holder can verify is.**
+
+**2.3 · Uniqueness.** Convex has no unique constraints and no foreign keys. Every uniqueness rule in this instruction is enforced inside the mutation, under the wrapper, as a refusal: exactly two console holders · exactly one `in_force` revision per controlled document · one site report per project per workday · one toolbox meeting per site report · no bare gate `25` row and no gate rows 13 to 17 · six hard block rows and never a seventh.
+
+**2.4 · No scheduler.** `ctx.scheduler`, `runAfter`, `runAt` and a `crons` file are the single easiest way to add automation to this stack, **and none of them may appear anywhere in the codebase.** An automated test fails the build if any of them does. Acceptance test 8 depends on this. The only permitted way for one function to cause another to run is a direct call inside the same mutation.
+
+**2.5 · Offline.** Convex optimistic updates are not an offline queue. The progressive web application holds its own queue in IndexedDB with device-generated idempotency keys, as section 9 requires.
+
+**2.6 · Verification is by inspection, not by summary.** A search of the codebase for `ctx.db` outside the wrapper, and for `scheduler`, `runAfter`, `runAt` and `crons`, must all return nothing — and the search output, not a sentence about it, is what you report. A described fix is not a verified fix.
+
+Everything else — frontend framework, component library, hosting, file layout — is your decision.
 
 ---
 
@@ -267,7 +279,9 @@ Seed five rows with `effective_from` set to the go-live date:
 
 **No Magnus-specific literal appears anywhere in the source code.** Not ₱2,000,000, not ₱100,000, not 1,277, not 7 square metres per kilowatt-peak, not ₱6.70, not any label or brand name. All of it is configuration.
 
-**`audit_entry`** — audit_entry_id · tenant_id · object_type · object_id · action · previous_value · new_value · changed_by · changed_at · module · arrival_channel · **previous_entry_hash · entry_hash**.
+**`audit_entry`** — audit_entry_id · tenant_id · object_type · object_id · action · previous_value · new_value · **changed_by (always a person — never a system, never an agent)** · changed_at · module · arrival_channel · **agent_session_id (set when the action arrived through an agent acting for that person, empty otherwise)** · **previous_entry_hash · entry_hash**.
+
+**Audit inserts go through the wrapper like every other write** — section 2.2. They are never written by a path that bypasses the tenant stamp. `agent_session_id` exists so that a person's own actions and the actions of an agent acting under their name can be told apart later, without ever breaking the rule that the name on the entry is a human's.
 
 Logged: create · update · delete attempt · approval · rejection · status change · threshold change · system constant change · permission change · **hard block attempt** · sign-in · data export.
 
@@ -333,7 +347,7 @@ The proposal is **structured on the same block spine as construction**, which is
 
 **When an opportunity is won the winning proposal version becomes immutable.** It is what the contract was priced against, and every later margin question is answered against it or not answered at all.
 
-**On `won`:** the winning proposal freezes · a project is created in `setup` · the site assessment carries to the design package · the proposal's block structure seeds the project blocks · **the project cannot become `active` until the signed contract is uploaded — hard block 6.** Sales winning is not Magnus being committed; nothing spends money until the contract exists.
+**On `won`, inside the single mutation that changes the stage and nothing else — no follow-up action, no scheduled step:** the winning proposal freezes · a project is created in `setup` · the site assessment carries to the design package · the proposal's block structure seeds the project blocks · **the project cannot become `active` until the signed contract is uploaded — hard block 6.** Sales winning is not Magnus being committed; nothing spends money until the contract exists. This is same-transaction derivation, section 1 item 4: one human action, one mutation, four stored consequences.
 
 **A proposal is a commercial judgement. The platform structures it; a person prices it.**
 
@@ -1139,7 +1153,8 @@ This is not an add-on. **It is how the platform is operated, monitored and confi
 - **Scope at the query layer, never by filtering an answer after computation.** An answer filtered after the fact has already read the data. An assistant answering *what is our margin on the Del Monte project* for a person with `money_visibility` of `none` has defeated every permission in one sentence — **and nobody would know, because the answer looks helpful.**
 - **It refuses rather than estimates.** Where the data does not support an answer, it says so.
 - **Every figure returned cites the records it came from.** An answer with no source records is not an answer the platform gives.
-- Every call is written to the audit log with `arrival_channel` of `model_context_protocol` — who, when, what was read or written.
+- Every call is written to the audit log with `arrival_channel` of `model_context_protocol` and the `agent_session_id` — who, when, what was read or written.
+- **No person record may be created solely to give an agent an identity.** An agent acts under the credentials of the real, accountable human whose job it assists, sees exactly what that person sees, and is logged under that person's name. A "platform administrator" that is actually an agent is a service account wearing a person's name, and it is forbidden for the same reason a service account is: nobody is answerable for what it did. **No agent ever holds gate 32 or a console seat.**
 
 ## 12.2 Read tools
 
@@ -1188,6 +1203,8 @@ Not through the Model Context Protocol, not through the screens, not through the
 
 Every screen is a view of section 8. Keep the interface thin.
 
+**Navigation — build the full sidebar on day one, in this exact order, with a placeholder for every module not yet built:** Dashboard · My Day · Pipeline · Projects · Design and Engineering · Procurement · Permits · Inventory · Manpower and Equipment · Safety · Documents · Messages · Finance · Human Resource · Payroll · Reports · Administration. The order is the order in which work happens and it is not rearranged. **There is no "Site Reporting" item** — site reports live under Projects and their blocks, because there is no separate site reporting module. **Human Resource and Payroll are separate items from Manpower** — identity, workforce and employment records are kept apart so that salary data never sits behind a permissions screen.
+
 **Foundation:** sign-in (identity provider redirect only) · notification inbox (complete, unranked, uncapped, four categories) · global search · **My Approvals** — one list, every gate, sorted by age, each row showing what, which gate, the value or condition that triggered it, who raised it, how long it has waited and the recorded window for the gate · **approval detail — the object being approved, in full. The approver must be able to see what they are approving without navigating away, or they will approve without reading** · Today (the Person In Charge landing screen) · My Day (tasks).
 
 **Pipeline:** accounts, sites and contacts · opportunity list and record · site assessment capture · proposal builder and version history.
@@ -1228,8 +1245,8 @@ Every screen is a view of section 8. Keep the interface thin.
 
 ## The seven that decide whether the platform is fit for use
 
-1. **The audit log is genuinely immutable.** Alter an entry using direct database access. The verification routine must report a broken chain.
-2. **Tenant isolation is enforced at row level.** Write a query with no application-layer filter. It must return nothing belonging to another tenant.
+1. **The audit log is genuinely immutable.** Alter an entry through the dashboard or a deploy key. The verification action must report a broken chain. Attempt to patch, replace or delete an audit entry from any function — the wrapper must throw.
+2. **Tenant isolation is enforced at the chokepoint.** Call any query and any mutation as a person of one tenant with a document identifier belonging to another. Nothing is returned and nothing is written. The build-failing test for `ctx.db` outside the wrapper passes.
 3. **Offline capture preserves creation time and survives reconnection.** Create records offline, reconnect after a delay, confirm both timestamps and that no record is lost or duplicated.
 4. **Percentage-of-completion and payroll calculations are correct.** Verify against manually computed cases. The platform will produce a number; **the test is whether it is the right number.**
 5. **Cryptographic erasure works over the immutable log.** Erase a data subject; content unrecoverable, chain still verifies.
@@ -1454,6 +1471,9 @@ Every screen is a view of section 8. Keep the interface thin.
 | Not built | Why |
 |---|---|
 | Any scheduler, cron job, background worker, queue processor, timer or polling loop | Section 1 |
+| `ctx.scheduler`, `runAfter`, `runAt` or a `crons` file, anywhere | Section 2.4 — a build-failing test enforces it |
+| Any function calling `ctx.db` outside the wrapper | Section 2.1 — a build-failing test enforces it |
+| A person record created to give an agent an identity | Section 12.1 |
 | An exception engine, rules engine or workflow engine | Agents do this |
 | A nightly pass of any kind | Section 1 |
 | Ranked exception lists, severity scoring, consequence ordering, item caps | Judgement, not a rule |
@@ -1648,18 +1668,30 @@ Multi-tenant schema with `tenant_id` on every table from the first migration · 
 
 ---
 
-# 18. STACK-SPECIFIC ADDENDUM — CONVEX
+# 18. SELF-VERIFICATION — DO NOT WAIT TO BE PROMPTED
 
-**Applied after the foundation was built on Convex.** Section 2 names two database-layer requirements that this stack cannot satisfy literally: it has no row-level security policies and no database-level constraints. These five rules translate the intent into this stack and take precedence over the wording of section 2.
+**You will not be prompted between modules. This section is the prompt.** Work through the build order in section 17 continuously. At each of the milestones below, stop building, run the checks, and **write the evidence into your progress report before continuing** — the search output, the test output, the code — never a sentence saying it was done. A described fix is not a verified fix. Then continue without waiting.
 
-1. **Tenant isolation.** One wrapper surrounds every database read and write. It injects the tenant filter from the authenticated person and refuses any document whose `tenant_id` does not match. **No query, mutation or action anywhere in the codebase may call `ctx.db` directly.** An automated test fails the build if `ctx.db` appears outside the wrapper file. Acceptance test 2 becomes: call any function as a person of one tenant with a document identifier from another — nothing is returned and nothing is written.
+**After the foundation, before any feature screen:**
+- Paste the search output for `ctx.db` across the whole codebase. Only the wrapper file may appear.
+- Paste the search output for `scheduler`, `runAfter`, `runAt` and `crons`. All four must be empty.
+- Run acceptance tests 1, 2, 5, 7, 9, 10, 16, 22 and 168 and paste the results.
+- Confirm the full sidebar exists in the section 13 order with placeholders.
+- Confirm the second, invented test tenant exists with different thresholds and roles.
 
-2. **Audit log immutability.** The same wrapper throws on any patch, replace or delete against the audit table, with no exception for any role. **The hash chain is what detects dashboard or deploy-key edits**, and the chain verification is a paginated action. Dashboard and deploy-key access is restricted to the two console holders. Acceptance test 1 is unchanged: an edit made through the dashboard must be reported by the verification action as a broken chain.
+**After every module, without exception:**
+- Re-run both searches and paste the output. A module that introduced a direct `ctx.db` call or a scheduler is retrofitted before the next module starts.
+- Run every acceptance test in section 14 that the module makes runnable, and paste the results.
+- Show the code of any mutation the module introduces that stores more than one consequence of a single human action — the `won` handover, contract signature, turnover date, goods receipt quarantine, transmittal receipt discrepancy, task closure on output — and confirm each is one mutation with no chained action.
+- Search the module's screens for any field where a person types a percentage complete, an hours or duration value, a headcount integer in place of named attendees, or a numeric per-person score. There must be none.
+- Search the module's screens and queries for reporter identity or any per-person incident count. There must be none outside the safety function.
 
-3. **Uniqueness.** There are no database unique constraints or foreign keys. Enforce inside mutations, under the wrapper: exactly two console holders · exactly one `in_force` revision per controlled document · one site report per project per workday · one toolbox meeting per site report · no bare gate `25` row and no rows 13 to 17.
+**After the Model Context Protocol server:**
+- Enumerate every tool and every parameter it exposes, as a list, and state for each whether it can reach a hard block's existence, the audit table, statutory results or another tenant. All must be no.
+- Run acceptance tests 159 to 168 and paste the results.
 
-4. **No scheduler.** `ctx.scheduler`, `runAfter`, `runAt` and a crons file are the single easiest way to add automation to this stack, and none may appear anywhere. An automated test fails the build if any of them does. Acceptance test 8 depends on this.
+**Before reporting the build complete:**
+- Run the full acceptance suite, 1 to 189, and paste the results.
+- Run acceptance test 8 for real: leave the deployed platform for twenty-four hours with nobody connected, then paste the audit log for that period. It must be empty.
 
-5. **Offline.** Optimistic updates are not an offline queue. The progressive web application holds its own IndexedDB queue with device-generated idempotency keys, as section 9 requires, and the visible queue, retry and original-retained-until-confirmed rules apply to it.
-
-**Verification is by inspection, not by summary:** a search of the codebase for `ctx.db` outside the wrapper and for `scheduler` must both return nothing. A described fix is not a verified fix.
+**When to stop and ask.** Only when this instruction is genuinely silent on something you cannot build without deciding, and the decision would change data that is hard to migrate later. Before asking, check that the answer is not already in this instruction. Do not ask for confirmation to proceed, do not ask whether to continue to the next module, and do not ask whether a rule that looks strict is really intended — it is. **Every question is cheaper than every assumption, and every assumption is cheaper than stopping to ask whether you may continue.**
