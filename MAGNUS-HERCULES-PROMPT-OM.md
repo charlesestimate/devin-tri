@@ -1,4 +1,4 @@
-This message adds one module to the build, applies seven schema amendments to modules not yet built, records three gate decisions, and closes three housekeeping items from the retrofit. **Read all of it before resuming Project and Contract, because amendments 1, 3 and 4 land in that module.** Then continue through the build order without waiting to be prompted, as section 18 of the original instruction requires.
+This message adds one module to the build, applies seven schema amendments to modules not yet built, records three gate decisions, and closes three housekeeping items from the retrofit. **Read all of it before resuming Project and Contract, because amendments 1, 2, 3 and 4 land in that module.** Then continue through the build order without waiting to be prompted, as section 18 of the original instruction requires.
 
 ---
 
@@ -63,7 +63,7 @@ The gate list was closed at twenty-eight and the identifier space fixed at 1 to 
 
 **Severity governs the promise. It never governs ranking.** The executive view ranks by estimated lost generation valued at that site's tariff — never by a severity label. Both statements are true and neither may be used for the other's purpose.
 
-**`serviced_asset`** — serviced_asset_id · site_id · service_agreement_id (optional — an asset may be monitored before it is contracted) · project_id · design_package_id (both optional, present only where Magnus built it) · capacity_kilowatt_peak · commissioning_date · **warranty_expiry_date (derived from the turnover date plus `contract.warranty_months` where a project exists, in the same transaction as the turnover date; typed only where Magnus did not build the asset)** · **generation_monitoring_source · generation_monitoring_access (moved here from the project)** · **expected_annual_yield_kilowatt_hours (derived — capacity × the specific-yield constant, storing the effective-dated constant version used; never typed)** · **tariff_per_kilowatt_hour (site-specific — values lost generation)** · state (`monitored`/`under_service`/`service_lapsed`/`decommissioned`).
+**`serviced_asset`** — serviced_asset_id · site_id · service_agreement_id (optional — an asset may be monitored before it is contracted) · project_id · design_package_id (both optional, present only where Magnus built it) · capacity_kilowatt_peak · commissioning_date · **warranty_expiry_date (derived as turnover date plus `contract.warranty_months` where a project exists — computed in whichever transaction comes second, the asset's creation or the turnover date's entry; typed only where Magnus did not build the asset)** · **generation_monitoring_source · generation_monitoring_access (moved here from the project)** · **expected_annual_yield_kilowatt_hours (derived at asset creation — capacity × the specific-yield constant in force that day, storing the constant version used; recomputed only when capacity changes; never typed)** · **tariff_per_kilowatt_hour (site-specific — values lost generation)** · state (`monitored`/`under_service`/`service_lapsed`/`decommissioned`).
 
 **This is the object the original specification said does not exist. It exists here.**
 
@@ -79,11 +79,15 @@ The gate list was closed at twenty-eight and the identifier space fixed at 1 to 
 
 **Field-captured. Dual timestamps apply.** **A billable work order does not carry an amount.** It sets `is_billable`, and the service charge is created from it in the same transaction. **No screen accepts a typed charge.**
 
+**The assigned owner must be a person who signs in.** Crew members do not sign in and cannot transition a work order; they are named in the visit's attendance, never as the owner.
+
 **`warranty_claim`** — warranty_claim_id · serviced_asset_id · work_order_id (the work that found it) · **claimed_against (`supplier`/`subcontractor`/`magnus`)** · **purchase_order_id (required where `claimed_against` is `supplier` — supplier warranty lives on the purchase order, not on the client contract)** · contract_id · clause_family (where `claimed_against` is `magnus` and a contract exists — points at clause family 5, warranty and defects liability) · raised_at · claim_value · **evidence_document_id (required)** · state.
 
 **A claim needs a source, and which source depends on who is being claimed against.** Requiring a client-contract clause on every claim would make a supplier claim impossible on an asset Magnus did not build. The rule: `supplier` requires a purchase order · `magnus` requires a contract clause where a contract exists · `subcontractor` requires evidence and a named party. **A defect claim in year three is answered by the year-one record or it is not answered at all. This object is what makes the year-one record reachable.**
 
 **`service_charge`** — service_charge_id · service_agreement_id · work_order_id (set for a billable out-of-scope visit) · period_start · period_end · **amount (generated from the agreement or the work order — never typed)** · basis (copied from the agreement at creation) · state.
+
+**Which charges activation creates depends on `charge_basis`:** `fixed_periodic` — one charge per `charge_period` for the term, at `charge_amount` · `per_kilowatt_peak` — one per period, amount derived as `charge_amount` × the summed `capacity_kilowatt_peak` of the assets under the agreement at activation · `hybrid` — the periodic component as above, plus per-visit charges from billable work orders · **`per_visit` — no charge at activation; every charge comes from a billable work order.** Escalation applies to periods after `escalation_month` in each year.
 
 **This is not a `billing_milestone`.** A milestone is keyed to a project and generated at contract signature. **A service charge has no milestone, no percentage complete and no completion. It recurs until the agreement ends.** Both feed the same cash forecast under `secured` once issued. **There is no `written_off` state** — an uncollectable charge goes to `write_off` under the ladder, amendment 5.
 
@@ -260,4 +264,4 @@ Existing agreements are loaded with their signed documents, commencement dates a
 
 # D. THEN CONTINUE
 
-Apply A1 to A3 now and paste the exempt-list constant. Apply amendments 1, 3 and 4 as you build Project and Contract, which is next. Seed gate 34 now and paste the gate table row count. Then continue through the build order in section 17 of the original instruction, with operations and maintenance built at the end of stream D, verifying at each milestone as section 18 requires. **Do not stop to ask whether to continue.**
+Apply A1 to A3 now and paste the exempt-list constant. Apply amendments 1, 2, 3 and 4 as you build Project and Contract, which is next. Seed gate 34 now and paste the gate table row count. Then continue through the build order in section 17 of the original instruction, with operations and maintenance built at the end of stream D, verifying at each milestone as section 18 requires. **Do not stop to ask whether to continue.**
