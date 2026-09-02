@@ -41,7 +41,7 @@ In a relational database these two would be row-level security policies and tabl
 
 **2.2 · Audit log immutability.** The same wrapper **permits insert** on the audit table — stamped with the acting person's `tenant_id`, through the wrapper like every other write, never bypassing it — and **throws on patch, replace or delete against the audit table for every caller with no exception for any role.** Because the dashboard and a deploy key can still edit any document, **the hash chain is the control that detects it**: each entry carries the hash of the previous entry, and a paginated verification action walks the chain and reports intact or broken. Dashboard and deploy-key access is restricted to the two console holders. A log protected only by application code that declines to offer a delete button is not immutable — it is inconvenient; **a log whose every edit breaks a chain that a console holder can verify is.**
 
-**2.3 · Uniqueness.** Convex has no unique constraints and no foreign keys. Every uniqueness rule in this instruction is enforced inside the mutation, under the wrapper, as a refusal: exactly two console holders · exactly one `in_force` revision per controlled document · one site report per project per workday · one toolbox meeting per site report · no bare gate `25` row and no gate rows 13 to 17 · six hard block rows and never a seventh.
+**2.3 · Uniqueness.** Convex has no unique constraints and no foreign keys. Every uniqueness rule in this instruction is enforced inside the mutation, under the wrapper, as a refusal: exactly two console holders · exactly one `in_force` revision per controlled document · one site report per project per workday · one toolbox meeting per site report · thirty gate rows, no bare gate `25` row and no gate rows 13 to 17 · six hard block rows and never a seventh.
 
 **2.4 · No scheduler.** `ctx.scheduler`, `runAfter`, `runAt` and a `crons` file are the single easiest way to add automation to this stack, **and none of them may appear anywhere in the codebase.** An automated test fails the build if any of them does. Acceptance test 8 depends on this. The only permitted way for one function to cause another to run is a direct call inside the same mutation.
 
@@ -130,7 +130,7 @@ Anything that is neither a hard block nor one of these five **records and warns.
 
 **Gates are database rows, not code. If a gate value appears in a source file, it is wrong.**
 
-Seed **twenty-nine rows** for twenty-eight gate numbers — gate 25 splits into `25a` and `25b`. `gate_id` is text, not an integer. **Numbers 13 to 17 are permanently reserved and are never loaded**, and no bare `25` row exists. An earlier draft numbered five hard blocks at 13 to 17; that numbering is withdrawn so every gate number already in use still points at the same gate.
+Seed **thirty rows** for twenty-nine gate numbers — gate 25 splits into `25a` and `25b`, and gate 34 was added with module 26 (section 8.23.2). `gate_id` is text, not an integer. The identifier space runs 1 to 34. **Numbers 13 to 17 are permanently reserved and are never loaded**, and no bare `25` row exists. An earlier draft numbered five hard blocks at 13 to 17; that numbering is withdrawn so every gate number already in use still points at the same gate.
 
 | # | Gate | Trigger | Primary | Alternate | Window (recorded only) |
 |---|---|---|---|---|---|
@@ -163,6 +163,9 @@ Seed **twenty-nine rows** for twenty-eight gate numbers — gate 25 splits into 
 | 31 | Threshold change | all | Domain owner | Chief Executive Officer | — |
 | 32 | Change to what a role may do | all | Administration Console holder | Second console holder | — |
 | 33 | Document controlled-versus-archive classification | all | **Cristy — `primary_person`** | **none** | — |
+| 34 | Warranty claim submission | all | Head of Finance | Chief Operating Officer | 3 |
+
+**Two extensions recorded with gate 34, approved by the Chief Executive Officer on 2 September 2026:** gate 9 covers any signed customer agreement, including a service agreement, not only an engineering, procurement and construction contract · gate 11 covers a service charge as well as a progress claim.
 
 **Gate 7 band:** policy markup is 115% major equipment and 130% balance of system. A Director may quote down to **110% major** and **125% balance of system**. Below that, Chief Executive Officer only.
 
@@ -355,7 +358,7 @@ The proposal is **structured on the same block spine as construction**, which is
 
 **Magnus signs on client paper. There is no Magnus standard contract and the terms differ every time.** The platform cannot assume any clause exists, cannot default any term, and cannot infer retention, liquidated damages, payment terms or insurance obligations from a template, because there is no template. **Do not build a contract template engine. Build a record of what this particular contract says.**
 
-**`party`** — party_id · **legal_name (the name on the contract, not the trading name)** · **party_type — multi-valued: `client`/`asset_owner`/`offtaker`/`subcontractor`/`supplier`/`consultant`/`other`** · taxpayer_identification_number (required where invoiced or paid) · address · contacts · **is_related_party** · accreditation_state (`accredited`/`provisional`/`suspended` — subcontractors and suppliers) · insurance_certificate_id · insurance_expiry · **insurance_exclusions (a field, not an attachment nobody reads)** · bank_account_details · categories_supplied · currency.
+**`party`** — party_id · **legal_name (the name on the contract, not the trading name)** · **party_type — multi-valued: `client`/`asset_owner`/`offtaker`/`subcontractor`/`supplier`/`consultant`/`operations_and_maintenance_provider`/`other`** · taxpayer_identification_number (required where invoiced or paid) · address · contacts · **is_related_party** · accreditation_state (`accredited`/`provisional`/`suspended` — subcontractors and suppliers) · insurance_certificate_id · insurance_expiry · **insurance_exclusions (a field, not an attachment nobody reads)** · bank_account_details · categories_supplied · currency.
 
 **One record for every organisation.** A subcontractor is a party, not a separate object; so is a supplier. The alternative — a subcontractor record beside a supplier record beside a client record — produces three places where the same company's insurance expiry is recorded and two of them are wrong. *This merges the separate `supplier` object in the source specification; see section 16, deviation D9.*
 
@@ -363,13 +366,13 @@ The proposal is **structured on the same block spine as construction**, which is
 
 **Several subcontractor policies exclude injury to contractors' workmen**, which is precisely the risk the certificate appears to cover. **A certificate on file with an unread exclusion is worse than no certificate, because it produces confidence.**
 
-**`project`** — project_id · project_name · client (reference to `party`) · site_address · **region (derived from province)** · local_government_unit · capacity_kilowatt_peak · contract_value · project_manager · **director (approver on gates 6 and 8)** · permit_dependency · expected_permit_duration_days · contract_id (empty until uploaded — **this emptiness is what blocks**) · status (`setup`/`active`/`suspended`/`turned_over`/`closed`/`cancelled`) · **planned_percentage_curve (a list of date and planned-percentage pairs, entered once from the contract programme — there is no scheduling engine)** · turnover_date · generation_monitoring_source · generation_monitoring_access.
+**`project`** — project_id · project_name · client (reference to `party`) · **site_id (reference to `site`, module 4 — carried across by the `won` handover; this is what joins a serviced site to the project that built it)** · site_address · **region (derived from province)** · local_government_unit · capacity_kilowatt_peak · contract_value · project_manager · **director (approver on gates 6 and 8)** · permit_dependency · expected_permit_duration_days · contract_id (empty until uploaded — **this emptiness is what blocks**) · status (`setup`/`active`/`suspended`/`turned_over`/`closed`/`cancelled`) · **planned_percentage_curve (a list of date and planned-percentage pairs, entered once from the contract programme — there is no scheduling engine)** · turnover_date. Generation monitoring lives on `serviced_asset`, section 8.23, not on the project.
 
 **Project status transitions:** `setup` → `active` requires the signed contract document (hard block 6) · `active` → `suspended` is recorded with a reason and the party responsible · `suspended` → `active` · `active` → `turned_over` on the Turnover Document, gate 21 · `turned_over` → `closed` requires **both** retention released **and** defects liability expired · any → `cancelled` by a Director, with open commitments listed and resolved first.
 
 **There is no stored `phase` field and no project phase badge.** A single project routinely has design complete on some blocks, procurement running on others and construction under way on a third set. **Stage is computed on read from block states and displayed as a distribution, never a single word.** It is the first thing that looks missing and the first thing that becomes wrong.
 
-**`contract`** — contract_id · project_id · **signed_document (the signed copy — not a tick-box, not a draft, not an unsigned final)** · contract_value · currency · date_signed · client_signatory · payment_terms_days · retention_percentage · retention_reference_date_basis · retention_release_months · **counsel_review_state (`reviewed`/`proceeded_without_review`/`pending`)** · related_party · superseded_by.
+**`contract`** — contract_id · project_id · **signed_document (the signed copy — not a tick-box, not a draft, not an unsigned final)** · contract_value · currency · date_signed · client_signatory · payment_terms_days · retention_percentage · retention_reference_date_basis · retention_release_months · **warranty_months (read from the document — the turnover date plus this sets the warranty expiry)** · **counsel_review_state (`reviewed`/`proceeded_without_review`/`pending`)** · related_party · superseded_by.
 
 **Retention terms are read out of the document by a person and entered. Nothing is defaulted or inferred.** Retention is time-based and Magnus must send the bill — it is not released by a certificate, an acceptance event or a client action. **It is the most forgettable receivable in this business**, becoming billable long after everyone has stopped thinking about the project.
 
@@ -801,7 +804,7 @@ A defect appears in year three and the question is whether the crew built what t
 
 **A review that confirms no change still records a review** — the document is then demonstrably current rather than merely old.
 
-**Six permanent classes, never subject to any retention schedule:** site photographs · as-built drawings · test and commissioning records · structural certificates · permits · contracts. **A defect claim in year twelve is answered by the year-one photograph set, or it is not answered at all.**
+**Eight permanent classes, never subject to any retention schedule:** site photographs · as-built drawings · test and commissioning records · structural certificates · permits · contracts · **service agreements · work-order evidence**. **A defect claim in year twelve is answered by the year-one photograph set, or it is not answered at all.**
 
 **Legal hold** suspends retention entirely on a nominated project, document, thread or person's records. Set and released by a console holder, logged. **It overrides every retention rule, including erasure requests, to the extent the law permits — which is a question for counsel, not for the platform.**
 
@@ -823,11 +826,11 @@ A defect appears in year three and the question is whether the crew built what t
 
 **`fund_request`** — request_id · project_id · requested_by · amount · purpose · state (`requested`/`approved`/`released`/`liquidated`) · **liquidation_due (15 days from release)** · liquidation_documents. **Hard block 6 applies. An unliquidated advance blocks the requester's next request** — refusal 3 — and Finance and Human Resource are informed.
 
-**`write_off`** — write_off_id · subject (`receivable`/`retention`/`stock`/`advance`) · subject_id · project_id · **amount (determines which of gates 1, 2 and 3 applies)** · reason · **recovery_attempts — deliberately optional: a write-off with no recovery history is permitted and is reported. Requiring the field would make the condition unreportable because it could never occur** · requested_by · requested_on · state (`requested`/`approved`/`posted`/`rejected`) · approved_by · approved_on.
+**`write_off`** — write_off_id · subject (`receivable`/`retention`/`stock`/`advance`/`service_charge`) · subject_id · project_id · **amount (determines which of gates 1, 2 and 3 applies)** · reason · **recovery_attempts — deliberately optional: a write-off with no recovery history is permitted and is reported. Requiring the field would make the condition unreportable because it could never occur** · requested_by · requested_on · state (`requested`/`approved`/`posted`/`rejected`) · approved_by · approved_on.
 
 **A write-off is irreversible money.** That is why the ladder has three gates rather than one, and why gate 3 has no alternate — **above ₱100,000 there is no authority above the Chief Executive Officer to pass it to. Nothing else in the platform writes value off.**
 
-**`cash_forecast_line`** — month (twelve forward) · direction (`in`/`out`) · **confidence (`secured`/`gated`/`projected`)** · amount · source_object.
+**`cash_forecast_line`** — month (twelve forward) · direction (`in`/`out`) · **confidence (`secured`/`gated`/`projected`)** · amount · source_object (a progress claim, retention, fund request, pipeline opportunity, or **a service charge**).
 
 **A forecast presenting one number is a forecast nobody can act on.** `secured` — contracted, certified or invoiced; will arrive unless something goes wrong. **`gated` — real money held behind a specific gate, with a named owner and an age.** `projected` — expected but not committed, from the pipeline weighted by stage.
 
@@ -1041,7 +1044,7 @@ The control: the platform produces a printed distribution sheet from the approve
 
 **No outbound electronic mail, for anything, including summaries and digests.** The only outward delivery is the device push carve-out in section 1.1.
 
-**Generation monitoring** fields exist from the first release, populated for company-owned lease and independent power producer assets and empty for handed-over projects. **Magnus currently has no performance visibility on systems it built and handed over; the field is where that changes when the data becomes available, and it does not require the integration to exist first.**
+**Generation monitoring** lives on `serviced_asset` and `generation_reading`, section 8.23 — one home for every asset, owned or serviced. **Magnus currently has no performance visibility on systems it built and handed over; populating readings is a data task, not a design task, and it does not require the integration to exist first.**
 
 **Electronic signature** where a counterparty requires it — not a platform-wide signing mechanism. **Electronic wallet payroll is deferred**: it would remove the cash distribution exposure entirely but depends on crews holding accounts and on site connectivity. **Recorded as the structural fix, not scheduled.**
 
@@ -1087,6 +1090,213 @@ Price history by item · actual supplier lead time · supplier performance · bl
 - **The platform does not track where you are or when you log in.**
 
 **Staff behaviour follows what they believe, not what is true.** Unstated, people under-register — **and the task and site data, which everything else is built on, goes hollow.**
+
+---
+
+## 8.23 Operations and Maintenance (module 26)
+
+**This is the only module that specifies a service line rather than a project.** Modules 4 to 8 deliver a project: an opportunity becomes a contract, a contract becomes blocks, blocks become a Turnover Document, and the project closes. **This module specifies what happens after that date, for years, on assets Magnus does not own — and on assets Magnus did not necessarily build.**
+
+**Three consequences hold throughout.** A service relationship attaches to a **site**, never to a project, and outlives every project on it. It generates **recurring revenue with no completion**, which milestone billing cannot express. And it covers assets that may have no project record, no block structure, no as-built drawings and no bill of materials — **every field that would come from a project is optional, and every function works without it.**
+
+**The governing rule: a service agreement is a promise with a clock on it. The platform's job is to make every clock visible before it runs out — not after.** Every object here answers one of four questions: what did we promise · what is due · what happened · what are we owed.
+
+### 8.23.1 Amendments to modules already specified
+
+Seven schema amendments, none optional. Five are single fields. **Apply them before or as the affected module is built; none may be deferred to a later migration.**
+
+| # | Amendment | Why |
+|---|---|---|
+| 1 | **`project` gains `site_id`** (reference to `site`, module 4), carried across by the `won` handover | `project` carries only free-text `site_address`. Without this a serviced site cannot be joined to the project that built it, and the as-built drawings, test records and structural certificates permanently retained under module 15 become unreachable |
+| 2 | **Generation monitoring moves off the project record.** `generation_monitoring_source` and `generation_monitoring_access` are removed from `project` and live on `serviced_asset` | Two places asserted the field; none held a reading |
+| 3 | **`party_type` gains `operations_and_maintenance_provider`** | `project_party` already carries the role; the party enumeration did not |
+| 4 | **`contract` gains `warranty_months`**, alongside `retention_release_months` | The turnover date starts a warranty clock, but nothing held a warranty duration. Retention was computable; warranty was not. Same pattern, same table |
+| 5 | **`write_off.subject` gains `service_charge`** | Gates 1, 2 and 3 approve the only write-off record in the platform. A service charge must reach that path, not invent its own |
+| 6 | **`cash_forecast_line.source_object` accepts `service_charge`** | Otherwise recurring revenue cannot enter the twelve-month forecast |
+| 7 | **The six permanent retention classes in module 15 become eight:** service agreements, and work-order evidence | A warranty claim in year eight is answered by the year-one work order or it is not answered |
+
+**And the sidebar gains an eighteenth item:** *Operations and Maintenance*, after Safety and before Documents — the work that happens once construction ends.
+
+### 8.23.2 Gate decisions — recorded, approved by the Chief Executive Officer on 2 September 2026
+
+The gate list was closed at twenty-eight and the identifier space fixed at 1 to 33. This module needs three things the list did not provide, and a module that quietly adds a gate is the failure the closed list exists to prevent. **The three below are governance acts, recorded here as decided.**
+
+| Need | Decision |
+|---|---|
+| Service agreement signature | **Gate 9 is extended** to any signed customer agreement, not only an engineering, procurement and construction contract. No new number |
+| Service charge approval | **Gate 11 is extended** to a service charge. Gate 11's original trigger was a progress claim keyed to a project with a percentage complete; a service charge is neither. This is an extension, and it is recorded as one |
+| Warranty claim submission | **Gate 34 is added — Warranty claim submission · all · Head of Finance · alternate Chief Operating Officer · window 3 working days (recorded only).** A claim against a supplier commits Magnus's position. **The gate list now has twenty-nine gates and thirty seed rows; the identifier space runs 1 to 34; 13 to 17 remain reserved** |
+
+**No hard block is added, and none is extended.** Hard block 6 is *fund release without a signed contract* and is not extended to service charges. Issuing an invoice is neither law, nor irreversibly committed money, nor an irreversible physical act. **The protection is structural instead:** a charge is created only from an `active` agreement, and `active` is unreachable without the signed document. The unsigned case cannot arise.
+
+### 8.23.3 Objects
+
+**`service_agreement`** — service_agreement_id · **site_id (required — the agreement attaches to the site, never to a project)** · account_id (the counterparty) · project_id (optional — present where Magnus built the asset, empty for third-party service) · **agreement_document_id (required to reach `active`; the signed document is the record, and a field asserting an agreement exists does not satisfy it)** · commencement_date · term_months · **expiry_date (derived from commencement plus term at activation, in the same transaction — never typed)** · **renewal_notice_days (configuration, default 90, gate 31)** · predecessor_agreement_id · successor_agreement_id · scope_of_service (`preventive`/`corrective`/`preventive_and_corrective`/`monitoring_only`) · charge_basis (`fixed_periodic`/`per_kilowatt_peak`/`per_visit`/`hybrid`) · charge_amount · charge_period (`monthly`/`quarterly`/`annual`) · escalation_percentage · escalation_month · **state (stored: `draft`/`active`/`renewed`/`terminated`)** · **effective_status (derived on read — section 8.23.4)**.
+
+**`service_level_term`** — service_level_term_id · service_agreement_id · **severity (`total_outage`/`partial_outage`/`degraded`/`cosmetic`)** · **response_hours (elapsed hours to first response)** · **restoration_hours (elapsed hours to service restored)**. **One row per agreement per severity — not two columns on the agreement. These rows are what Magnus sells.** An agreement with no service level terms is one nobody can be held to and nobody can be shown to have met; `active` is refused without at least one.
+
+**Severity governs the promise. It never governs ranking.** The executive view ranks by estimated lost generation valued at that site's tariff — never by a severity label. Both statements are true and neither may be used for the other's purpose.
+
+**`serviced_asset`** — serviced_asset_id · site_id · service_agreement_id (optional — an asset may be monitored before it is contracted) · project_id · design_package_id (both optional, present only where Magnus built it) · capacity_kilowatt_peak · commissioning_date · **warranty_expiry_date (derived from the turnover date plus `contract.warranty_months` where a project exists, in the same transaction as the turnover date; typed only where Magnus did not build the asset)** · **generation_monitoring_source · generation_monitoring_access (moved here from the project)** · **expected_annual_yield_kilowatt_hours (derived — capacity × the specific-yield constant, storing the effective-dated constant version used; never typed)** · **tariff_per_kilowatt_hour (site-specific — values lost generation)** · state (`monitored`/`under_service`/`service_lapsed`/`decommissioned`).
+
+**This is the object the original specification said does not exist. It exists here.**
+
+**`serviced_asset_equipment`** — serviced_asset_equipment_id · serviced_asset_id · item_id (optional, where the model is in the catalogue) · equipment_class (`panel`/`inverter`/`battery`/`mounting`/`monitoring`/`other`) · manufacturer · model · serial_number · quantity · installed_date.
+
+**`generation_reading`** — generation_reading_id · serviced_asset_id · period_start · period_end · granularity (`daily`/`monthly`) · generated_kilowatt_hours · ingestion_source (`manual`/`portal_export`/`integration`) · ingested_at. **Without this object nothing in underperformance, lost-generation valuation or the operations domain can run.** Populating it is a data task, not a design task, and it is the single highest-value input this module has.
+
+**`maintenance_plan`** — maintenance_plan_id · service_agreement_id · activity · **interval_months (configuration default per activity, gate 31)** · first_due_date · **next_due_date (stored; advanced by `interval_months` in the same transaction that closes a preventive work order raised from this plan)** · estimated_hours · required_capability (capability tag) · is_active.
+
+**A maintenance plan does not do the work and does not create the task.** It holds the cadence and the next due date — the definition of a recurring obligation, section 16 deviation D11. **A person or an agent reading `next_due_date` creates the task with `source = recurring`, and a work order is raised from that task when the visit is actually scheduled.** The plan is the obligation; the task is the commitment; the work order is the visit. **No scheduler instantiates any of them.**
+
+**`work_order`** — work_order_id · serviced_asset_id · service_agreement_id (optional — goodwill and warranty work happens outside an agreement) · originating_task_id · origin (`preventive`/`fault`/`client_request`/`warranty`/`monitoring_alert`) · **severity (selects which `service_level_term` row applies)** · **raised_on_device · raised_received_by_server** · **responded_on_device · responded_received_by_server (stamped on `in_progress`)** · **restored_on_device · restored_received_by_server (stamped on `restored`)** · closed_at (server time — closure is an office act, not a field act) · reported_by · assigned_to · assigned_at · fault_description · root_cause · action_taken (**all three required to reach `closed`**) · parts_used (item references — operations and maintenance spares, module 10) · **evidence_document_id (required to reach `closed`)** · **is_billable (default false — out-of-scope work is billable)** · state.
+
+**Field-captured. Dual timestamps apply.** **A billable work order does not carry an amount.** It sets `is_billable`, and the service charge is created from it in the same transaction. **No screen accepts a typed charge.**
+
+**`warranty_claim`** — warranty_claim_id · serviced_asset_id · work_order_id (the work that found it) · **claimed_against (`supplier`/`subcontractor`/`magnus`)** · **purchase_order_id (required where `claimed_against` is `supplier` — supplier warranty lives on the purchase order, not on the client contract)** · contract_id · clause_family (where `claimed_against` is `magnus` and a contract exists — points at clause family 5, warranty and defects liability) · raised_at · claim_value · **evidence_document_id (required)** · state.
+
+**A claim needs a source, and which source depends on who is being claimed against.** Requiring a client-contract clause on every claim would make a supplier claim impossible on an asset Magnus did not build. The rule: `supplier` requires a purchase order · `magnus` requires a contract clause where a contract exists · `subcontractor` requires evidence and a named party. **A defect claim in year three is answered by the year-one record or it is not answered at all. This object is what makes the year-one record reachable.**
+
+**`service_charge`** — service_charge_id · service_agreement_id · work_order_id (set for a billable out-of-scope visit) · period_start · period_end · **amount (generated from the agreement or the work order — never typed)** · basis (copied from the agreement at creation) · state.
+
+**This is not a `billing_milestone`.** A milestone is keyed to a project and generated at contract signature. **A service charge has no milestone, no percentage complete and no completion. It recurs until the agreement ends.** Both feed the same cash forecast under `secured` once issued. **There is no `written_off` state** — an uncollectable charge goes to `write_off` under the ladder, amendment 5.
+
+### 8.23.4 States and transitions
+
+**`service_agreement` — stored state and derived status.** The stored `state` moves only by a human hand. **`effective_status` is computed on read from the stored dates, and this is how the module holds its clocks without a timer:**
+
+| Effective status | Computed when |
+|---|---|
+| `draft` · `renewed` · `terminated` | The stored state, as is |
+| `active` | Stored state `active` and today is before `expiry_date` minus `renewal_notice_days` |
+| **`expiring`** | Stored state `active` and today is on or after `expiry_date` minus `renewal_notice_days` and before `expiry_date` |
+| **`lapsed`** | Stored state `active`, today is on or after `expiry_date`, and `successor_agreement_id` is empty |
+
+**`lapsed` is reached by the passage of time, not by a person — and not by a timer either.** It is a fact about two stored dates, visible the moment anyone or any agent asks. The ninety-day renewal threshold had no home in the original specification; this is the home.
+
+| From | To | Who | Condition |
+|---|---|---|---|
+| `draft` | `active` | Director | **`agreement_document_id` present AND at least one `service_level_term` row. Refused otherwise.** In the same transaction: `expiry_date` is computed, and every `service_charge` for the term is created in state `scheduled` with escalation applied to periods after `escalation_month` |
+| `active` | `active` | Director | Term extended in place — `expiry_date` moves and the charges for the added periods are created in the same transaction |
+| `active` | `renewed` | Director | A successor agreement reaches `active` and `successor_agreement_id` is set; the successor carries `predecessor_agreement_id` |
+| `active` | `terminated` | Chief Operating Officer | Either party terminates. **Reason required.** Charges in `scheduled` for periods after termination are cancelled in the same transaction |
+
+**`work_order`** — `raised` · `assigned` · `in_progress` · `restored` · `closed` · `cancelled`.
+
+| From | To | Who | Condition |
+|---|---|---|---|
+| `raised` | `assigned` | Project Manager, Director, or the site's Person In Charge | An owner is named; stamps `assigned_at`. **Raises a Task notification to the owner in the same transaction** |
+| `assigned` | `in_progress` | Assigned owner | Work starts. **Stamps `responded_on_device` — this stops the response clock** |
+| `in_progress` | `restored` | Assigned owner | Service restored. **Stamps `restored_on_device` — this stops the restoration clock** |
+| `in_progress` | `closed` | Assigned owner | **`origin` is `preventive` only.** Nothing was broken, so nothing is restored. **Advances the originating maintenance plan's `next_due_date` in the same transaction** |
+| `restored` | `closed` | Assigned owner | `root_cause`, `action_taken` and `evidence_document_id` all present. **If `is_billable`, the service charge is created in the same transaction** |
+| any | `cancelled` | Project Manager or Director | **Reason required** |
+
+**`restored` and `closed` are separate on purpose.** Restoration is what the client experiences and what the service level measures; closure is what the record needs. Collapsing them loses the measurement. **A preventive visit never passes through `restored`** — forcing it would stamp a restoration time on work where nothing failed.
+
+**Offline rule for work orders — settling the open dependency on module 23.** A work order is raised offline like any field record. **The assigned owner, and only the assigned owner, may capture the `in_progress` and `restored` transitions offline**, because the device timestamp on those two transitions is the service level measurement itself, and a record with one assigned writer is not a shared record. Both queue with a device-generated idempotency key. Every other transition — assign, close, cancel — is online.
+
+**`warranty_claim`** — stored `raised` · `submitted` · `accepted` · `rejected` · `settled`; **derived `expired` on read** where the asset's `warranty_expiry_date` has passed and the stored state is `raised` or `submitted`.
+
+| From | To | Who | Condition |
+|---|---|---|---|
+| `raised` | `submitted` | Head of Finance | **Gate 34.** Claim sent to the counterparty — this commits Magnus's position |
+| `submitted` | `accepted` · `rejected` | Head of Finance | Counterparty responds. Rejection requires a reason |
+| `accepted` | `settled` | Head of Finance | Value received or credited |
+
+**`service_charge`** — `scheduled` · `approved` · `issued` · `paid` · `cancelled`.
+
+| From | To | Who | Condition |
+|---|---|---|---|
+| — | `scheduled` | Same-transaction derivation | Created at agreement activation for every period in the term, or when a billable work order closes. **Never by a scheduler, never typed** |
+| `scheduled` | `approved` | Head of Finance | **Gate 11** |
+| `approved` | `issued` | Head of Finance | Sent to the client. **Enters the cash forecast under `secured`** |
+| `issued` | `paid` | Head of Finance | Payment received |
+| `scheduled` · `approved` | `cancelled` | Head of Finance | Reason required |
+
+### 8.23.5 Service level measurement — computed on read
+
+| Measure | Derivation |
+|---|---|
+| **Response** | `responded_on_device` − `raised_on_device`, against `response_hours` of the `service_level_term` matching the work order's severity |
+| **Restoration** | `restored_on_device` − `raised_on_device`, against `restoration_hours` |
+
+**Both use device time. Both are measured in elapsed hours, not working hours — a system down on a Saturday is down.**
+
+**The service level is reported, never scored against a person.** A breach is a fact about a promise, not a fact about an engineer. No screen, query or export aggregates breaches by named engineer.
+
+### 8.23.6 Generation and underperformance
+
+`expected_annual_yield_kilowatt_hours` is derived from capacity and the effective-dated specific-yield constant; actual generation comes from `generation_reading`. **Underperformance is the shortfall, valued at `tariff_per_kilowatt_hour`.** That valuation is what ranks the operations and maintenance exception — by estimated lost generation valued at that site's tariff, not by a severity label. **Two sites with equal shortfall and different tariffs rank the higher-tariff site above.**
+
+### 8.23.7 Gates that apply
+
+Gates 1, 2, 3 — the write-off ladder, where a service charge becomes uncollectable · **gate 9** — service agreement signature, as extended · **gate 11** — service charge approval, as extended · gate 19 — non-conformance closure, only where a work order raises one on an asset that has a project, since `non_conformance_report.project_id` is required · gate 22 — the specific-yield constant · gate 31 — `renewal_notice_days`, plan intervals, the warranty-expiry warning window · gate 33 — agreements and evidence classification · **gate 34** — warranty claim submission.
+
+### 8.23.8 Notifications and queries
+
+**Two things exist, they look similar, and they must not share a code path.** Notifications below are raised in the same transaction as the human action that causes them. Everything time-based is a query, evaluated on request, that an agent reads.
+
+**Notifications raised in the same transaction:**
+
+| Human action | Notification | To | Cleared by |
+|---|---|---|---|
+| Work order assigned | **Task** | Assigned owner | Work reaches `in_progress` |
+| Agreement activated | **Task** — the first scheduled charge | Head of Finance | Charge reaches `approved` |
+| Billable work order closed | **Task** — the charge | Head of Finance | Charge reaches `approved` |
+| Warranty claim raised | **Task** | Head of Finance | Claim reaches `submitted` |
+| Asset created with no active agreement | **Information** | Account executive | — |
+
+**Queries — each returning its own evaluation timestamp:**
+
+Agreements with effective status `expiring`, with days to expiry · agreements with effective status `lapsed`, with days since · maintenance plans with `next_due_date` within N days, and those past due with no task · work orders in `assigned` or `in_progress` past their `response_hours`, with hours over · work orders in `in_progress` past their `restoration_hours`, with hours over · warranty expiring within the configured window with an open work order on the asset · warranty claims in `raised` or `submitted` with derived status `expired` · underperforming assets, shortfall valued at site tariff, ranked · service charges `issued` and unpaid beyond the agreement's payment terms · serviced assets with no agreement · serviced assets with no generation reading in the last N days.
+
+**Recipients and scopes are by account, not by project**, because a serviced site may have no Project Manager.
+
+### 8.23.9 Permissions
+
+| Role | Agreements | Work orders | Charges | Service level | Claims |
+|---|---|---|---|---|---|
+| Chief Operating Officer | all | all | view | all | view |
+| Director | own accounts, full | own accounts | view | own accounts | view |
+| Head of Finance | view | view | **full** | view | **full** |
+| Account executive | own accounts | view | view | own accounts | none |
+| Project Manager | view, own sites | own site orders | none | own sites | none |
+| **Person In Charge** | **none** | **own site only — raise, assign, update** | **none** | **none** | **none** |
+
+Money visibility and record scope apply unchanged.
+
+### 8.23.10 Reports and accumulated data
+
+**Reports:** service level attainment by agreement and period · response and restoration distribution by severity · work orders by origin, preventive against corrective · **recurring service revenue by client and period** · agreements expiring in the next two quarters · warranty claims raised, settled and expired, with value · lost generation by site, valued · parts consumption from operations and maintenance spares · **cost to serve against charge, by agreement — the margin question for the service line.**
+
+**Accumulated, never maintained, always with sample size:** mean time to respond and to restore, by severity · **failure rate by equipment model and age — the input a later predictive phase needs** · warranty claim success rate by supplier, feeding procurement · actual cost to serve against agreement value, feeding pricing.
+
+### 8.23.11 Model Context Protocol
+
+All six objects are exposed for read, write and search under section 12, and all eleven queries above are read tools. `renewal_notice_days`, plan intervals and the warranty-expiry window are configuration tools under gate 31. **No agent creates, assigns, closes or prioritises a work order except as an authenticated person, through the write tools, logged under that person's name.**
+
+### 8.23.12 Migration
+
+Existing agreements are loaded with their signed documents, commencement dates and terms; **an agreement whose document is not loaded stays `draft` and produces no charge.** In-force warranties are loaded with their expiry dates. Open work orders are loaded with their device-side raised timestamps where known, and with the server timestamp otherwise, marked as migrated.
+
+### 8.23.13 Deliberately not built
+
+| Not built | Why |
+|---|---|
+| A timer that moves an agreement to `expiring` or `lapsed`, or a claim to `expired` | Section 1. These are derived statuses computed from stored dates |
+| A scheduler that creates service charges, maintenance tasks or work orders | Section 1. Charges are created at activation; tasks by a person or agent; work orders by a person |
+| Predictive failure modelling · automatic work-order dispatch · yield-degradation forecasting | Need accumulated service history |
+| A client-facing service portal | A later phase |
+| A separate service-line general ledger | One sub-ledger, not two |
+| A `written_off` state on the service charge | The write-off ladder holds the only write-off path |
+| Technician utilisation as a score | Workload is visible; presence is never tracked, and neither produces a rating |
+| Severity as a ranking input | Ranking is by valued lost generation, not by label |
+| A spare-parts module of its own | Module 10 already holds operations and maintenance spares |
+| Service level in working hours | A system down on a Saturday is down |
+| A typed service charge | Generated or it is not a charge |
+| A seventh hard block | Issuing an invoice is not law, irreversible money or an irreversible physical act |
+| Any gate beyond 34, or any widening of 9 or 11 beyond what is recorded above | The list is closed again at twenty-nine |
 
 ---
 
@@ -1203,7 +1413,7 @@ Not through the Model Context Protocol, not through the screens, not through the
 
 Every screen is a view of section 8. Keep the interface thin.
 
-**Navigation — build the full sidebar on day one, in this exact order, with a placeholder for every module not yet built:** Dashboard · My Day · Pipeline · Projects · Design and Engineering · Procurement · Permits · Inventory · Manpower and Equipment · Safety · Documents · Messages · Finance · Human Resource · Payroll · Reports · Administration. The order is the order in which work happens and it is not rearranged. **There is no "Site Reporting" item** — site reports live under Projects and their blocks, because there is no separate site reporting module. **Human Resource and Payroll are separate items from Manpower** — identity, workforce and employment records are kept apart so that salary data never sits behind a permissions screen.
+**Navigation — build the full sidebar on day one, in this exact order, with a placeholder for every module not yet built:** Dashboard · My Day · Pipeline · Projects · Design and Engineering · Procurement · Permits · Inventory · Manpower and Equipment · Safety · **Operations and Maintenance** · Documents · Messages · Finance · Human Resource · Payroll · Reports · Administration. Eighteen items. The order is the order in which work happens — operations and maintenance is what happens once construction ends — and it is not rearranged. **There is no "Site Reporting" item** — site reports live under Projects and their blocks, because there is no separate site reporting module. **Human Resource and Payroll are separate items from Manpower** — identity, workforce and employment records are kept apart so that salary data never sits behind a permissions screen.
 
 **Foundation:** sign-in (identity provider redirect only) · notification inbox (complete, unranked, uncapped, four categories) · global search · **My Approvals** — one list, every gate, sorted by age, each row showing what, which gate, the value or condition that triggered it, who raised it, how long it has waited and the recorded window for the gate · **approval detail — the object being approved, in full. The approver must be able to see what they are approving without navigating away, or they will approve without reading** · Today (the Person In Charge landing screen) · My Day (tasks).
 
@@ -1224,6 +1434,8 @@ Every screen is a view of section 8. Keep the interface thin.
 **People and equipment:** resource availability with release dates · resource requests · deployment with all three layers shown · equipment register.
 
 **Safety:** permits to work · incidents and near misses · safety stops · corrective actions · inspections · the offline emergency card · **the per-site Quick Response near-miss and stop-work form, no login.**
+
+**Operations and Maintenance:** agreements with their service level terms and effective status · serviced assets and equipment · generation readings · maintenance plans with next due dates · work orders, with the assigned owner's `in_progress` and `restored` transitions capturable offline · warranty claims · service charges · service level attainment.
 
 **Work:** task lists · document library with classification, revisions and the governing revision marked · threads on every object · channels.
 
@@ -1464,6 +1676,34 @@ Every screen is a view of section 8. Keep the interface thin.
 188. **Old stores are read-only.** Attempt to add a file to a frozen document location. Must fail.
 189. **Accumulated figures carry sample size.** Every accumulated figure displays its observation count.
 
+## Operations and maintenance
+
+190. **An agreement attaches to a site, not a project.** Create an agreement on a site with no project. It activates and functions fully.
+191. **A signed document is required.** Attempt `draft` → `active` with no `agreement_document_id`. Must fail.
+192. **Service level terms are required.** Attempt `draft` → `active` with no `service_level_term` row. Must fail.
+193. **No charge without an active agreement.** Confirm no code path creates a `service_charge` for a `draft` agreement, and that activation is the only path that creates the term's charges — in the same mutation.
+194. **Expiring is derived, not fired.** Set expiry 89 days out with a 90-day notice period. The agreement's effective status reads `expiring` on the next read, with no stored transition, no timer and nothing in the audit log.
+195. **Lapse is derived, not fired.** Let an expiring agreement pass expiry with no successor. Effective status reads `lapsed`; the lapsed query returns it with days since; nothing ran.
+196. **Renewal links both ways.** Sign a successor. Predecessor reaches `renewed`; both carry the link.
+197. **Dual timestamps on field capture.** Raise a work order offline; synchronise later. Both `raised_on_device` and `raised_received_by_server` are stored and differ.
+198. **Response is measured in elapsed device hours.** Raise at 17:00 Friday on device, respond 10:00 Monday. 65 hours, not one working hour, measured off device time.
+199. **Severity selects the promise.** Two work orders, different severities, same agreement. Each measures against its own `service_level_term` row.
+200. **A preventive visit does not pass through `restored`.** Close a preventive work order. `in_progress` → `closed` directly; `restored_on_device` stays empty; the originating plan's `next_due_date` advances by its interval in the same mutation.
+201. **Service level breaches are never scored against a person.** No screen, query or export aggregates breaches by named engineer.
+202. **A maintenance plan holds the cadence and creates nothing.** Activate a plan with a 3-month interval. `next_due_date` is set; no task exists until a person or an agent creates one; the past-due query lists the plan.
+203. **A supplier claim needs a purchase order, not a client clause.** Raise a supplier claim on an asset with no project. Succeeds with `purchase_order_id`; fails without.
+204. **An asset works with no project.** Create a serviced asset with `project_id` empty. Every function in this module works.
+205. **Warranty expiry with open work is queryable.** Open a work order, set warranty expiry inside the window. The warranty-expiring query returns it before expiry.
+206. **A service charge is generated, never typed.** No screen accepts a typed charge amount; a billable work order closing creates its charge in the same mutation.
+207. **Recurring revenue reaches the forecast.** Issue a service charge. It appears in the twelve-month forecast under `secured`.
+208. **A service charge cannot be written off outside the ladder.** Attempt to write off a charge without gates 1 to 3. Must fail.
+209. **Lost generation values at site tariff.** Two sites, equal shortfall, different tariffs. The higher-tariff site ranks above.
+210. **Yield uses the effective-dated constant.** Change the specific-yield constant. Existing assets keep the version they were derived under.
+211. **Nothing dispatches.** Confirm no code path inside the platform creates, assigns, closes or prioritises a work order except a mutation called by an authenticated person, through the screen or the Model Context Protocol, logged under that person's name.
+212. **Every operations query returns its evaluation timestamp** and works with no agent connected.
+213. **Gate 34 fires.** Attempt `raised` → `submitted` on a warranty claim without Head of Finance approval. Must fail. Confirm the gate table holds thirty rows and no row 13 to 17.
+214. **Offline transitions are owner-only.** As a person who is not the assigned owner, attempt an offline `in_progress` transition. Refused. As the assigned owner, it queues with an idempotency key and posts once.
+
 ---
 
 # 15. DELIBERATELY NOT BUILT — DO NOT ADD ANY OF THESE
@@ -1616,7 +1856,7 @@ Every screen is a view of section 8. Keep the interface thin.
 Build in this order and **do not compress the first phase.**
 
 **Phase 0 — Foundation. One owner. Nothing else starts.**
-Multi-tenant schema with `tenant_id` on every table from the first migration · database row-level security · the append-only hash-chained audit log with cryptographic erasure · identity, roles, `record_scope` and `money_visibility` · **the twenty-nine gate rows and six hard block rows as seed data, not code** · system constants and configuration values, effective-dated · the notification model and badge computation · the tenant record · continuous integration and a tested restore from backup.
+Multi-tenant schema with `tenant_id` on every table from the first migration · the tenant wrapper and its build-failing test, section 2 · the append-only hash-chained audit log with cryptographic erasure · identity, roles, `record_scope` and `money_visibility` · **the thirty gate rows and six hard block rows as seed data, not code** · system constants and configuration values, effective-dated · the notification model and badge computation · the tenant record · continuous integration and a tested restore from backup.
 
 **Everything downstream inherits this phase's mistakes. A `tenant_id` retrofitted onto populated tables is a migration, not an edit, and an append-only log cannot be retrofitted onto a table that has been edited for four months.**
 
@@ -1628,7 +1868,7 @@ Multi-tenant schema with `tenant_id` on every table from the first migration · 
 *Stream C — field, inventory and safety:* inventory → manpower → safety → mobile. Publishes `deployment.labour_rate`, without which stream D cannot compute labour cost, and `location_id`, which procurement needs for receipt and quarantine. **Build the safety checklist structure and leave the content slots empty. Do not invent them.**
 
 **Phase 2 — after the spine delivers real values, not stubs.**
-*Stream D — money, in this fixed order:* finance → **payroll** → human resource. **Payroll before Human Resource. Human Resource depends on payroll, not the reverse.** Cannot start until block value weights and `deployment.labour_rate` are real — **a stub gives you a working screen over meaningless numbers.** Externally blocked until the accounting platform maintainer is named.
+*Stream D — money and the service line, in this fixed order:* finance → **payroll** → human resource → **operations and maintenance**. **Payroll before Human Resource. Human Resource depends on payroll, not the reverse.** Operations and maintenance last in the stream because it needs `write_off`, `cash_forecast_line`, `site`, `item`, `purchase_order`, `document` and `task` to exist. Cannot start until block value weights and `deployment.labour_rate` are real — **a stub gives you a working screen over meaningless numbers.** Externally blocked until the accounting platform maintainer is named.
 *Stream E — permits.* Small and self-contained; slots in any time after projects, design, blocks, tasks and communication exist.
 
 **Phase 3 — reporting and measurement queries, then migration and cutover.** These read what the other streams wrote and create almost nothing of their own. **Building them early produces confident screens over data that does not exist yet.**
@@ -1693,7 +1933,7 @@ Multi-tenant schema with `tenant_id` on every table from the first migration · 
 - Run acceptance tests 159 to 168 and paste the results.
 
 **Before reporting the build complete:**
-- Run the full acceptance suite, 1 to 189, and paste the results.
+- Run the full acceptance suite, 1 to 214, and paste the results.
 - Run acceptance test 8 for real: leave the deployed platform for twenty-four hours with nobody connected, then paste the audit log for that period. It must be empty.
 
 **When to stop and ask.** Only when this instruction is genuinely silent on something you cannot build without deciding, and the decision would change data that is hard to migrate later. Before asking, check that the answer is not already in this instruction. Do not ask for confirmation to proceed, do not ask whether to continue to the next module, and do not ask whether a rule that looks strict is really intended — it is. **Every question is cheaper than every assumption, and every assumption is cheaper than stopping to ask whether you may continue.**
