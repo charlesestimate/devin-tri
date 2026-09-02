@@ -1645,3 +1645,21 @@ Multi-tenant schema with `tenant_id` on every table from the first migration · 
 **Eight things that are not software and do not wait for it**, recorded because cutover is when they get forgotten: renew the commercial general liability cover — **no company-wide cover since 28 February 2026, against ₱43.5 million of equity, the most urgent item in this entire exercise** · check retention billing on every project turned over in the last eighteen months · restate every model built on 1,400 kilowatt-hours per kilowatt-peak · verify subcontractor insurance by reading the exclusions · start the payroll acknowledgement sheet this week, on paper · train a second person on battery energy storage programming · send the builder's questions · tell the investor that four approved objectives are a later phase.
 
 **Where this instruction is silent, ask. Do not decide. Every question is cheaper than every assumption.**
+
+---
+
+# 18. STACK-SPECIFIC ADDENDUM — CONVEX
+
+**Applied after the foundation was built on Convex.** Section 2 names two database-layer requirements that this stack cannot satisfy literally: it has no row-level security policies and no database-level constraints. These five rules translate the intent into this stack and take precedence over the wording of section 2.
+
+1. **Tenant isolation.** One wrapper surrounds every database read and write. It injects the tenant filter from the authenticated person and refuses any document whose `tenant_id` does not match. **No query, mutation or action anywhere in the codebase may call `ctx.db` directly.** An automated test fails the build if `ctx.db` appears outside the wrapper file. Acceptance test 2 becomes: call any function as a person of one tenant with a document identifier from another — nothing is returned and nothing is written.
+
+2. **Audit log immutability.** The same wrapper throws on any patch, replace or delete against the audit table, with no exception for any role. **The hash chain is what detects dashboard or deploy-key edits**, and the chain verification is a paginated action. Dashboard and deploy-key access is restricted to the two console holders. Acceptance test 1 is unchanged: an edit made through the dashboard must be reported by the verification action as a broken chain.
+
+3. **Uniqueness.** There are no database unique constraints or foreign keys. Enforce inside mutations, under the wrapper: exactly two console holders · exactly one `in_force` revision per controlled document · one site report per project per workday · one toolbox meeting per site report · no bare gate `25` row and no rows 13 to 17.
+
+4. **No scheduler.** `ctx.scheduler`, `runAfter`, `runAt` and a crons file are the single easiest way to add automation to this stack, and none may appear anywhere. An automated test fails the build if any of them does. Acceptance test 8 depends on this.
+
+5. **Offline.** Optimistic updates are not an offline queue. The progressive web application holds its own IndexedDB queue with device-generated idempotency keys, as section 9 requires, and the visible queue, retry and original-retained-until-confirmed rules apply to it.
+
+**Verification is by inspection, not by summary:** a search of the codebase for `ctx.db` outside the wrapper and for `scheduler` must both return nothing. A described fix is not a verified fix.
