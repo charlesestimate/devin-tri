@@ -77,7 +77,7 @@ Every feature is checked against these.
 
 # 4. TERMINOLOGY — NO ABBREVIATIONS ANYWHERE
 
-Every column name, label, button, status value, notification, report heading and error message uses the full term. An abbreviation may appear in parentheses after the full term on first use in the interface, and never alone.
+Every column name, label, button, status value, notification, report heading and error message uses the full term. An abbreviation may appear in parentheses after the full term on first use in the interface, and never alone. **An ampersand is an abbreviation:** write *Design and Engineering*, never *Design & Engineering*. A label that does not fit its space is wrapped or the space is widened; it is not shortened.
 
 Write `person_in_charge`, never `pic`. `non_conformance_report`, never `ncr`. `bill_of_materials`, never `bom`. Also spelled in full everywhere: Provisional Acceptance Certificate · Final Acceptance Certificate · Notice to Proceed · Permission to Operate · Operations and Maintenance · Professional Electrical Engineer · Engineering, Procurement and Construction · Battery Energy Storage System · Distribution Utility · Local Government Unit · Construction Safety and Health Program · Department of Labor and Employment · Bureau of Internal Revenue · Social Security System · Magnus Renewable Tech Corp.
 
@@ -1231,7 +1231,9 @@ Every screen is a view of section 8. Keep the interface thin.
 
 **People (Human Resource):** employee record · requisitions, candidates, interviews, offers · objectives and quarterly reviews · **employee self-service** · payroll periods, register, statutory rate tables, acknowledgement sheets.
 
-**Administration:** tenant · system constants with effective dates, history and reasons · configuration values · thresholds by domain · approval gates · **hard block rows, read-only with values editable and no enable control** · roles and permissions · access review · labels · push list with the three shown as non-removable · change log with arrival channel · **audit chain verification** · read-only audit log view.
+**Administration:** tenant · system constants with effective dates, history and reasons · configuration values · thresholds by domain · approval gates · **hard block rows, read-only with values editable and no enable control** · roles and permissions · access review · labels · push list with the three shown as non-removable · change log with arrival channel · **audit chain verification** · read-only audit log view · **agent sessions — every Model Context Protocol session currently authorised, showing the person it acts as, when it was authorised, its last call, and a revoke control.**
+
+**Every person also sees, on their own profile, the agent sessions acting under their name, and can revoke any of them.** An agent acts under a person's name only because that person authorised it; the person must be able to see that authorisation and end it. Revocation takes effect on the next call. Console holders see all sessions in the tenant and may revoke any; nobody else sees another person's.
 
 **A blocked-action message names the block, the unmet condition, what releases it and who can supply it — never "you do not have permission."**
 
