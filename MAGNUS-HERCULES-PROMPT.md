@@ -351,6 +351,8 @@ The proposal is **structured on the same block spine as construction**, which is
 
 **`project`** — project_id · project_name · client (reference to `party`) · site_address · **region (derived from province)** · local_government_unit · capacity_kilowatt_peak · contract_value · project_manager · **director (approver on gates 6 and 8)** · permit_dependency · expected_permit_duration_days · contract_id (empty until uploaded — **this emptiness is what blocks**) · status (`setup`/`active`/`suspended`/`turned_over`/`closed`/`cancelled`) · **planned_percentage_curve (a list of date and planned-percentage pairs, entered once from the contract programme — there is no scheduling engine)** · turnover_date · generation_monitoring_source · generation_monitoring_access.
 
+**Project status transitions:** `setup` → `active` requires the signed contract document (hard block 6) · `active` → `suspended` is recorded with a reason and the party responsible · `suspended` → `active` · `active` → `turned_over` on the Turnover Document, gate 21 · `turned_over` → `closed` requires **both** retention released **and** defects liability expired · any → `cancelled` by a Director, with open commitments listed and resolved first.
+
 **There is no stored `phase` field and no project phase badge.** A single project routinely has design complete on some blocks, procurement running on others and construction under way on a third set. **Stage is computed on read from block states and displayed as a distribution, never a single word.** It is the first thing that looks missing and the first thing that becomes wrong.
 
 **`contract`** — contract_id · project_id · **signed_document (the signed copy — not a tick-box, not a draft, not an unsigned final)** · contract_value · currency · date_signed · client_signatory · payment_terms_days · retention_percentage · retention_reference_date_basis · retention_release_months · **counsel_review_state (`reviewed`/`proceeded_without_review`/`pending`)** · related_party · superseded_by.
@@ -563,7 +565,7 @@ Seed: Laguna (Luzon, Jay) · Sorsogon (Bicol, Bernie) · Dumaguete (Visayas, Pau
 
 **`stock_position`** — item_id · location_id · quantity_on_hand · **quantity_in_transit** · quantity_quarantined · valuation_basis.
 
-**`transmittal`** — transmittal_number · job_order_number · **from_location · to_location** · purpose · system_reference_number · date · time_of_release · line items (quantity, unit, item description with brand, size, colour, capacity) · **prepared_by · confirmed_by · received_by (each a signature and date)** · state (`draft`/`awaiting_approval`/`issued`/`in_transit`/`received`/`received_short`/`cancelled`).
+**`transmittal`** — transmittal_number · job_order_number · **from_location · to_location** · purpose · system_reference_number · date · time_of_release · line items (quantity, unit, item description with brand, size, colour, capacity) · **prepared_by · confirmed_by · received_by (each a signature and date)** · state (`draft`/`awaiting_approval`/`issued`/`in_transit`/`received`/`received_short`/`cancelled`). A transmittal may be cancelled only before `issued`, by the approver, with a reason. `received_short` raises a stock adjustment and gate 26. **A transmittal with no state is the leak this module exists to close** — stock that has left one place and not arrived anywhere is only visible if the record has somewhere to sit between the two.
 
 This is the digitised form MRTC-PROC-F003, field for field. **The digitised form becomes the controlled version and the paper form is superseded** — otherwise Magnus holds two live versions of the same form, both claiming to be current.
 
@@ -620,6 +622,8 @@ This is the digitised form MRTC-PROC-F003, field for field. **The digitised form
 **Scheduling awareness shows approved leave and assignment overlap when a deployment is planned. It never shows the reason for leave, any medical information, or any presence, location or activity data — at any permission level.**
 
 **Bench depth:** any capability held by fewer than two people, where that capability sits on a project critical path, is flagged continuously. Three such capabilities exist; one is confirmed — **only one person can programme the battery energy storage systems.** This is a single point of failure no organisation chart shows, **the mitigation costs shadowing time rather than a salary, and it is a live exposure now rather than a platform feature.**
+
+**Permissions on this module:** Project Manager — sees own projects and the available pool, requests, does not allocate, rates per money visibility · Department head — own department, requests and allocates, sees rates · Chief Operating Officer — all, requests and allocates, sees rates · Person In Charge — **own site only**, requests, does not allocate, **no rates** · Human Resource — all people, neither requests nor allocates, sees rates. **No role sees a person's leave reason, medical information or presence data through this module.**
 
 **Deployment records carry a regularization exposure under Philippine labour law.** A long continuous deployment record for a person engaged as a site worker is evidence in a regularization question. **The platform records the truth; counsel decides the retention period.**
 
@@ -1134,6 +1138,7 @@ This is not an add-on. **It is how the platform is operated, monitored and confi
 - Every call is tenant-scoped by the same database row-level policies that scope the interface.
 - **Scope at the query layer, never by filtering an answer after computation.** An answer filtered after the fact has already read the data. An assistant answering *what is our margin on the Del Monte project* for a person with `money_visibility` of `none` has defeated every permission in one sentence — **and nobody would know, because the answer looks helpful.**
 - **It refuses rather than estimates.** Where the data does not support an answer, it says so.
+- **Every figure returned cites the records it came from.** An answer with no source records is not an answer the platform gives.
 - Every call is written to the audit log with `arrival_channel` of `model_context_protocol` — who, when, what was read or written.
 
 ## 12.2 Read tools
@@ -1183,7 +1188,7 @@ Not through the Model Context Protocol, not through the screens, not through the
 
 Every screen is a view of section 8. Keep the interface thin.
 
-**Foundation:** sign-in (identity provider redirect only) · notification inbox (complete, unranked, uncapped, four categories) · global search · **My Approvals** — one list, every gate, sorted by age, each row showing what, which gate, the value or condition that triggered it, who raised it and how long it has waited · **approval detail — the object being approved, in full. The approver must be able to see what they are approving without navigating away, or they will approve without reading** · Today (the Person In Charge landing screen) · My Day (tasks).
+**Foundation:** sign-in (identity provider redirect only) · notification inbox (complete, unranked, uncapped, four categories) · global search · **My Approvals** — one list, every gate, sorted by age, each row showing what, which gate, the value or condition that triggered it, who raised it, how long it has waited and the recorded window for the gate · **approval detail — the object being approved, in full. The approver must be able to see what they are approving without navigating away, or they will approve without reading** · Today (the Person In Charge landing screen) · My Day (tasks).
 
 **Pipeline:** accounts, sites and contacts · opportunity list and record · site assessment capture · proposal builder and version history.
 
@@ -1554,13 +1559,15 @@ Every screen is a view of section 8. Keep the interface thin.
 
 **Every one of these is a deliberate simplification made to remove automation from the platform. Each is listed with what is lost, so it can be reviewed rather than discovered.**
 
+**Automation will be layered onto this platform before deployment, by agents and possibly by a scheduler added later. Every deviation below must therefore be reversible without a schema change:** keep `window_working_days`, `passed_down_at`, `original_approver`, the `awaiting_alternate` and `escalated` states, the stored retention and statutory deadline dates, and the recurring-obligation cadence definitions **exactly as specified**, even though nothing in this build acts on them. Removing a field because nothing reads it yet would make the later automation a migration instead of an addition.
+
 **D1 · Approval windows no longer act.** The source specification passes authority to the alternate automatically when a window elapses. Here the window is stored and displayed but nothing fires. **Lost:** automatic pass-down, and the pass-down-rate report as a live signal. **Replaced by:** an agent reading pending approvals with their age against the recorded window. **Gate 29's age-escalation and gate 10's `proceeded_without_review` both become explicit human or agent actions rather than transitions the platform makes.**
 
 **D2 · No nightly pass.** The source specification recomputes every exception at 23:00, ages open items, fires escalations and raises scheduled obligations, then delivers a directors' report at 06:00. **Lost:** the 06:00 report and the structural guarantee that a check ran overnight. **Replaced by:** on-demand queries that each return their own evaluation timestamp and rule count, which preserves the *silence means checked* requirement at the moment of asking.
 
 **D3 · No exception ranking or twelve-item cap.** The source specification ranks by consequence, then irreversibility, then age, and caps at twelve. **Lost:** a deterministic, auditable ordering. **Replaced by:** agents ranking from the same underlying facts. The four required contents of every exception — what, who, how long, so what — are retained on every row.
 
-**D4 · Retention and progress-claim invoices are not raised automatically.** The source specification raises the retention invoice on its date with no human action and calls this the structural fix for the most forgettable receivable in the business. **This is the highest-value automation being removed.** The date is computed and stored at turnover; **an agent must read it. If no agent runs, the retention leak reopens. Decide explicitly whether you accept this.**
+**D4 · Retention and progress-claim invoices are not raised automatically.** The source specification raises the retention invoice on its date with no human action and calls this the structural fix for the most forgettable receivable in the business. **This is the highest-value automation being removed.** The date is computed and stored at turnover; **an agent must read it. If no agent runs, the retention leak reopens.** Accepted by the Chief Executive Officer on the basis that automation is layered on before deployment; the stored date is what makes that possible.
 
 **D5 · Non-Conformance Reports are not raised automatically on a damaged, wrong or short delivery.** Quarantine still happens in the same transaction and hard block 5 still holds. Only the report creation moves to a person or an agent.
 
@@ -1614,10 +1621,27 @@ Multi-tenant schema with `tenant_id` on every table from the first migration · 
 
 **One registry for every fact that appears more than once** — gates, hard blocks, constants, thresholds. Change it there; never restate it. **Write a script that checks the seed data and every rule number in a test against the registry. Nothing merges until it returns clean. Nothing is recorded as done until a later check confirms it — not because the person who did it said so.**
 
-**Three things are open and none is a developer's to solve:**
+**Sixteen items are open at the time of writing. Three block building; the rest block nothing. None is a developer's to solve, and the item numbers are the ones used throughout the source data room.**
 
-1. **The safety checklist content and the safety manual `MRTC-OSH-GDL-00 Rev 00`, both owned by Alma Codog.** Blocking for the inspection items, the thirteen indicators, the seven permit-to-work steps and the eighteen investigation points. Build the structure; leave the slots empty.
-2. **The accounting platform maintainer, not yet named.** The export format is an input to the finance module. Do not design around a guess.
-3. **Retention periods, cryptographic erasure sufficiency, and several statutory questions, pending counsel.** Leave them `[CONFIGURED]`.
+| # | Open | Owner | Blocks |
+|---|---|---|---|
+| **1** | **Safety checklist content — daily walk, weekly checklist, monthly audit** | **Alma Codog** | **Section 8.11 inspections. Build the structure; leave the slots empty** |
+| **2** | **Accounting platform maintainer — who maintains it, and their availability** | **To be named** | **Section 8.15. Do not design the export format around a guess** |
+| 3 | Primary Administration Console holder | Chief Executive Officer to name | — |
+| 4 | Opening stock count dates for Laguna, Sorsogon and Dumaguete | Jay, Bernie, Paul | — |
+| 5 | Pilot project, its Person In Charge and project manager | Chief Executive Officer | — |
+| 6 | Cristy's document migration date, and help | Chief Executive Officer | — |
+| 7 | **The counsel list, canonical:** retention periods · cryptographic erasure sufficiency · Labor Code Article 105 · probationary and regularization requirements · payroll deduction authorisation · aggregation exposure · subcontractor insurance clause · related-party documentation · fatigue tracking · thirteenth-month pay, statutory leave and Social Security System, PhilHealth and Pag-IBIG obligations · the eight-family contract playbook · suspension entitlement · Department of Labor and Employment inspection records · National Privacy Commission registration position | Atty. Caneja | Leave every affected value `[CONFIGURED]` |
+| 8 | Subcontractor insurance exclusions; commercial general liability renewal | Insurance broker | — |
+| 9 | Data allowance cover for Persons In Charge | Chief Executive Officer | — |
+| 10 | Developer seats — one or two | Waits on the builder | — |
+| 11 | Retention policy split — which classes beyond the six permanent ones are kept, and for how long | Atty. Caneja | — |
+| 12 | Whether the accounting platform is registered as a Computerized Accounting System with the Bureau of Internal Revenue | To be confirmed | — |
+| 13 | The controlled weather selection list — exact values | Safety Officer with the Persons In Charge | — |
+| 14 | Whether any project uses a daily report format other than the standard one | Project Managers | — |
+| 15 | Starting expected permit durations per local government unit, and whether the safety programme is submitted online in each region | Jeferson, Austin | — |
+| **16** | **The safety manual `MRTC-OSH-GDL-00 Rev 00` itself** — it names the thirteen indicators, the seven permit-to-work steps and the eighteen investigation points | **Alma Codog** | **Section 8.11 — permits to work, incident investigation, indicators** |
+
+**Eight things that are not software and do not wait for it**, recorded because cutover is when they get forgotten: renew the commercial general liability cover — **no company-wide cover since 28 February 2026, against ₱43.5 million of equity, the most urgent item in this entire exercise** · check retention billing on every project turned over in the last eighteen months · restate every model built on 1,400 kilowatt-hours per kilowatt-peak · verify subcontractor insurance by reading the exclusions · start the payroll acknowledgement sheet this week, on paper · train a second person on battery energy storage programming · send the builder's questions · tell the investor that four approved objectives are a later phase.
 
 **Where this instruction is silent, ask. Do not decide. Every question is cheaper than every assumption.**
