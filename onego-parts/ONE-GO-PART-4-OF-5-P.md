@@ -1,6 +1,6 @@
-# CONFORMANCE BUILD INSTRUCTION — CONTINUATION 3 OF 4
+# CONFORMANCE BUILD INSTRUCTION — CONTINUATION 4 OF 5
 
-This continues the same message.
+This continues the same message. 
 
 ---
 # PART P — THE PROTOCOL: SCOPES, DECIDE, MIGRATE (Milestone 8)

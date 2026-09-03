@@ -1,6 +1,6 @@
-# CONFORMANCE BUILD INSTRUCTION — CONTINUATION 4 OF 4
+# CONFORMANCE BUILD INSTRUCTION — CONTINUATION 5 OF 5
 
-This continues and completes the same message. Part H is the milestone order for the whole instruction, all four continuations included. Deliverable 0 covers every requirement number in all four.
+This continues the same message. It completes the instruction. Part H is the milestone order for the whole instruction, all five pieces included. Deliverable 0 covers every requirement number in all five.
 
 ---
 # PART I — INTERFACE, LABELS AND USABILITY (Milestone 9)
