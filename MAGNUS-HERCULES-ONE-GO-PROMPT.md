@@ -783,7 +783,22 @@ Add `scope`, `expires_at` and `created_by` to the session record and the tab. Sh
 
 ## I1 · Theme
 
-**I1.1** Light theme by default: white cards on a light neutral ground, dark grey text, one accent colour used for primary actions, active navigation, links and focus. The accent is the Magnus orange **[ORANGE HEX]** from the logo, with a darker shade for hover and text on light ground that meets a contrast ratio of at least 4.5 to 1. Blue is not used as an accent anywhere. Refusals and hard block messages use a red that is distinct from the accent; warnings amber; success green; none of the three is the accent.
+**I1.1** Light theme by default: white cards on a light neutral ground, dark grey text, one accent colour used for primary actions, active navigation, links and focus. The accent is the Magnus orange from the logo flame. Use these values as design tokens, never as literals scattered through components:
+
+| Token | Value | Use |
+|---|---|---|
+| accent | #F06818 | primary buttons, active navigation, selected tabs, progress; white text on it only at 18 point or larger, or bold 14 point |
+| accent-hover | #D45410 | hover and pressed state |
+| accent-text | #C24A0C | links and accent-coloured text on white or light ground (contrast 4.9 to 1) |
+| accent-amber | #F8A828 | highlights, badges and charts only, never text |
+| accent-tint | #FFF1E8 | selected rows, active sidebar background, notification chips |
+| ground | #F5F6F7 | page background |
+| surface | #FFFFFF | cards, dialogs, sidebar |
+| text | #1F2937 | body text |
+| text-muted | #6B7280 | secondary text |
+| border | #E5E7EB | dividers and card edges |
+
+The logo keeps its own blue and orange. Blue is not used as an accent anywhere else, and the logo image is the one from the Magnus letterhead. Refusals and hard block messages use a red that is distinct from the accent; warnings amber; success green; none of the three is the accent.
 
 **I1.2** The field screens, site report, toolbox meeting, safety forms and the emergency card, are tested in direct sunlight on a phone: larger type, higher contrast, and a high-contrast switch on the person's profile that applies only to that person.
 
