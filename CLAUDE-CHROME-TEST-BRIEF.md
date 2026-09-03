@@ -3,7 +3,7 @@
 You are testing a newly built operations platform on behalf of its owner, Karl Ivan Estadola, Chief Executive Officer of Magnus Renewable Tech Corp. The platform is open in the current tab, signed in as Karl, who is a console holder with every permission. Your job is to **populate it with the data below, exercise every module end to end, and report exactly what works, what fails, what is missing and what is untestable** — so the builder can be given a precise list of fixes.
 
 **Platform:** https://magnus-solar-workspace-platform-446354.onhercules.app/
-**Second account for this test:** `[PROJECT MANAGER EMAIL]` — a Project Manager login Karl has created. You will sign in as this person for the steps that say so. If no second account was provided, do those steps as Karl, expect refusals, and record them as *blocked — needs second account*.
+**Second account for this test:** `kidron.magnus@gmail.com` (person record: Kidron Magnus, Project Manager). This account is signed in on a **different browser that you cannot reach**. Never sign Karl out. For any step marked *as the Project Manager*, stop, tell Karl exactly what to do in the other browser (which screen, which button, which record), and wait for Karl to say it is done before you continue. If Karl is not available, do the step as Karl, expect refusals, and record it as *blocked — needs second account*. Before Phase 3, check Administration for the Project Manager account: it must be assigned to the Magnus tenant with the Project Manager role and linked to the Kidron Magnus person record. If it shows as pending, ask Karl to complete the assignment first.
 
 ---
 
@@ -51,15 +51,15 @@ Create these under whatever screen holds parties, clients or suppliers. `party_t
 
 | # | Legal name | Type | Province · Local government unit | Related party |
 |---|---|---|---|---|
-| C1 | `[CUSTOMER 1]` | client | Laguna · Calamba | no |
-| C2 | `[CUSTOMER 2]` | client, asset_owner | Batangas · Lipa | no |
-| C3 | `[CUSTOMER 3]` | client | Sorsogon · Sorsogon City | no |
-| C4 | `[CUSTOMER 4]` | client, offtaker | Negros Oriental · Dumaguete | no |
-| C5 | `[CUSTOMER 5]` | client | Cavite · Dasmariñas | no |
-| C6 | `[CUSTOMER 6]` | client | Albay · Legazpi | no |
-| C7 | `[CUSTOMER 7]` | client | Cebu · Mandaue | no |
-| C8 | `[CUSTOMER 8]` | client | Laguna · Santa Rosa | no |
-| C9 | `[CUSTOMER 9]` | client | Camarines Sur · Naga | no |
+| C1 | `Calamba Agro Industrial Corporation` | client | Laguna · Calamba | no |
+| C2 | `Lipa Cold Storage and Logistics Inc.` | client, asset_owner | Batangas · Lipa | no |
+| C3 | `Sorsogon Provincial Hospital Foundation` | client | Sorsogon · Sorsogon City | no |
+| C4 | `Dumaguete Bay Resort and Convention Center` | client, offtaker | Negros Oriental · Dumaguete | no |
+| C5 | `Dasmariñas Plastics Manufacturing Corporation` | client | Cavite · Dasmariñas | no |
+| C6 | `Legazpi Ice Plant and Fisheries Cooperative` | client | Albay · Legazpi | no |
+| C7 | `Mandaue Furniture Exports Inc.` | client | Cebu · Mandaue | no |
+| C8 | `Santa Rosa Motor Assembly Corporation` | client | Laguna · Santa Rosa | no |
+| C9 | `Naga City Commercial Mall Holdings Inc.` | client | Camarines Sur · Naga | no |
 | C10 | Magnus Energy Corp | client, asset_owner | Laguna · Biñan | **yes** |
 
 **Three suppliers and two subcontractors:**
@@ -96,7 +96,7 @@ Create these person records. None of them signs in yet except the Project Manage
 | Roberto Santos | office | Head of Finance | no |
 | Melanie Cruz | office | Procurement Head | no |
 | Diego Fernandez | office | Director | no |
-| **`[PROJECT MANAGER NAME]`** | office | **Project Manager** | **yes — the second account** |
+| **`Kidron Magnus`** | office | **Project Manager** | **yes — the second account** |
 | Mario Bautista | field | Person In Charge | no |
 | Six crew members: Ramon Aquino, Jun Mendoza, Erwin Castillo, Noel Garcia, Rey Salazar, Tonyo Villar | field | none — crew | **no** |
 
@@ -141,7 +141,7 @@ Record the pipeline views: by stage, by region, weighted value. Note any abbrevi
 
 ---
 
-## Phase 3 — Project and Contract (sign in as the Project Manager for the raise steps)
+## Phase 3 — Project and Contract (the raise steps are done by the Project Manager in the other browser)
 
 For **P1 to P5**, as the Project Manager:
 
@@ -153,7 +153,7 @@ For **P1 to P5**, as the Project Manager:
 6. **Project parties:** on P2 (lease) add the customer as client, host and offtaker, and Nordwind as nothing — confirm one party can hold several roles.
 7. **Permit dependency:** P3 and P4 = **permit required before mobilisation**, expected 90 working days. P1, P2, P5 = not required.
 8. **Counsel review, gate 10:** on P1 record that Atty. Caneja reviewed it. On P2 record *proceeded without review*. Confirm the two are stored as different outcomes, and that a query or list shows "contracts signed without counsel review" containing P2.
-9. **Contract signature, gate 9:** as the Project Manager, request signature on each. Sign out, sign in as Karl, approve. Record whether gate 9 is shown with **no alternate**. Then, as Karl, **request signature on P5 yourself and try to approve it yourself** — expect refusal.
+9. **Contract signature, gate 9:** ask Karl to request signature on each from the Project Manager browser. Then, as Karl in your browser, approve. Record whether gate 9 is shown with **no alternate**. Then, as Karl, **request signature on P5 yourself and try to approve it yourself** — expect refusal.
 10. Move P1 to P4 to active. **Insurance, hard block 1:** on P1 (above ₱2,000,000) try to mobilise with no insurance certificate. Must refuse. Attach a certificate document (any PDF), then mobilise. On **P5** (below the threshold) mobilise without one — must be allowed.
 11. **Variation order:** on P1 raise a variation of +₱1,200,000 affecting blocks B1 and B3. Expect gate 8. Approve. Mark it accepted by the client. Record whether contract value changed and whether the original contract is intact.
 12. **Turnover date:** do not enter one yet.
@@ -215,7 +215,7 @@ Do this as the Project Manager where possible, and note anything only a Person I
 
 **Tasks (My Day):** create a task with no output type — must refuse. Create four tasks with different output types. Mark a fifth as priority when you already hold three priority items — must refuse. Move a task's date three times — record whether the original committed date is still shown and the recommit count reads 3. Put a task into blocked with no named blocker — must refuse. Look for any **hours or duration field** — there must be none. Check the load indicator is a **band**, not a number.
 
-**Messages:** open P1 and post a message on the project thread, then on the B1 block thread, then on the SolarTech purchase order thread. Post one message mentioning the Project Manager. Sign in as the Project Manager: **exactly one** notification, category Response, opening the object. Post ten messages mentioning nobody — nobody should be notified. Look for any mute, watch or subscribe control — there must be none. Try to edit or delete a message — must refuse; hide should exist for an administrator. Attach a photograph on the block thread — the platform should offer to attach it to today's site report instead.
+**Messages:** open P1 and post a message on the project thread, then on the B1 block thread, then on the SolarTech purchase order thread. Post one message mentioning the Project Manager. Ask Karl to check the Project Manager browser: **exactly one** notification, category Response, opening the object. Record what Karl reports. Post ten messages mentioning nobody — nobody should be notified. Look for any mute, watch or subscribe control — there must be none. Try to edit or delete a message — must refuse; hide should exist for an administrator. Attach a photograph on the block thread — the platform should offer to attach it to today's site report instead.
 
 **Documents:** upload a drawing for P1, revision 1, classify it `controlled`, set it in force. Upload revision 2 and set it in force — revision 1 must show as superseded and link to revision 2. Upload a document and **leave it unclassified** — it must be viewable but **refuse to be attached to a work instruction**. Check the required-document register for P1 lists the signed contract and insurance certificate as satisfied.
 
@@ -236,7 +236,7 @@ Do this as the Project Manager where possible, and note anything only a Person I
 1. **Notification panel:** open it. Create an Information-category item if you can — the badge must not count it. Open a Task-category item and navigate away without doing it — the badge must not change.
 2. **Search:** as the Project Manager, search for a project they are not assigned to. It must **not appear at all**.
 3. **Deep links:** copy the URL of P1's B1 block and the SolarTech purchase order. Paste each into a new tab — it must open the exact record.
-4. **Money visibility:** if a Person In Charge account exists, sign in as it and open P1's material list. No cost figure anywhere, including exports. If not, record *untestable in phase 1*.
+4. **Money visibility:** if a Person In Charge account exists in another browser, ask Karl to open P1's material list. No cost figure anywhere, including exports. If not, record *untestable in phase 1*.
 5. **Nothing runs unattended:** note the time. Open the audit log, find the last entry, and record its timestamp. Return after your final step and confirm no entry was written by anything other than you or the Project Manager.
 6. **Abbreviation sweep:** list every abbreviation you noted, with its screen.
 
