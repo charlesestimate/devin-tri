@@ -35,7 +35,7 @@ Nothing in Parts M, X, C or P is safe to build until Part F exists, because ever
 
 **F2.3** Assigning a role to a person raises gate 24 (department head primary, Chief Operating Officer alternate). Gate 24 in the current build is named "Employment Offer"; rename and re-point it. Offers are part of module 17 and carry no gate of their own.
 
-**F2.4** Console holders: exactly two. Fill the second seat with **[SECOND CONSOLE HOLDER]**. Adding a third refuses. Gate 32 alternate is the second holder. Add the Tenants screen showing the tenant record and its identity provider setting.
+**F2.4** Console holders: exactly two. The second seat is filled by Karl from the Console Holders screen once he names the person; build the control, leave the seat empty, and show the rule text "exactly two" with the seat marked as awaiting appointment. Adding a third refuses. Gate 32 alternate is the second holder. Add the Tenants screen showing the tenant record and its identity provider setting.
 
 ## F3 · Gates as rows with a role check, and the universal self-approval refusal (original section 6)
 
@@ -558,7 +558,7 @@ Add to the protocol's read scope: `get_account_activity(account_id, from, to)` r
 
 ## B1 · Connection
 
-In Administration, under Integrations, a console holder connects one Google account by OAuth. **It is a dedicated Google account owned by Magnus for this purpose, not a person's own account: [DRIVE ACCOUNT EMAIL].** Request only the scope that limits access to files the application created. The connection stores the refresh token encrypted, the account's email, the root folder identifier, when it was connected and by whom. Disconnecting is logged and does not delete anything in Drive. The connection state, quota used and the count of files pending upload are shown on the same screen.
+In Administration, under Integrations, a console holder connects one Google account by OAuth. **It is a dedicated Google account owned by Magnus for this purpose, not a person's own account. Karl connects it from the Integrations screen once the account exists; build the connection so that until it is connected, files stay `staged` in platform storage and the Integrations screen says so.** Request only the scope that limits access to files the application created. The connection stores the refresh token encrypted, the account's email, the root folder identifier, when it was connected and by whom. Disconnecting is logged and does not delete anything in Drive. The connection state, quota used and the count of files pending upload are shown on the same screen.
 
 ## B2 · The `file` record
 
