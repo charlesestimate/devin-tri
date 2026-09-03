@@ -8,7 +8,7 @@ This is one message. It replaces every follow-up prompt sent before it and it is
 
 **Reading discipline.** Before writing any code, produce **Deliverable 0: the conformance checklist** — one row per numbered requirement in this message (every line marked with a requirement number such as F1.3 or M4.2) with the columns: requirement · exists / deviates / missing · what will change. Post it in full. Then build in the milestone order in Part H, and after each milestone post the checklist rows for that milestone updated to done, plus the results of the acceptance tests named for it. Do not skip ahead, do not reorder, and do not stop to wait for a reply between milestones.
 
-**The five rules that hold everywhere, unchanged from the original instruction:** no scheduler, timer or cron anywhere in the platform · nothing acts by itself; every write is a person's act or a same-transaction derivation · every database access goes through the tenant wrapper · the audit log is append-only and hash-chained · no abbreviation on any label, including the ampersand.
+**The five rules that hold everywhere, unchanged from the original instruction:** no scheduler, timer or cron anywhere in the platform · nothing acts by itself; every write is a person's act or a same-transaction derivation · every database access goes through the tenant wrapper · the audit log is append-only and hash-chained · no abbreviation on any label, including the ampersand. The thirteen deviations in section 16 of the original instruction stand: nothing passes down, escalates, ranks, invoices, raises or chases by itself, and Google Workspace sign-in stays deferred behind the identity link.
 
 **Screens under test.** Staff will test on phones and at the warehouse after this build. Nothing in this message is optional because of that.
 
@@ -37,6 +37,8 @@ Nothing in Parts M, X, C or P is safe to build until Part F exists, because ever
 
 **F2.4** Console holders: exactly two. The second seat is filled by Karl from the Console Holders screen once he names the person; build the control, leave the seat empty, and show the rule text "exactly two" with the seat marked as awaiting appointment. Adding a third refuses. Gate 32 alternate is the second holder. Add the Tenants screen showing the tenant record and its identity provider setting.
 
+**F2.5** Every person sees, on their own profile, the agent sessions acting under their name with scope, expiry and a revoke control; console holders see every session in the tenant on the Agent Sessions tab.
+
 ## F3 · Gates as rows with a role check, and the universal self-approval refusal (original section 6)
 
 **F3.1** Replace the gate rows with the thirty rows of section 6 exactly: numbers 1 to 12, 18 to 24, 25a, 25b, 26 to 34; the exact gate names, triggers, primary and alternate as written there; windows recorded and displayed, never enforced. Gate 34 is the warranty claim submission from section 8.23. The current names on gates 5, 6, 7, 11, 20, 24 and 25a differ and are corrected.
@@ -53,7 +55,7 @@ Nothing in Parts M, X, C or P is safe to build until Part F exists, because ever
 
 **F3.7** My Approvals: one list, every gate, sorted by age, each row showing what, which gate, the triggering value or condition, who raised it, how long it has waited and the recorded window. Approval detail shows the object, not a summary of it. Board pack and exception counts read from this same query, so "Pending Approvals 0" with nine pending cannot recur.
 
-**F3.8** Statutory rate tables are **not gate 32**. They are dual control under section 6.2: the second person is any other person holding Head of Finance or Human Resource Head, never the author. Rename the current flow.
+**F3.8** Statutory rate tables are **not gate 32**. They are dual control under section 6.2: a person holding Human Resource Head or Payroll Officer enters the rate with its effective date; a person holding Head of Finance approves it; the two are never the same person; an unapproved rate sits pending and never reaches a payroll run; both identities and both timestamps enter the audit log. Rename the current flow.
 
 **F3.9** Every approval, rejection and gate attempt writes an audit entry carrying the actor's name, the gate, the object and the outcome. Audit entries currently carry no actor name; add it to every entry, past and future, where the identity is stored.
 
@@ -104,6 +106,10 @@ Nothing in Parts M, X, C or P is safe to build until Part F exists, because ever
 
 **F6.8** The audit chain panel shows the true last sequence number and the exact range verified.
 
+**F6.10** The tenant wrapper's exempt list is the wrapper itself and true pre-tenant bootstrap only: `tenantDb.ts`, `tenantEnforcement.ts`, `crypto.ts`, and the identity-link and tenant-creation paths in `users.ts` and `tenants.ts`. `notifications.ts`, `seed.ts` and anything else are removed from it. The build-failing tests for a raw `ctx.db` outside the wrapper and for any scheduler call stay in place and pass.
+
+**F6.11** No record that has ever been referenced by another record has a delete control. Parties, accounts, contacts, persons, roles, documents and every business record are archived, voided, withdrawn or superseded, with the reason logged. The red delete icon on a contact is removed. Only an unsaved draft may be discarded.
+
 **F6.9** No Magnus literal in code: search for ₱2,000,000, ₱100,000, 1,277, 7, 6.70, 115, 130, 50,000 and the brand names. Move every one into configuration.
 
 ## F7 · Milestone 1 exit
@@ -119,7 +125,7 @@ Each item states what the test found and what section 8 requires. "Replace" mean
 
 **M1.1** Replace the single-select account type with the `party` model of section 8.4: legal_name, multi-valued party_type (client / asset_owner / offtaker / subcontractor / supplier / consultant / operations_and_maintenance_provider / other), taxpayer_identification_number, address, is_related_party, accreditation_state, insurance_certificate file, insurance_expiry, insurance_exclusions as a field, bank_account_details with the existing confirmation control, categories_supplied, currency. `account`, `site` and `contact` stay as section 8.3, with `site` carrying province, region derived from province, local_government_unit, distribution_utility from a controlled list (Meralco and the electric cooperatives, extendable under configuration), host_party, and the emergency card fields.
 
-**M1.2** Add to `opportunity`: commercial_model (sale / power purchase / lease / operations and maintenance only), capacity_kilowatt_peak, estimated_value. The lost reason is required at any value; the ₱10,000,000 rule of section 8.3 requires a reason from the controlled list rather than free text above that value. Declining a proposal requires a reason. The under-negotiation transition changes the stage; the toast without a change is a defect.
+**M1.2** Add to `opportunity`: commercial_model (sale / power purchase / lease / operations and maintenance only), capacity_kilowatt_peak, estimated_value. Loss reason is chosen from the controlled list of section 8.3: price · timeline · technical · relationship or incumbent · client did not proceed at all · financing; it is required above ₱10,000,000 and optional below; *client did not proceed* is reported separately from *lost to a competitor*. Declining a proposal requires a reason. The under-negotiation transition changes the stage; the toast without a change is a defect.
 
 **M1.3** Site assessment carries structural_confidence, usable_area, tapping_point and the proceed / proceed_with_conditions / do_not_proceed outcome, and the badge shows the stored outcome.
 
@@ -184,6 +190,8 @@ Each item states what the test found and what section 8 requires. "Replace" mean
 **M5.4** Non-conformance report with source, block, goods receipt where delivery, photograph required, ageing, and closure under gate 19 with evidence as a file.
 
 **M5.5** Turnover Document under gate 21 sets the turnover date (M2.7).
+
+**M5.6** Offline, section 9 of the original instruction, applies to the site report, toolbox meeting, activities, photographs, messages and work order transitions: the progressive web application holds its own queue in IndexedDB with device-generated idempotency keys; field users create records offline and never edit shared records offline; no approval is ever given offline; every offline record carries its device time and its server receipt time; the queue is visible; the emergency card works with no signal; the cache becomes unreadable on sign-out. Tests 169 to 172 of section 14 are the exit for this item.
 
 ## M6 · Permits (section 8.8) — Milestone 4
 
@@ -523,7 +531,7 @@ The conversation pane shows messages newest at the bottom, the composer, attachm
 
 **What it shows.** Its own messages, plus every record thread under the account rolled up in one view: the opportunities and proposals in Pipeline, the site assessment, the design package and its deliverables, the project, its blocks, site reports, permits, purchase orders, non-conformance reports, variation orders, progress claims, and after turnover the service agreements, serviced assets and work orders on that account's sites. Each rolled-up message shows which record it was posted on and opens that record. **A message posted from the account space view onto a record thread is stored on that record thread**, not on the space; the composer shows which thread it will post to, and the default when nothing is selected is the space itself.
 
-**Membership is automatic and logged.** A person joins the account space when assigned to anything under the account: sales owner on the opportunity, Director on the project, Project Manager, design engineer on a deliverable, Person In Charge on a site report, procurement officer on a purchase order, assigned owner on a work order. A person leaves the space when no assignment under the account remains, except Directors and console holders, who remain. A person may also be invited by a current member, logged, and removed by the inviter or a Director, logged. Membership changes never delete history.
+**Membership is automatic and logged.** A person joins the account space when assigned to anything under the account: sales owner on the opportunity, Director on the project, Project Manager, design engineer on a deliverable, Person In Charge on a site report, procurement officer on a purchase order, assigned owner on a work order. A person leaves the space when no assignment under the account remains, except Directors, who remain. Console holders are not members by virtue of the seat. A person may also be invited by a current member, logged, and removed by the inviter or a Director, logged. Membership changes never delete history.
 
 **Record scope still governs.** A person who may not see the project's money sees the messages but not the figures the record carries; the roll-up shows message text, never a monetary field.
 
@@ -673,7 +681,7 @@ Every agent session carries exactly one scope, fixed at creation, stored on the 
 | `decide` | Submit an approval decision on any pending request where the person is primary or alternate; every configuration tool in section 12.4 under its gate; hard block **values** under gate 31 | Gate 32 and console holder changes; a statutory rate change without the second person's screen confirmation; gates 18, 28, 29 and 30 unless the person is the officer of record; self-approval; the existence of any hard block | Console holders only; the second console holder receives a notification on creation | 12 hours |
 | `migrate` | The import tools in section C only | Anything else | Console holders only; second console holder notified | The cutover date recorded in Administration; after that date the scope cannot be created |
 
-Rules that apply to all scopes: the session acts as the person and no more, section 12.1 · a scope grants nothing the person lacks on screen · self-approval is refused across sessions, since two tokens held by one person are one person · every call is logged with `arrival_channel = model_context_protocol`, the session identifier and the scope · an expired or revoked token is refused on the next call with the reason.
+There is no fifth scope. No session, however created, carries authority the person lacks on screen, skips a gate, or approves its own request; a break-glass or bypass scope is not built. Rules that apply to all scopes: the session acts as the person and no more, section 12.1 · a scope grants nothing the person lacks on screen · self-approval is refused across sessions, since two tokens held by one person are one person · every call is logged with `arrival_channel = model_context_protocol`, the session identifier and the scope · an expired or revoked token is refused on the next call with the reason.
 
 ## B2 · Read tools
 
@@ -885,7 +893,7 @@ The logo keeps its own blue and orange. Blue is not used as an accent anywhere e
 | 1 | Part F, with Part C section B (Google Drive) built inside it | Section 14 tests 1 to 30; 259 to 276 |
 | 2 | M1, M2 | Section 14 pipeline and project tests; 277 to 280 |
 | 3 | M3, M4 | Section 14 design and procurement tests; 281 |
-| 4 | M5, M6, M7 | Section 14 site, permit and inventory tests; 282 to 285 |
+| 4 | M5, M6, M7 | Section 14 site, permit, inventory and offline tests, including 169 to 172; 282 to 285 |
 | 5 | M8 to M14 | Section 14 remaining module tests; 286 to 289 |
 | 6 | Part X, Operations and Maintenance | 190 to 214 |
 | 7 | Part C section A, Communication | 237 to 251; 252 to 258 if not already passed in milestone 1 |
