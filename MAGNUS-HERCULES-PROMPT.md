@@ -209,7 +209,7 @@ Purchase orders committing 50% or more of a block budget · Director approval tu
 
 # 7. IDENTITY, ROLES AND ACCESS
 
-**The platform stores no password, no credential, no reset flow and no recovery question.**
+**The platform stores no password, no credential, no reset flow and no recovery question.** *During the build phase this is deferred — section 16, deviation D13 — but the schema rule beneath it is not.*
 
 Build it as: **each tenant configures an identity provider, and the Magnus tenant's identity provider is Google Workspace.** Do not build it as: the platform uses Google. The second is simpler, passes every Phase A test, and requires a rebuild the day the first outside tenant arrives.
 
@@ -1850,6 +1850,8 @@ Every screen is a view of section 8. Keep the interface thin.
 **D11 · Recurring obligations are definitions, not instances.** A cadence is stored against the obligation; nothing instantiates the task. An agent does.
 
 **D12 · Weekly digests are queries, not deliveries.** The console change digest and the daily overdue digest are exposed as queries. An agent delivers them.
+
+**D13 · Google Workspace sign-in is deferred to the tuning phase — decided by the Chief Executive Officer on 3 September 2026, for speed.** During the build the tenant's identity provider is the builder's hosted sign-in, and email-and-password sign-in is tolerated. **What is not deferred:** the identity provider remains a property of the tenant, not of the platform; the only field anywhere that knows the provider's user identifier is the identity-link on the person record; every other table references `person_id` and never the provider's user id; a person with no role still has no access. Held to that, the later switch to Google Workspace is a re-link of one field per person. Broken, it is a rebuild. **Before production: switch the Magnus tenant to Google Workspace, domain-restricted, disable the password path, and confirm that disabling a Workspace account ends the platform session.**
 
 **Everything else in the source specification is implemented as written.** The six hard blocks and the five refusals · the twenty-eight gates as data · row-level tenant isolation · the hash-chained append-only log with cryptographic erasure · record scope and money visibility as independent axes · effective-dated system constants · the fixed block spine and derived completion · offline field capture with dual timestamps · the revision-in-force rule · the payroll statutory boundary and the Article 116 rule · non-retaliation · and every gaming guard, unchanged.
 
