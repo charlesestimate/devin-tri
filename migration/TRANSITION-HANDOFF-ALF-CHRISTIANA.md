@@ -1,7 +1,7 @@
 # Magnus Workspace Platform — Transition Handoff
 
 **From:** Karl Ivan Estadola, Chief Executive Officer
-**To:** Alf and Christiana, transition coordinators
+**To:** Alf (project and technical) and Christianah (people, business and process), transition coordinators
 **Date:** 4 September 2026
 **Report to:** Karl, through the platform itself, in the way section 7 describes
 **Questions:** post them in the General space on the platform, so the answer is on record once
@@ -19,6 +19,18 @@ It covers pipeline, projects, design, procurement, permits, inventory, manpower,
 The platform is being finished module by module. **What works today:** sign-in, people and roles, messaging (the General company space, group chats, direct messages, and a discussion thread on every project), file attachments in messages, and tasks. **What is still being rebuilt this week:** the operating modules — site reporting, procurement, finance, permits, inventory and payroll. **What comes after that:** loading the company's real records into the platform.
 
 Your job sits in that order: get people on, get them talking on the platform instead of Messenger, test what is live, collect what is broken, and prepare the records for loading. You are not expected to fix bugs or build anything — you find, record, coordinate and report.
+
+**Who owns what.** The work is split so nothing falls between you, and each part below is marked with its owner:
+
+| | Alf — project and technical | Christianah — people, business and process |
+|---|---|---|
+| Part one, access | Phone installation walkthroughs | Access list, sign-in grants tracking, first-message tracking |
+| Part two, Messenger | Create the spaces and groups on the platform; verify each move technically | Announcements, moving members, coaching the habits, freezing the old groups |
+| Part three, testing | Owns the whole test list and the Platform Bugs group | Runs the two-person tests with Alf (messages, notifications, groups) |
+| Part four, records | Project-side sheets: projects, contracts, blocks, bill of materials, purchase orders, permits, equipment, stock | People and business sheets: persons, roles, parties, accounts, sites, contacts, service agreements, billing milestones |
+| Reporting | Daily bug count and testing status | Daily access and Messenger-move status; both compile the weekly report together |
+
+Where something does not clearly belong to one of you, Alf takes it if it involves the platform's behaviour, Christianah if it involves a person or a department. Disagreements go to Karl once, in the Platform Bugs group, not back and forth.
 
 ## 2. What done means
 
@@ -106,4 +118,4 @@ Your role is coordinator, not typist:
 | 14 | All required documents in the Drive migration folder | | | |
 | 15 | Trackers handed to Karl | | | |
 
-Signed: Alf ______________ Christiana ______________ Date ______________
+Signed: Alf ______________ Christianah ______________ Date ______________
