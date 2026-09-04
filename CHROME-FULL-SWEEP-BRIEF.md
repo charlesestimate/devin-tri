@@ -1,6 +1,8 @@
 # Full platform sweep — for Claude in Chrome
 
-**Your job is to find and document defects. You are not here to fix anything.**
+**Your job is to find and document defects. You are not here to fix anything, and
+nobody is available to answer questions. Read the whole brief, then work through
+it from Phase 0 to the end without stopping.**
 
 Open every screen in the Magnus Workspace Platform, use every control on it, and
 write down what does not work. When you find a defect, record it and move on —
@@ -52,7 +54,7 @@ screen has three parts and only one of them is yours.
   Settings. None of it is part of the platform under test.
 
 If you are ever unsure whether a control belongs to Hercules or to the platform,
-do not click it. Ask.
+leave it alone and note that you skipped it. Do not ask — nobody is available.
 
 ### Two passes, desktop first
 
@@ -98,36 +100,98 @@ Only `same` is acceptable. Everything else goes in the table.
 
 ---
 
-## Step zero — establish whether this is real data
+## You are on your own — no questions, no waiting
 
-You are testing a **branch preview**, not the live platform. The code is
-isolated. Whether the **data** is isolated is the thing to establish before you
-touch anything, and it takes a minute.
+Nobody is available while you run this. **Do not ask questions. Do not wait for
+confirmation. Do not stop to check whether something is allowed.** Decide and
+continue.
 
-The preview will show a **Sign In** button. Sign in, then go to **Messages** and
-look at the member lists and the spaces.
+Four rules make that work:
 
-- **If you see around 45 people with real Filipino names, and spaces called
-  General, GROUP CHAT 1, Platform Bugs and Tutorials** — this branch shares the
-  live database. **Stop and say so.** Do not send messages, do not remove anyone,
-  do not delete anything. Wait for instructions.
-- **If the platform is empty, or holds only a handful of obviously seeded
-  records** — the data is isolated. Proceed with the full sweep below and hold
-  nothing back.
+1. **When something is ambiguous, choose the most likely reading, write down the
+   choice you made, and carry on.** A recorded assumption is worth far more than
+   a stalled run.
+2. **When something blocks you, record it as a defect and go around it.** If a
+   form will not save, note it and test the next form. If a screen will not open,
+   note it and open the next screen. Never let one broken thing end the run.
+3. **Report as you go, not only at the end.** After each screen, write out the
+   defects found so far. If the session dies at screen 15, the first 14 must
+   still be usable.
+4. **Never merge, never publish, never touch the Hercules chat.** Those are the
+   only actions that could cause harm, and none of them is ever necessary.
 
-Report which of the two you found before doing anything else.
+This is an isolated branch with its own empty database. Nothing you do reaches
+the live platform or any real person. **Break whatever you like.**
+
+The one thing that genuinely stops you is being unable to sign in. If that
+happens, write it up in full — what you clicked, what appeared, any console
+error — and end the run saying so. Everything else, work around.
+
+---
+
+## Phase 0 — sign in, then build the test data
+
+The branch database is **empty**. There are no people, no customers, no projects.
+Nothing can be tested until there is something to test, so your first job is to
+create it — and creating it is itself the first and most valuable test, because
+it exercises every creation form in the platform.
+
+**Sign in first**, using the Google account already signed in to this browser.
+
+Then build the following, in this order, because each depends on the one before.
+Record a defect for every step that fails, and if a step fails, invent the
+simplest way around it and continue — if a form will not save, note it and move
+to the next item.
+
+**People — under Human Resource or Administration, create six:**
+
+| Name | Role | Why |
+|---|---|---|
+| Test Alpha Reyes | Chief Executive Officer | approvals, full visibility |
+| Test Bravo Santos | Chief Operating Officer | the confirming authority on most gates |
+| Test Charlie Cruz | Head of Finance | proposes financial gates |
+| Test Delta Ramos | Project Manager | project-level work |
+| Test Echo Garcia | Safety Officer | safety and permits |
+| Test Foxtrot Lim | Solar Installer | the lowest permission level — use this one to check what a field worker can see |
+
+**Then, in order:**
+
+1. **A customer** — Pipeline → Accounts. `Test Client Manufacturing Corporation`.
+2. **A contact** on that customer.
+3. **A site** for that customer, with a province.
+4. **An opportunity** on that site, around 500 kilowatt-peak.
+5. **A site assessment** on that opportunity.
+6. **A proposal** on that opportunity — this needs a capacity and costs.
+7. **Win the opportunity**, then a **project**, then a **contract** on it.
+8. **Project blocks** on the project — at least B0 and B1.
+9. **A supplier** party, then a **purchase order** on the project.
+10. **An inventory item** and a **location**.
+11. **A site report** on the project.
+12. **A permit** and a **permit to work**.
+13. **A design package** and a **deliverable**.
+14. **A task**, assigned to one of the test people.
+15. **A safety record** — an incident or a toolbox meeting.
+16. **A group space**, with three of the test people in it, and several messages.
+17. **Upload a small image** into that space, and a non-image file.
+
+Where a form needs a value you have no basis for, put something plainly sensible
+and move on. Exact figures do not matter; exercising the form does.
+
+**Record everything you create** — name and identifier — so the sweep afterwards
+has something to open.
+
+If a step is impossible because the platform will not let you, that is one of the
+most valuable findings in the whole run. Write it up carefully: it means a real
+employee could not do that job either.
 
 ---
 
 ## Rules
 
-Assuming step zero showed isolated data:
-
 **Use everything. Break things.** Create records, submit forms, send messages,
-start conversations, upload files, rename spaces, add and remove members, convert
-messages to tasks, approve things, cancel things, delete things. A control you do
-not press is a control nobody has tested. Half-testing produces a half-finished
-document, which is worth very little.
+upload files, rename spaces, add and remove members, convert messages to tasks,
+approve things, cancel things, delete things. A control you do not press is a
+control nobody has tested.
 
 Try the awkward cases too, because that is where platforms fail:
 
@@ -137,16 +201,13 @@ Try the awkward cases too, because that is where platforms fail:
 - Paste something very long into a short field.
 - Press a save button twice quickly.
 - Navigate away mid-form and come back.
-- Open the same record in two tabs.
+- Delete something that other records depend on.
 
-**Two things remain off limits, and only two:**
+**Two restrictions, and only two:**
 
 1. **Stay inside the preview pane.** Never touch the Hercules chat panel, Merge,
-   the branch selector, the mode toggle, or the Hercules navigation rail. Those
-   spend money and change the deployment. The preview pane and its own controls
-   are yours; nothing outside it is.
-2. **Do not upload anything confidential.** A small test image or document is
-   fine.
+   the branch selector, the mode toggle, or the Hercules navigation rail.
+2. **Do not upload anything confidential.** A small test image is fine.
 
 Everything else is permitted. If a control looks destructive, press it and write
 down what happened.
@@ -296,8 +357,9 @@ You are done when every one of the 22 screens has been visited in **both passes*
 every control on each has been used, and every defect is written up in the format
 above.
 
-Report at the end of Pass 1 before starting Pass 2, so the window can be resized
-and so the desktop findings are safe if the session is interrupted.
+Write out the full Pass 1 findings before starting Pass 2, so they survive if the
+session is interrupted. Switch to the phone icon yourself and continue — do not
+wait for anyone.
 
 Finish with:
 
@@ -321,6 +383,16 @@ Finish with:
 4. **A count**: how many defects, split by severity.
 5. **The three worst things you found**, in your own words.
 
+6. **The list of test records you created in Phase 0**, with their names, so the
+   next person can open them.
+7. **Every assumption you made** where the brief was ambiguous.
+
 Do not summarise your findings as "mostly working". Give the counts.
 
-Report only. Change nothing beyond the test records you create, and name those.
+**A last word on stopping.** The run is finished when all 22 screens have been
+worked in both passes. It is not finished because you have found a lot of
+defects, or because something important is broken, or because you are unsure
+whether to continue. Those are all reasons to write it down and keep going.
+
+The only acceptable early ending is being unable to sign in at all. Everything
+else has a way around it.
