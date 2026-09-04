@@ -16,7 +16,7 @@ typing one word, raised a ₱500,000 purchase order against a project with no
 signed contract, and issued a hot-work permit as someone who is not a Safety
 Officer. All three succeeded silently.
 
-Twenty-seven items follow, in three parts. **Part A is the priority — nothing in
+Twenty-eight items follow, in three parts. **Part A is the priority — nothing in
 the platform is safe to use until it is done.** Each item names the section it
 violates and the call that proved it.
 
@@ -396,7 +396,36 @@ not the session identifier — and once item 2 gives gates their approver roles,
 also refuse where the proposer and confirmer resolve to the same person through
 any role.
 
-## 27. Test data to clear
+## 27. The protocol layer must not write to tables directly
+
+Root cause, found on reading the source. `convex/mcp/*.ts` imports
+`internalMutation`, `internalQuery`, Convex validators, generated types,
+`createTenantDb` and `appendAuditEntry` — **and nothing from any domain module.**
+Across the protocol layer there are **178 direct `db.insert` and `db.patch`
+calls**: every write reimplemented inline rather than delegated to the mutation
+that owns the rule.
+
+That is why every control-layer failure I reported reproduces over the protocol
+regardless of what the domain enforces: the protocol never reaches it.
+`convex/foundation/hardBlocks.ts` exists and works; the protocol layer never
+imports it.
+
+Two consequences. Every fix on the 26 items above has to be written twice or the
+paths drift. And a rule added next month is enforced on the screen and not over
+the protocol, silently.
+
+Replace the 178 direct writes with calls to the domain mutations, then **fail the
+build on any `db.insert` or `db.patch` inside `convex/mcp/`** — the same
+technique section 2.6 already uses for `ctx.db` outside the tenant wrapper.
+
+Do this **after** items 1 to 12, not before. The domain rules are themselves
+wrong today: `finance.ts` derives the write-off gate from
+`gateIdForSeverity(args.severity)`, and `orders.ts` implements hard block 6 as a
+gate 4 approval check rather than a signed-contract check. Converging the
+protocol onto rules that are wrong would make both paths wrong in the same way
+and throw the work away.
+
+## 28. Test data to clear
 
 Marked "Group 2 verification" or "TEST DATA - Group 3 verification", all on
 Calamba Agro Industrial Corporation / PRJ-2026-0041:

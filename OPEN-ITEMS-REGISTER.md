@@ -91,7 +91,7 @@ All of A, B and C are written up as the 27 items in `CONSOLIDATED-FIX-PROMPT.md`
 |---|---|---|---|
 | D-a | Interface and branding: amber visibility cues, MRTC and MEC logos, light theme | Major | Design work; needs its own prompt |
 | D-b | Screens never verified against the current build | **Blocker for the pilot** | Needs a browser agent run, not a prompt |
-| D-c | Code never reviewed | Major | Waits on the tar export |
+| ~~D-c~~ | ~~Code never reviewed~~ | **Closed 4 Sep** | Export received and read; see `CODE-REVIEW-ROOT-CAUSE-2026-09-04.md` |
 | D-d | Chat and messaging never verified end to end in the browser | **Blocker for the pilot** | Your stated first priority; only the protocol side has been tested |
 
 **D-b and D-d are the two that should be closed before the pilot group starts.**
@@ -146,7 +146,7 @@ permissions are declared on the role and consulted nowhere.
 | K2 | Roles for Christianah and Alfie — money visibility and record scope | Both still hold no role; permanent once set |
 | K3 | Should Vice President for Sales hold gate 6 (quotation release)? | Currently flagged approver but named in no gate |
 | K4 | The pilot group — roughly six names and email addresses | Granting sign-in |
-| K5 | Tar export to GitHub | Code review, and a restore point |
+| ~~K5~~ | ~~Tar export~~ | **Delivered 4 Sep** — source and data snapshot both complete |
 | K6 | When to send D1 to Hercules | Everything in A, B and C |
 | ~~K7~~ | ~~Company-provisioned AI accounts, or employees' own?~~ | **Parked** — revisit after adoption |
 | ~~K8~~ | ~~Which roles actually need agent access~~ | **Parked** — revisit after adoption |
@@ -185,8 +185,13 @@ When the pilot feedback is in and the tar is exported, three inputs combine:
 
 Those three become the milestones. My current reading, subject to the code:
 
-- **Milestone A — make refusal real.** Register section A. Until this lands the
-  platform cannot be a system of record for anything involving money or safety.
+- **Milestone A — make refusal real.** Register section A, in two ordered steps
+  established by the code review: **A-1** correct the rules in the domain layer
+  (gate derived from amount, approval requests raised, the six hard blocks as
+  specified, roles consulted); **A-2** converge the protocol layer onto those
+  mutations, replacing 178 direct writes, and fail the build on any future one.
+  A-2 before A-1 throws the work away. Until this lands the platform cannot be a
+  system of record for anything involving money or safety.
 - **Milestone B — the commercial chain.** Register section B.
 - **Milestone C — interface, branding and whatever the pilot returns.** D-a plus
   feedback.
