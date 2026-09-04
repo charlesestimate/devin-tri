@@ -2,8 +2,8 @@
 
 Group 2 is deployed and I verified all 39 tools over the protocol. The objects
 exist and the risk-term register seeds itself inside the project-creation
-mutation, which is correct. Nine defects follow. Each names the section of the
-master prompt it violates and the call that proved it. Fix all nine, then report
+mutation, which is correct. Ten defects follow. Each names the section of the
+master prompt it violates and the call that proved it. Fix all ten, then report
 against the numbered list — one line per item, stating the file and function you
 changed and the call you ran to prove it. Do not report an item complete on the
 basis of the code reading correct.
@@ -140,6 +140,35 @@ on the account presumes the account is an object with fields.
 
 Build `account` with its own table and its own list / get / search / create /
 update tools, linked to `party`.
+
+**10. There is no way to assign a role to a person, and almost nobody has one.**
+
+`list_persons` returns 22 people. **21 of them have an empty `roles` array.** The
+only exception is Kidron Magnus, who carries `project_manager`. Karl Ivan
+Estadola, the Chief Executive Officer, has no role. Beda Escobedo, the Chief
+Operating Officer, has no role.
+
+There is no `list_roles`, no `assign_role` and no `revoke_role` tool among the 95,
+so a role cannot be granted over the protocol at all.
+
+This is not administrative tidying. The Chief Operating Officer appears on
+**fifteen of the thirty gate rows** in section 4 — confirming authority on gates
+1, 5, 11, 12, 19, 21, 23, 24, 25a, 25b, 26 and 34; proposer on gates 2 and 20;
+countersignatory on gate 30. The Chief Executive Officer is the confirming
+authority on gates 2, 8 and 20. If neither person holds their role, **no gate in
+the platform can resolve** — every write-off, purchase order above ₱100,000,
+progress claim, payroll release, stock adjustment and inter-island transfer has
+a confirming authority that no account can satisfy.
+
+Note also gate 24: *"New hire, or assignment of a role to a person"* is itself
+gated, proposed by a department head and confirmed by the Chief Operating
+Officer. So role assignment must go through the gate machinery, not around it.
+
+Build `list_roles`, `assign_role` and `revoke_role`. `assign_role` raises gate 24
+rather than writing directly. Report which of the seeded roles exist by name, and
+whether Chief Executive Officer, Chief Operating Officer, Head of Finance,
+Procurement Head, Department Head, Safety Officer and Process Engineer are among
+them — several of the titles the gate table depends on may not have been seeded.
 
 ---
 
