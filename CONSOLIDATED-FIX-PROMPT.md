@@ -16,7 +16,7 @@ typing one word, raised a ₱500,000 purchase order against a project with no
 signed contract, and issued a hot-work permit as someone who is not a Safety
 Officer. All three succeeded silently.
 
-Twenty-two items follow, in three parts. **Part A is the priority — nothing in
+Twenty-four items follow, in three parts. **Part A is the priority — nothing in
 the platform is safe to use until it is done.** Each item names the section it
 violates and the call that proved it.
 
@@ -333,7 +333,34 @@ that must hold over the protocol too.
 `limit`. A list tool that cannot list is a query tool. Make the filters optional
 with sensible defaults, keeping pagination.
 
-## 22. Test data to clear
+## 22. `employmentBasis` on a person is completely unvalidated
+
+`create_person` accepted `employmentBasis: "zzz"` and stored it. The field has no
+enum and no handler check, while `population`, `homeRegion` and `status` on the
+same object all validate correctly.
+
+Give it an enum. It must include at least `employee`, `consultant`,
+`project_based` and `on_call` — the last two carry the engagement distinction for
+site installers, which is recorded on the person rather than as a separate role.
+One probe record, `ks7848gaa08b1qz0mcj34dghr58ds5hv`, is marked `departed` and
+renamed "ZZ DELETE ME - probe artefact"; delete it.
+
+## 23. A role's permissions cannot be changed, so gate 32 has nothing to gate
+
+`update_role` accepts only `label`, `description` and `active`. It cannot change
+`recordScope`, `moneyVisibility`, `isApprover` or `name`.
+
+Section 6 gate 32 is *"Change to what a role may do — Administration Console
+holder, alternate Second console holder."* That gate exists precisely to govern
+changes to record scope, money visibility and approver status. Today those
+changes are impossible, so the gate governs nothing — and a role created with the
+wrong money visibility can only be replaced, never corrected.
+
+Allow `recordScope`, `moneyVisibility` and `isApprover` to be updated, routed
+through gate 32 with two console holders. `name` stays immutable; it is the
+internal key.
+
+## 24. Test data to clear
 
 Marked "Group 2 verification" or "TEST DATA - Group 3 verification", all on
 Calamba Agro Industrial Corporation / PRJ-2026-0041:
