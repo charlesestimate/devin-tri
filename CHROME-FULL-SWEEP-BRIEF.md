@@ -98,33 +98,58 @@ Only `same` is acceptable. Everything else goes in the table.
 
 ---
 
-## Rules — read before you touch anything
+## Step zero — establish whether this is real data
 
-This is a live platform with **45 real employees** in it, real customer records
-and real conversations. Some staff are already using it.
+You are testing a **branch preview**, not the live platform. The code is
+isolated. Whether the **data** is isolated is the thing to establish before you
+touch anything, and it takes a minute.
 
-**Never:**
+The preview will show a **Sign In** button. Sign in, then go to **Messages** and
+look at the member lists and the spaces.
 
-- Send a message in **General**, or in any space with real colleagues in it.
-  They receive notifications. Use only the space named **Platform Bugs**.
-- Remove a person from a group, revoke a role, or change anyone's access.
-- Delete a thread, a space, a person, a project or any record you did not create.
-- Approve, reject, sign off or release anything.
-- Change a system constant, a threshold, or anything under Administration that
-  alters how the platform behaves for other people.
-- Upload anything confidential. A small test image is fine.
+- **If you see around 45 people with real Filipino names, and spaces called
+  General, GROUP CHAT 1, Platform Bugs and Tutorials** — this branch shares the
+  live database. **Stop and say so.** Do not send messages, do not remove anyone,
+  do not delete anything. Wait for instructions.
+- **If the platform is empty, or holds only a handful of obviously seeded
+  records** — the data is isolated. Proceed with the full sweep below and hold
+  nothing back.
 
-**Always:**
+Report which of the two you found before doing anything else.
 
-- Prefix anything you create with `ZZTEST` so it can be found and removed later.
-- Prefer reading over writing. Where a form must be submitted to test it, submit
-  the smallest valid record you can and record its identifier.
-- Stop and report if a control looks destructive and its label is unclear.
+---
 
-**One thing to know:** the approval machinery is not connected. Nothing you
-approve is authorised, and nothing the platform refuses is necessarily refused
-for the right reason. Record what you observe; do not assume the platform's
-behaviour reflects a rule.
+## Rules
+
+Assuming step zero showed isolated data:
+
+**Use everything. Break things.** Create records, submit forms, send messages,
+start conversations, upload files, rename spaces, add and remove members, convert
+messages to tasks, approve things, cancel things, delete things. A control you do
+not press is a control nobody has tested. Half-testing produces a half-finished
+document, which is worth very little.
+
+Try the awkward cases too, because that is where platforms fail:
+
+- Submit a form with every field empty.
+- Put text in a number field, and a negative number in an amount.
+- Enter a date in the past where a future one is expected.
+- Paste something very long into a short field.
+- Press a save button twice quickly.
+- Navigate away mid-form and come back.
+- Open the same record in two tabs.
+
+**Two things remain off limits, and only two:**
+
+1. **Stay inside the preview pane.** Never touch the Hercules chat panel, Merge,
+   the branch selector, the mode toggle, or the Hercules navigation rail. Those
+   spend money and change the deployment. The preview pane and its own controls
+   are yours; nothing outside it is.
+2. **Do not upload anything confidential.** A small test image or document is
+   fine.
+
+Everything else is permitted. If a control looks destructive, press it and write
+down what happened.
 
 ---
 
