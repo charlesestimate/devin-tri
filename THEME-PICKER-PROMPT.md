@@ -105,9 +105,17 @@ Cool green surfaces, Magnus orange for accent and focus. Starting values:
 }
 ```
 
-I have computed the contrast for every one of these pairings. All pass at 4.5:1
-or better: body text on background 17.03:1, body text on card 17.96:1, muted text
-16.03:1 (5.60:1), text on primary 7.57:1, sidebar text on sidebar 12.09:1.
+I have computed the contrast for every one of these pairings, converting the
+OKLCH values to sRGB rather than estimating. All pass at 4.5:1 or better:
+
+| Pairing | Ratio |
+|---|---|
+| Body text on background | 17.03:1 |
+| Body text on card | 17.96:1 |
+| Muted text on background | 5.60:1 |
+| Text on primary button | 7.57:1 |
+| Sidebar text on sidebar | 12.09:1 |
+| Text on accent | 6.47:1 |
 
 **One correction is already applied above and matters.** An earlier draft used a
 near-white `--accent-foreground` on the orange, which measures **2.73:1 and
