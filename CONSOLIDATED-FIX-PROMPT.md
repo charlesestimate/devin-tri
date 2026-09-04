@@ -16,7 +16,7 @@ typing one word, raised a ₱500,000 purchase order against a project with no
 signed contract, and issued a hot-work permit as someone who is not a Safety
 Officer. All three succeeded silently.
 
-Twenty-four items follow, in three parts. **Part A is the priority — nothing in
+Twenty-seven items follow, in three parts. **Part A is the priority — nothing in
 the platform is safe to use until it is done.** Each item names the section it
 violates and the call that proved it.
 
@@ -360,7 +360,43 @@ Allow `recordScope`, `moneyVisibility` and `isApprover` to be updated, routed
 through gate 32 with two console holders. `name` stays immutable; it is the
 internal key.
 
-## 24. Test data to clear
+## 24. The board pack shows no pending approvals
+
+`get_board_pack` returns `activeProjects`, `activeDeployments`, `openTasks`,
+`openNcrs`, `openIncidents` and a project breakdown. It does not return approvals
+pending.
+
+Section 8 requires, among the board pack figures: *"approval requests pending,
+with age in working days and the recorded window."* An approval waiting past its
+window is the single figure the pack exists to surface, and it is the one absent.
+Add it — count, age in working days per request, and the gate's recorded window —
+once item 5 makes approval requests real.
+
+## 25. `propose_decision` is free text and links to nothing
+
+`propose_decision` takes one argument: `proposal`, a string. It does not name an
+object, an object type, an amount or a gate. `confirm_decision` then takes a
+session id and a code.
+
+So the propose-then-confirm handshake changes nothing real. Two people can
+faithfully complete it and no record moves, because the proposal was a sentence
+rather than a reference to a row.
+
+Give it `objectType`, `objectId`, the intended change, and the derived gate.
+Confirming must apply that change to that row inside the mutation, or refuse.
+
+## 26. Self-approval is enforced against sessions, not people
+
+`confirm_decision` requires `proposingSessionId` to differ from the confirming
+session. Two tokens held by the same person are two sessions and one person, so
+the check passes while R6 is violated.
+
+R6 refuses self-approval everywhere. Compare the `personId` behind each session,
+not the session identifier — and once item 2 gives gates their approver roles,
+also refuse where the proposer and confirmer resolve to the same person through
+any role.
+
+## 27. Test data to clear
 
 Marked "Group 2 verification" or "TEST DATA - Group 3 verification", all on
 Calamba Agro Industrial Corporation / PRJ-2026-0041:
