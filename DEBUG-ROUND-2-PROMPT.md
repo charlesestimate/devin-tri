@@ -14,27 +14,63 @@ described, the control is not reachable.
 
 ---
 
-## 1. Group rename and member removal are still not reachable
+## 1. Rename, remove member and hand over ownership are missing from the panel
 
-You replaced the unlabelled ⓘ with a `Users [N members]` label in
-`ChannelPanel.tsx` and published. It is still not usable.
+**Do not investigate this. The cause is confirmed by screenshot.**
 
-Establish which of these is true, and say which:
+The panel opens correctly. One tap from the group header shows: the heading
+"Group info", the group name, the group rules, **MEMBERS · 6** with a search box
+and the member list, **ADD PEOPLE** with an invite search, and **Leave group**.
 
-- The label is not rendering at all.
-- It renders but does not open `GroupInfoPanel`.
-- The panel opens but the rename and remove controls are not in it, or are
-  disabled.
-- It only renders for the group owner, and the person testing is not the owner.
-- It renders on a wide screen and not on a phone. **The Chief Executive Officer
-  is testing on a phone.** Check the mobile layout specifically — a header
-  control that fits on a laptop is frequently pushed out of view on a narrow
-  screen, and that alone would explain both rounds of this.
+So `GroupInfoPanel` renders, and invite and leave work. What is not there:
 
-Then fix it, and report the navigation as steps:
+- **Rename.** The group name is static text with no edit control beside it.
+- **Remove member.** Each member row shows an avatar and a name and nothing
+  else — no remove action, no row menu.
+- **Hand over ownership.** Not present anywhere in the panel.
 
-> Messages → tap a group under SPACES → header shows … → tap … → panel shows …
-> → Rename is at … → Remove member is at …
+The owner is marked with a crown, so the panel already knows who the owner is.
+
+Add all three to the panel:
+
+- The name becomes editable in place for the owner and for a console holder,
+  calling `renameChannel`. Log the change with the old and new name and announce
+  it in the group as a system message.
+- Each member row gains a remove action, visible to the owner and to a console
+  holder, calling `removeMember`. It is logged, as specified.
+- An action to hand ownership to another member, owner only, calling
+  `handoverGroupOwnership`.
+
+All four mutations already exist in `convex/communication/channels.ts` at lines
+355, 381, 425 and 460. This is wiring, not new backend work.
+
+**Check the phone layout.** The Chief Executive Officer tests on a phone. Three
+new controls in a panel that already scrolls must remain reachable on a narrow
+screen.
+
+## 1b. Departed people still appear as members and as invitable
+
+The member list shows four people whose `status` is `departed`, each named
+`[TEST RECORD] …`, and more are offered under ADD PEOPLE.
+
+A person marked `departed` must not appear in the invite search anywhere in the
+platform, and must be shown as departed wherever they still hold an existing
+membership. Sweep every person picker for the same defect — task assignment,
+project party, approvals, mentions.
+
+## 1c. The project name still has not been applied
+
+The Messages sidebar shows `Site Report 001 — PRJ-20…` and `PRJ-2026-0004`. If
+the backfill had run these would read
+`Site Report 001 — 480_kW_Calamba Agro Industrial Corporation_PRJ-2026-0004`.
+
+The "Seed Project Names" button was pressed and nothing changed. Establish why
+and say which it was: the button did not call the mutation, the mutation ran and
+wrote nothing, it wrote `derivedName` but the thread label does not read it, or
+the format change was never applied.
+
+Then make it work, and confirm by quoting the exact sidebar text for one project
+thread and one site report thread after running it.
 
 ## 2. Reply and quote do not work — three separate defects
 
@@ -74,12 +110,16 @@ are renameable.
 
 ## Report back with
 
-1. Which of the five causes in item 1 was true, and the tap-by-tap navigation for
-   rename and for remove member, on a phone-width screen.
-2. The file and line of the Reply action, of the quoted-parent rendering, and of
+1. The tap-by-tap navigation for rename, for remove member and for hand over
+   ownership, on a phone-width screen.
+2. Confirmation that departed people no longer appear in any invite search, and
+   the list of pickers you swept.
+3. Which of the four causes in item 1c was true, and the exact sidebar text for
+   one project thread and one site report thread afterwards.
+4. The file and line of the Reply action, of the quoted-parent rendering, and of
    the thread reply.
-3. The same tap-by-tap navigation for: replying to a message in a space, and
+5. The same tap-by-tap navigation for: replying to a message in a space, and
    replying to a message in a record thread.
-4. Confirmation that you published, and the published URL.
+6. Confirmation that you published, and the published URL.
 
 Screenshots of the group header and of a rendered reply if you can produce them.
