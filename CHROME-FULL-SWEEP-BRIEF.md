@@ -75,6 +75,27 @@ unambiguous.
 Most of this company works from a phone, and nearly every defect found so far has
 been mobile-only, so Pass 2 is where the valuable findings are.
 
+### During Pass 2, build the gap table
+
+The difference between the two views is not a scatter of unrelated bugs — it is
+one systematic problem, and it needs its own document. As you repeat each screen
+on the phone, record every control from Pass 1 against one of five states:
+
+| State | Meaning |
+|---|---|
+| **same** | Reachable and works exactly as on desktop |
+| **absent** | Does not render on the phone at all |
+| **hidden** | Renders but cannot be reached — off screen, clipped, behind a hover, under another element, needs a scroll that does not scroll |
+| **unusable** | Visible but cannot be operated — too small to tap, overlapped, keyboard covers it, tap does nothing |
+| **degraded** | Works, but takes materially more steps than on desktop — say how many more |
+
+**hidden** is the important one and the easiest to miss. A control that exists in
+the page but is invisible on a phone looks identical to one that was never built.
+If you can see it on desktop and cannot reach it on the phone, it is `hidden`,
+and that is a defect even though nothing is broken in the ordinary sense.
+
+Only `same` is acceptable. Everything else goes in the table.
+
 ---
 
 ## Rules — read before you touch anything
@@ -256,10 +277,24 @@ and so the desktop findings are safe if the session is interrupted.
 Finish with:
 
 1. **The defect list**, numbered, ordered with "blocks work" first.
-2. **A coverage table** — each of the 22 screens marked complete, or not reached
-   with the reason.
-3. **A count**: how many defects, split by severity.
-4. **The three worst things you found**, in your own words.
+2. **The desktop-versus-phone gap table.** One row per control that is not
+   `same`, grouped by screen:
+
+   ```
+   | Screen | Control | Desktop | Phone | Notes |
+   |--------|---------|---------|-------|-------|
+   | Messages → group header | Rename group | works | hidden | only appears on hover |
+   | Finance → Write-offs | New write-off | works | absent | button not rendered |
+   ```
+
+   End it with a count per state — how many `absent`, how many `hidden`, how many
+   `unusable`, how many `degraded` — and name the screens where the phone view is
+   worst.
+
+3. **A coverage table** — each of the 22 screens marked complete for both passes,
+   or not reached with the reason.
+4. **A count**: how many defects, split by severity.
+5. **The three worst things you found**, in your own words.
 
 Do not summarise your findings as "mostly working". Give the counts.
 
