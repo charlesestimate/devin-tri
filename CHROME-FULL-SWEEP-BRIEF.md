@@ -20,10 +20,27 @@ You are signed in as **Karl Ivan Estadola, Chief Executive Officer** — a conso
 holder with full access. Remember this: a control you can see may be invisible to
 a Solar Installer. Note anywhere that seems likely.
 
-**Test at phone width first (about 390 pixels), then at desktop width.** Most of
-this company works from a phone, and nearly every defect found so far has been
-mobile-only. Where behaviour differs between the two, that difference is itself
-the defect and must be recorded.
+### Two passes, desktop first
+
+**Pass 1 — desktop width.** Go through every screen and build the inventory:
+every button, tab, menu, filter and form field that exists, and whether each one
+works. This pass tells us what the platform is supposed to have.
+
+**Pass 2 — phone width, about 390 pixels.** Go through the same screens again
+with the Pass 1 inventory in hand, and check each control is still reachable and
+still works. Anything present in Pass 1 and missing or unusable in Pass 2 is a
+defect, recorded as `WIDTH: phone only`.
+
+The order matters. You cannot notice that a control is unreachable on a phone
+unless you already know it exists.
+
+**The person running you will resize the browser window between passes.** Do not
+try to resize it yourself, and do not use device emulation — if you are unsure
+which width you are at, say so and ask, rather than reporting a pass you did not
+perform.
+
+Most of this company works from a phone, and nearly every defect found so far has
+been mobile-only, so Pass 2 is where the valuable findings are.
 
 ---
 
@@ -61,7 +78,7 @@ behaviour reflects a rule.
 
 Work one screen at a time, left navigation top to bottom. For each screen:
 
-1. **Does it open at all?** At phone width and at desktop width.
+1. **Does it open at all?**
 2. **List every control on it** — buttons, tabs, links, menus, filters, search
    boxes, form fields, table row actions, icons.
 3. **Use each one.** Click it. Does something happen? Is what happens what the
@@ -196,9 +213,12 @@ If no token is provided, skip this entirely and test through the interface only.
 
 ## What finishing looks like
 
-You are done when every one of the 22 screens has been visited at both widths,
+You are done when every one of the 22 screens has been visited in **both passes**,
 every control on each has been used, and every defect is written up in the format
 above.
+
+Report at the end of Pass 1 before starting Pass 2, so the window can be resized
+and so the desktop findings are safe if the session is interrupted.
 
 Finish with:
 
