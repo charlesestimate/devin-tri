@@ -103,11 +103,25 @@ is the whole reason the platform exists.
 `CLAUDE-CHROME-TEST-BRIEF.md` can be pointed at the current deployment as-is. An
 hour of that tells you whether the screens are ready for six people.
 
-### E · Prerequisites for per-employee Model Context Protocol access
+### E · Per-employee and agent access
 
-Raised 4 September. Connecting each employee's own AI subscription to the
-platform is architecturally supported — the server already issues per-person
-tokens and attributes every call. These must be true first.
+**Status: the deployment question is PARKED, 4 September.** Per-employee Model
+Context Protocol access, artificial-intelligence assistant roles, Paperclip as
+an agent management layer, and company-provisioned versus personal accounts are
+exploratory. Nothing is committed and nothing is scheduled. The decision waits
+until staff are actually using the platform — introduced slowly, so people are
+not overwhelmed.
+
+The reasoning is the spec's own. An agent's entire output is tasks and
+notifications written back to people. Deploy agents before adoption and that
+output lands where nothing reads it — locked principle L3, *"records completed
+correctly and sent somewhere nothing reads them,"* named there as the company's
+dominant historical defect.
+
+**E1 to E3 are NOT parked.** They are a live security defect on any protocol
+token, agents or no agents: a read token issued to a Solar Installer today
+returns the same cost and margin data a Chief Executive Officer token returns.
+They stay in Milestone A. E4 to E6 travel with the parked deployment decision.
 
 | # | Item | Severity | Evidence |
 |---|---|---|---|
@@ -134,8 +148,8 @@ permissions are declared on the role and consulted nowhere.
 | K4 | The pilot group — roughly six names and email addresses | Granting sign-in |
 | K5 | Tar export to GitHub | Code review, and a restore point |
 | K6 | When to send D1 to Hercules | Everything in A, B and C |
-| K7 | Company-provisioned AI accounts, or employees' own? | Per-employee protocol access (register section E) |
-| K8 | Which roles actually need agent access | Sizing the subscription cost |
+| ~~K7~~ | ~~Company-provisioned AI accounts, or employees' own?~~ | **Parked** — revisit after adoption |
+| ~~K8~~ | ~~Which roles actually need agent access~~ | **Parked** — revisit after adoption |
 
 ## 5. Waiting on the team
 
