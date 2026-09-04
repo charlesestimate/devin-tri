@@ -1,3 +1,7 @@
+> **SUPERSEDED — do not send this file.** Its ten items are carried into
+> `CONSOLIDATED-FIX-PROMPT.md`, which also covers the Group 3 findings and
+> orders everything by priority. Kept here as a record only.
+
 # Prompt for Hercules — Group 2 conformance fixes
 
 Group 2 is deployed and I verified all 39 tools over the protocol. The objects
