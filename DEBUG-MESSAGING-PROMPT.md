@@ -104,3 +104,24 @@ For each of the seven: the file and line, and for items 1, 2, 3, 5 and 6 the
 result of actually using the control in the interface — not that the code
 compiles. Item 7 needs the published-or-preview answer first, before anything
 else.
+
+---
+
+## Scope — read this before you start
+
+**This round is debugging only.** Every item above is something already
+instructed, where the backend function exists and the interface never calls it.
+Six of the seven are wiring, not new code. Treat them that way.
+
+**Archive is the next round, and it is not part of this one.** A separate
+instruction will follow covering archived threads and closed spaces, an Archived
+section in the sidebar, and restore. **Do not build any of it now, and do not
+restructure anything in anticipation of it.** Wire what is listed above, publish
+it, and report. Nothing else.
+
+Two things that are settled and must not be added, now or later: message editing
+and read receipts. Section 15 excludes both — *"message editing or deletion;
+presence, typing or read receipts"* — and the Chief Executive Officer has
+confirmed they stay excluded. Read receipts in particular would breach locked
+principle L4, which forbids presence tracking for anybody at any permission
+level, as a legal constraint and as a commitment made to staff at rollout.
