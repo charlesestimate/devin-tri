@@ -103,6 +103,25 @@ is the whole reason the platform exists.
 `CLAUDE-CHROME-TEST-BRIEF.md` can be pointed at the current deployment as-is. An
 hour of that tells you whether the screens are ready for six people.
 
+### E · Prerequisites for per-employee Model Context Protocol access
+
+Raised 4 September. Connecting each employee's own AI subscription to the
+platform is architecturally supported — the server already issues per-person
+tokens and attributes every call. These must be true first.
+
+| # | Item | Severity | Evidence |
+|---|---|---|---|
+| E1 | The protocol session does not resolve the person's role | **Blocker** | `get_session_info` returns `personId` and token scope only — no role, no record scope, no money visibility |
+| E2 | The permission table is empty for every role | **Blocker** | `list_permissions` returns zero rows for all 25 roles, including Chief Executive Officer and Solar Installer |
+| E3 | Reads return cost and margin unfiltered | **Blocker** | `get_proposal` returns base costs, pinned markups and contingency with no role filter applied |
+| E4 | Token issuance, expiry and revocation not governed | Major | Tokens minted from the console with no per-role scoping or revocation drill |
+| E5 | Company-provisioned versus personal AI accounts undecided | Major | Personal subscriptions put Magnus data under an individual's terms; it leaves with them when they leave |
+| E6 | L4 exposure from agent call density | Major | Locked principle L4 forbids presence tracking. A dense trail of timestamped agent calls makes desk-time inferable from the audit log by accident. State the rule before the trail exists. |
+
+E1 to E3 together mean that today a read token issued to a Solar Installer would
+return the same margin data a Chief Executive Officer token returns. Role
+permissions are declared on the role and consulted nowhere.
+
 ---
 
 ## 4. Waiting on you
@@ -115,6 +134,8 @@ hour of that tells you whether the screens are ready for six people.
 | K4 | The pilot group — roughly six names and email addresses | Granting sign-in |
 | K5 | Tar export to GitHub | Code review, and a restore point |
 | K6 | When to send D1 to Hercules | Everything in A, B and C |
+| K7 | Company-provisioned AI accounts, or employees' own? | Per-employee protocol access (register section E) |
+| K8 | Which roles actually need agent access | Sizing the subscription cost |
 
 ## 5. Waiting on the team
 
