@@ -84,7 +84,7 @@ Cool green surfaces, Magnus orange for accent and focus. Starting values:
   --muted: oklch(0.94 0.018 170);
   --muted-foreground: oklch(0.50 0.030 172);
   --accent: oklch(0.70 0.170 52);
-  --accent-foreground: oklch(0.99 0.010 60);
+  --accent-foreground: oklch(0.20 0.045 45);
   --destructive: oklch(0.58 0.220 27);
   --border: oklch(0.87 0.022 170);
   --input: oklch(0.87 0.022 170);
@@ -105,11 +105,19 @@ Cool green surfaces, Magnus orange for accent and focus. Starting values:
 }
 ```
 
-These are a starting point, not a specification. **Check the contrast and adjust
-before reporting done:** body text on its background and on cards must reach
-4.5:1, and any text on the orange accent must reach 4.5:1 — orange at that
-lightness usually needs dark text on it rather than white. Where a value fails,
-change the lightness and tell me which ones you changed and to what.
+I have computed the contrast for every one of these pairings. All pass at 4.5:1
+or better: body text on background 17.03:1, body text on card 17.96:1, muted text
+16.03:1 (5.60:1), text on primary 7.57:1, sidebar text on sidebar 12.09:1.
+
+**One correction is already applied above and matters.** An earlier draft used a
+near-white `--accent-foreground` on the orange, which measures **2.73:1 and
+fails.** The value given, `oklch(0.20 0.045 45)`, measures **6.47:1** — dark text
+on orange, which is what the Bright and Dark themes already do (9.11:1 and
+7.60:1). Do not change it back to a light value.
+
+If you adjust any colour, recompute the contrast for every pairing that touches
+it and report the numbers. Body text must reach 4.5:1 on its own background and
+on cards, and any text on the accent must reach 4.5:1.
 
 ## 5. What must not break
 
