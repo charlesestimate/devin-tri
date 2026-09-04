@@ -16,10 +16,12 @@ staff across three regions a number tells you nothing about which job it is.
 **Show a name in this shape:**
 
 ```
-{capacity}_kW_{Customer}_{Location}
+{capacity}_kW_{Customer}
 ```
 
-For example: `480_kW_Calamba Agro Industrial Corporation_Calamba, Laguna`
+For example: `480_kW_Calamba Agro Industrial Corporation`
+
+Two parts only. No location, no site, no region.
 
 ## Where each part comes from
 
@@ -27,7 +29,6 @@ For example: `480_kW_Calamba Agro Industrial Corporation_Calamba, Laguna`
 |---|---|
 | capacity | `proposals.systemSizeKwp` on the project's `proposalId` — this is peak capacity in kilowatt-peak; show the number as it is stored, do not convert it |
 | Customer | `parties.legalName`, reached through the project's `opportunityId` → `opportunity.partyId` |
-| Location | `sites.local_government_unit` and `sites.province` on the project's `siteId` |
 
 ## Derive it, do not store it
 
@@ -49,24 +50,9 @@ numbers, so changing it would break document numbering on existing records.
 Keep it, show it as secondary text under the name, and keep it searchable. The
 name is what a person reads; the number is what the documents carry.
 
-## Blocking dependency: the site has no local government unit field
-
-Section 8.3 specifies `site` as: *"site_id · account_id · address · **region
-(derived from province, never typed)** · **local_government_unit** ·
-distribution_utility · host_party."*
-
-The built `sites` table has `address`, `province` and `region` and **no
-`local_government_unit`**. One of the existing site records even carries the note
-*"Local government unit: Calamba (no field)"* — someone hit this and wrote it into
-free text.
-
-Add `local_government_unit` to `sites`, expose it on the site form and on the
-protocol's site tools, and use it as the first part of the location. It is needed
-beyond naming: permits are filed per local government unit, and section 8 asks for
-permit duration, requirement and fee accumulation *per office*, which cannot be
-grouped without this field.
-
-Until it is populated on a given site, fall back to `province` alone.
+It is also the tiebreaker. Two projects for the same customer at the same capacity
+produce the same name, which is uncommon but possible; the number underneath
+separates them and no uniqueness rule is needed on the name itself.
 
 ## Where the name must appear
 
@@ -79,6 +65,25 @@ the number underneath after this change.
 The Drive folder follows the name — that is already specified and already true:
 *"A renamed project renames its folder; Drive file identifiers do not change, so
 no record breaks."*
+
+## Separately — the site is missing a field section 8.3 requires
+
+Not part of the naming change, and not blocking it. Recording it because it was
+found while looking.
+
+Section 8.3 specifies `site` as: *"site_id · account_id · address · **region
+(derived from province, never typed)** · **local_government_unit** ·
+distribution_utility · host_party."*
+
+The built `sites` table has `address`, `province` and `region` and **no
+`local_government_unit`**. One of the existing site records carries the note
+*"Local government unit: Calamba (no field)"* — someone hit this and wrote it into
+free text.
+
+Add the field and expose it on the site form and the protocol's site tools.
+Permits are filed per local government unit, and section 8 asks for permit
+duration, requirement and fee accumulation *per office*, which cannot be grouped
+without it.
 
 ---
 
