@@ -26,11 +26,8 @@ with `Z1-` — that prefix is the entire safety mechanism, so never skip it.
 2. **Do not open Migration and Cutover to write anything.** It creates person records
    that cannot afterwards be deleted through the interface. Looking is fine; importing
    is not.
-3. **Do not create anything in Human Resource or Payroll.** No employees, no
-   requisitions, no reviews, no payroll periods. Those records are auto-numbered, cannot
-   carry your prefix, and cannot be deleted. Both screens were already tested last week.
-   **Above all, never approve a statutory rate table** — approving one supersedes the
-   previous table and becomes the basis on which real people are paid.
+3. **Do not create anything in Human Resource.** That module belongs to the other
+   agent. **Payroll is yours** — it has its own section below, with its own rules.
 4. **Do not touch anything you did not create.** No renaming, no deleting, no editing,
    no status changes on any record without a `Z1-` prefix.
 5. **Do not touch any person.** Do not add or remove anyone from any space, do not
@@ -74,12 +71,37 @@ Work in this order. Each step depends on the one before it.
 14. **Progress claim** and **fund request**
 15. **Variation order** — see the experiments below
 
+Then, separately from the chain, work through **Payroll** — see the section below.
+
 At every step record: what you expected, what happened, whether it repeated, and the
 exact text of any error. If a step is impossible, say precisely what stopped you, then
 find a way around it and keep going. **Getting stuck at step 6 and stopping is the one
 outcome that makes this run worthless.**
 
 ---
+
+## Payroll — test it properly, and mark loudly what you leave behind
+
+Payroll has never been run. Nobody knows whether it works at all. Test it end to end:
+create a period, look at the payroll lines, and try to run it.
+
+To run it you must first enter and approve the four Philippine statutory rate tables —
+Social Security System, PhilHealth, Pag-IBIG and withholding tax. **You are allowed
+to.** But you are entering numbers that real people could later be paid from, so make
+them unmistakably fake:
+
+- **One bracket per table**, never a realistic schedule.
+- **Round, obviously wrong rates** — one percent, or a flat one peso. Never a number
+  that could be mistaken for a real contribution rate.
+- **Put `Z1-TEST` in every free-text field each table offers** — name, notes, reference.
+
+Then, **at the very top of your report, before anything else**, write a plain warning
+naming the four tables you approved and stating that real payroll must not be run until
+they are replaced. Not buried in a list — the first thing on the page.
+
+Record all of it: whether the period saved, whether the run guard fired, whether it
+computed anything, whether payroll lines or payslips appeared, what the numbers were,
+and the exact text of every message.
 
 ## Three experiments that matter more than the rest
 
@@ -186,14 +208,15 @@ SEVERITY:        blocks work / wrong result / annoying / cosmetic
 
 Order them **blocks work first**.
 
-Then add these five sections:
+Then add these six sections:
 
 1. **The chain.** How far did you get, of the fifteen steps? Name the step that stopped
    you and exactly what stopped you.
-2. **Experiment A** — the four-row table.
-3. **Experiment B** — both refusal texts, word for word.
-4. **Experiment C** — what happened when you tried to approve your own request.
-5. **Every record you created**, listed by name and reference, so it can be cleaned up.
+2. **Payroll.** How far it got, and the four rate tables you left approved.
+3. **Experiment A** — the four-row table.
+4. **Experiment B** — both refusal texts, word for word.
+5. **Experiment C** — what happened when you tried to approve your own request.
+6. **Every record you created**, listed by name and reference, so it can be cleaned up.
    Include anything you created that does **not** carry the `Z1-` prefix because the
    platform numbered it automatically.
 

@@ -25,11 +25,9 @@ with `Z2-` — that prefix is the entire safety mechanism, so never skip it.
 2. **Do not open Migration and Cutover to write anything.** It creates person records
    that cannot afterwards be deleted through the interface. Looking is fine; importing
    is not.
-3. **Do not create anything in Human Resource or Payroll.** No employees, no
-   requisitions, no reviews, no payroll periods. Those records are auto-numbered, cannot
-   carry your prefix, and cannot be deleted. Both screens were already tested last week.
-   **Above all, never approve a statutory rate table** — approving one supersedes the
-   previous table and becomes the basis on which real people are paid.
+3. **Do not create anything in Payroll.** That module belongs to the other agent, and
+   it is entering deliberately fake statutory rate tables there. Leave it alone
+   entirely. **Human Resource is yours** — see "While you wait".
 4. **Do not touch anything you did not create.** No renaming, no deleting, no editing,
    no status changes on any record without a `Z2-` prefix.
 5. **Do not touch any person.** Do not add or remove anyone from any space, do not
@@ -112,6 +110,12 @@ Useful work that needs no project:
   counts at all.
 - **Manpower and Equipment** — equipment items, deployments, resource requests. These
   were never opened last week.
+- **Human Resource** — all five tabs: employees, recruitment, performance, engagement,
+  regularization. Only Add Employee and a single requisition were ever tried, and both
+  failed. Create a `Z2-` workforce record first and build the employee record on that,
+  so everything you leave behind traces back to a `Z2-` name. Put `Z2-` into every
+  free-text field these forms offer — job titles, notes, references — because employee
+  and requisition numbers are assigned automatically and cannot carry a prefix.
 - **Permits** — the permit type library and the requirement library.
 - **Documents** — the register and revisions.
 - **Reports** — Board Pack, Measure Register, Exception Report. Note whether the
