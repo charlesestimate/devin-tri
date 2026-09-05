@@ -154,6 +154,40 @@ Tuesday.
 
 ---
 
+## 6. What is switchable, and what is not
+
+A fair question, and the honest answer is narrower than it sounds.
+
+**There is one switch: `self_approval_mode`.** It ships on `record` and a console holder moves it to
+`block` in one action. That is the only place where the platform is deliberately looser than it
+will eventually be.
+
+**Everything else in Monday's prompt is a repair.** A contract dated 2027 unlocking a gate, dates
+eight hours behind, a progress claim that cannot be created, stock going negative — none of those
+have a permissive setting worth keeping. There is nothing to switch on a bug.
+
+**And I would not add more switches.** Every switch is code to build now, a thing to forget later,
+and one more way for two workspaces to behave differently. One switch plus a written register beats
+ten switches nobody remembers.
+
+So the register is below. Some of it is a switch; most of it is work with a trigger attached.
+
+### The tighten-later register
+
+| | What | How it tightens | What triggers it |
+| --- | --- | --- | --- |
+| 1 | **Self-approval** | Switch `self_approval_mode` from `record` to `block` | Outside investment, **or** a second approver exists in Finance and Procurement, **or** the Board Pack counter shows it has become routine |
+| 2 | **Statutory rate tables** | Enter and approve four genuine tables; supersede the fakes | **Hard date: before 16 September 2026.** Not a judgement call |
+| 3 | **Payroll disbursement** | Require a second person to release a pay run | When the Head of Finance is active on the platform |
+| 4 | **Hard block 6** | Enforce your rule — signed contract *and* released funds — rather than the stage gate that stands in for it today | Monday's item is a partial fix; the full rule when the first real purchase order is raised |
+| 5 | **Attachments on records** | Photos and video on site reports, non-conformances, defects and documents | Next prompt. This is the biggest missing feature you have |
+| 6 | **Approvals inbox** | Tell people something is waiting for them | Next prompt. Until it exists, approvals are found only by opening the record |
+| 7 | **One person record** | Merge or bridge the workforce roster and the platform roster | Before the next intake of field staff |
+| 8 | **Variation orders** | Add the button; `createVariationOrder` already exists on the server | When the first variation is raised on a live job |
+| 9 | **The lease constant** | Decide whether ₱6.70 is per kilowatt-hour or per square metre, then fix the formula or the constant | **Before the next proposal goes to a client.** It is currently out by roughly 182× |
+
+Items 2 and 9 have real deadlines. The rest move when the trigger arrives.
+
 ## 6. The register
 
 Everything found, with its evidence:
