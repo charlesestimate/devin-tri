@@ -1,15 +1,16 @@
-# Monday — twelve changes, then publish. Sixty-three people arrive Tuesday.
+# Monday — thirteen changes, then publish. Sixty-three people arrive Tuesday.
 
 Two automated testers swept the live platform on Saturday and raised 74 findings. This prompt
-contains **only the twelve that must be true before sixty-three employees start using it**.
+contains **only the thirteen that must be true before sixty-three employees start using it**.
 Everything else is deliberately held.
 
-I have verified every line reference below against the current source. **Build all twelve. Do
+I have verified every line reference below against the current source. **Build all thirteen. Do
 not redesign anything. Do not fix anything not listed here. Do not reply with a plan — build it,
-publish it, and report against section 13.**
+publish it, and report against section 14.**
 
 Order matters: Part A protects money, Part B is four small repairs, Part C lets the test data be
-removed before anyone sees it, and Part D bounds what the assistant may do.
+removed before anyone sees it, Part D bounds what the assistant may do, and Part E repairs the
+backup so Tuesday's data can actually be recovered.
 
 ---
 
@@ -275,7 +276,71 @@ such change is audited with the session identifier that made it.
 (Gate 32), and approving or disbursing a payroll period (Gate 30). Those two reach a real person's
 pay and need a human at the keyboard.
 
-# 13. What to report back
+---
+
+# PART E — the backup is not backing everything up
+
+## 13. The export exists, reports success, and silently misses twenty-two tables
+
+`convex/compliance/compliance.ts` already has a working export — `runDataExport` at line 378,
+wired to Administration at `src/pages/admin/page.tsx:1553`. It collects rows, records an
+`EX-` number, reports a row count and hands the browser a JSON file. It looks like it works.
+
+**It collects 95 tables. The platform has 117.** The list at `collectExportData` (line 317) is
+hand-written, and the code has moved on without it. Every miss is silent, because each table read
+sits in a `try`/`catch` that returns an empty array.
+
+**What is not being backed up, with live row counts from today:**
+
+| Not collected | Rows today |
+| --- | --- |
+| `channels`, `channel_messages`, `channel_members`, `channel_mentions`, `direct_message_receipts` | 9 · 43 · 37 · 7 · 2 — **the entire messaging history** |
+| `om_visits`, `om_defects`, `om_readings`, `om_visit_activities`, `om_schedules` | all of Operations and Maintenance |
+| `payroll_lines`, `statutory_rate_tables`, `statutory_rate_brackets` | all of payroll's actual figures |
+| `files` | 13 — the index of every uploaded attachment |
+| `configuration_values` | 2 — the sequence counters, and shortly `self_approval_mode` |
+| `identity_links`, `users`, `tenants`, `public_holidays`, `migration_state`, `migration_project_seeds` | sign-in links and workspace settings |
+
+It also names three tables that **do not exist** — `payroll_disbursements`, `payroll_rate_tables`,
+`payroll_workers` — and fails silently on each.
+
+Messages is the module that replaces the group chats. **None of it is in the backup**, and nothing
+on screen says so.
+
+### What to change
+
+**13a. Stop hand-writing the list.** Derive the tables from the schema, so a table added next month
+is included without anyone remembering. Keep a short, **explicitly named exclusion list** instead —
+that is the only list a person maintains.
+
+**13b. Exclude exactly two, and say why in a comment:**
+- `drive_connection` — holds the live Google refresh token in plain text. **A backup file must never
+  contain a working credential.** It is already excluded; keep it that way and make the reason
+  explicit.
+- `mcp_sessions` — session tokens have no place in a backup.
+
+Everything else is included. `configuration_values` in particular: without it a restore loses the
+sequence counters and every setting.
+
+**13c. Report what was taken, per table.** The export payload and the screen both carry a table of
+table name and row count. A backup whose contents you cannot see is a hope, not a backup.
+
+**13d. The 10,000 row cap is a trap.** `collectExportData` takes at most 10,000 rows per table. With
+sixty-three people messaging daily, `channel_messages` passes that within months and the export will
+quietly start truncating. **When any table returns exactly the cap, the export must say so loudly on
+screen and mark itself incomplete** — not record a `completed` status.
+
+**13e. Add "Verify backup file" beside the export.** It reads a backup file the person chooses,
+lists the tables and row counts it contains, compares them against what is live now, and reports
+differences. **It writes nothing.** This is what turns a monthly download into a monthly backup.
+
+**13f.** Restoring from a backup file is deliberately **not** in this prompt. Writing 117 tables back
+means remapping every internal identifier, importing in dependency order, and chunking around the
+platform's write limits — that is real work and it must not be built untested the day before
+sixty-three people arrive. It is the first item of the next prompt. Item 13e is what makes the
+backups you take in the meantime worth having.
+
+# 14. What to report back
 
 Do not report that these are done. Report each with its proof.
 
@@ -297,6 +362,10 @@ Do not report that these are done. Report each with its proof.
 11. **Gates.** Say what the landing page reads now.
 12. **Protocol.** Confirm `self_approval_mode` is readable over the protocol, changeable only under
     the `decide` scope, and that rate table and payroll approval are unreachable over it entirely.
+13. **Backup.** Run an export and paste the per-table count table. Confirm `channel_messages`,
+    `om_visits`, `payroll_lines`, `files` and `configuration_values` all appear with non-zero counts,
+    and that `drive_connection` and `mcp_sessions` appear nowhere in the file. Then run
+    **Verify backup file** against that same file and paste what it reports.
 
 If any item cannot be built as written, say which and why **before** publishing the rest. Do not
 substitute a different fix without saying so.
