@@ -45,16 +45,16 @@ it, payroll is blocked for want of an approved table, which is safe but will con
 
 ## 2. The shape of Monday
 
-One prompt, thirteen items, all verified. It is deliberately smaller than the full defect list because
+One prompt, twelve items, all verified. It is deliberately smaller than the full defect list because
 **you have one day and you cannot publish something large the night before sixty-three people
 arrive.**
 
 | | |
 | --- | --- |
-| **Part A — protects money** | Self-approval guard on all sixteen approvals · gate derived from amount, not chosen · five validations that let impossible things through |
+| **Part A — protects money** | Self-approval **recorded, not blocked**, with a switch to block it later · gate derived from amount, not chosen · five validations that let impossible things through |
 | **Part B — small repairs** | Progress claims (one line) · Philippine-time dates · error boundary · safety stop without a project · video attachments |
 | **Part C — before Tuesday** | Delete-by-prefix tool · screen refreshes after a write · remember the selected project · the gate count |
-| **Part D — the exception** | The start-up period: an owner override that counts itself and switches itself off on 30 September · what the protocol may see and do |
+| **Part D — the boundary** | What the assistant may read, may change under your approval, and may never touch |
 
 Each is independently verifiable, so if Hercules runs out of time you can still publish the ones
 that landed.
@@ -69,18 +69,14 @@ that landed.
       around it.
 - [ ] **Do not press Disburse on PAY-2026-002.** It is approved and one click from paying on fake
       rates.
-- [ ] **Confirm the start-up period end date.** The prompt says **30 September 2026**. That is
-      three weeks of settling in and it lands before the October pay run. Change it in the prompt if
-      you want longer or shorter — but set a date, because the date is what turns it off.
-- [ ] Confirm you are happy that **two things can never be overridden**: approving a statutory rate
-      table, and approving or disbursing a payroll period. Those are the only two that reach a real
-      person's pay.
+- [ ] Nothing to decide. Self-approval ships **permitted and recorded**; the switch to block it is
+      built and set to `record`, so turning it on later is one action, not another round of work.
 
 ### After Hercules publishes (thirty minutes)
 
-- [ ] Work section 14 of the prompt yourself. It is thirteen checks and each one is a single action.
-- [ ] Check the **start-up period banner** appears, and that the Board Pack has an override counter.
-      If you cannot see the override being counted, the exception is not safe to keep.
+- [ ] Work section 13 of the prompt yourself. It is twelve checks and each one is a single action.
+- [ ] Check the Board Pack shows a **self-approval counter**. That number is the only thing that
+      tells you later whether the practice stayed rare or became the norm.
 - [ ] **Run the delete-by-prefix tool in preview for `Z1-` and `Z2-`.** Read the list before you
       confirm it. 87 records; the audit entries stay and that is correct.
 - [ ] Check PRJ-2026-0006 is gone with them. It is the test project carrying the 2027 contract, the
@@ -104,14 +100,17 @@ the entire sweep that could reach a real person's pay, so it does not get forgot
 
 Open everything **except three modules**, for one week.
 
-**Open on day one:** Messages · My Day · Construction and site reports · Safety · Tasks · Inventory ·
-Documents · Manpower · Permits · Pipeline
+**Open on day one:** everything except Payroll.
 
-**Hold for one week:** **Finance · Procurement approvals · Payroll**
+**Hold nothing.** Open all twenty-two screens on Tuesday.
 
-If item 1 and item 12 both land on Monday, this hold is unnecessary — open everything. The reason
-to hold was that an approval recorded with no control is permanent in the audit chain. With the
-guard in place and the override counted, the record is honest either way.
+I previously advised holding Finance, Procurement approvals and Payroll for a week. **That advice
+was based on approvals being recorded with no trace of who approved what.** With item 1 marking
+every self-approval and counting it on the Board Pack, the history is honest from day one, so the
+reason for the hold is gone.
+
+Payroll is the exception, and not for control reasons: the four statutory rate tables are still
+fake. Nobody should run a pay period until they are replaced — see the payroll checklist above.
 
 Not because money will be lost — nothing on the platform moves cash — but because until the guard
 lands, every approval recorded is an approval your audit chain will show as uncontrolled. **The
@@ -126,8 +125,7 @@ If item 1 of the prompt lands cleanly on Monday, open all three on Tuesday and i
 > messages, your day, site reports, safety, tasks, inventory, documents and permits. Use it exactly
 > as you would have used the group chats.
 >
-> Three areas — finance, purchase order approvals and payroll — stay closed for one more week while
-> a control is added. Nothing you do is lost; those screens simply are not yours yet.
+> Payroll is the one thing not to touch yet — the contribution tables are still being loaded.
 >
 > You may still see a few records whose names begin with `Z1-` or `Z2-`. Those are test records
 > from the weekend and they are being removed. Ignore them.

@@ -1,23 +1,24 @@
-# Monday — thirteen changes, then publish. Sixty-three people arrive Tuesday.
+# Monday — twelve changes, then publish. Sixty-three people arrive Tuesday.
 
 Two automated testers swept the live platform on Saturday and raised 74 findings. This prompt
-contains **only the thirteen that must be true before sixty-three employees start using it**.
+contains **only the twelve that must be true before sixty-three employees start using it**.
 Everything else is deliberately held.
 
-I have verified every line reference below against the current source. **Build all thirteen. Do
+I have verified every line reference below against the current source. **Build all twelve. Do
 not redesign anything. Do not fix anything not listed here. Do not reply with a plan — build it,
-publish it, and report against section 14.**
+publish it, and report against section 13.**
 
 Order matters: Part A protects money, Part B is four small repairs, Part C lets the test data be
-removed before anyone sees it, and Part D is the one exception to Part A and who may operate it.
+removed before anyone sees it, and Part D bounds what the assistant may do.
 
 ---
 
 # PART A — the control layer
 
-## 1. Nobody may approve their own request. Sixteen controls; one has the check.
+## 1. Record self-approval. Do not block it — yet.
 
-`convex/inventory/inventory.ts:432` is the only place in the codebase that checks it:
+`convex/inventory/inventory.ts:432` is the only place in the codebase that checks whether the
+approver is the person who raised the record:
 
 ```ts
 if (adj.createdByPersonId === tc.personId)
@@ -25,15 +26,22 @@ if (adj.createdByPersonId === tc.personId)
     message: "You cannot approve your own adjustment (Gate 26)" });
 ```
 
-Every other approval mutation was written without it. On Saturday one tester raised and approved
-**fourteen** records — a ₱9,482,000 purchase order, a ₱99,000,000 billing milestone, a ₱5,000,000
-fund request, a ₱5,000,000 write-off, three statutory rate tables and a payroll period among them.
-The only refusal in fourteen attempts was the stock adjustment above.
+Every other approval mutation was written without it. On Saturday a tester raised and approved
+**fourteen** records unopposed — a ₱9,482,000 purchase order, a ₱99,000,000 billing milestone, a
+₱5,000,000 fund request and a ₱5,000,000 write-off among them.
+
+**The company has decided that blocking self-approval is not right for this stage.** Build the
+mechanism and ship it in the permissive position, so it can be turned on later without another
+round of work.
 
 ### What to change
 
-**1a.** Write **one shared helper** — `assertNotSelfApproval(raiserPersonId, approverPersonId)` —
-and apply it to every approval mutation in `convex/`. These are the sixteen:
+**1a. Mark it, everywhere.** In each approval mutation, compare the approver against the person who
+raised the record. When they are the same, set `selfApproved: true` on the approval and record the
+same fact in the audit entry. **Refuse nothing.** Nobody is blocked and nobody sees a new dialog.
+
+**1b. One shared helper**, `checkSelfApproval(raiserPersonId, approverPersonId)`, called from every
+approval mutation. These are the sixteen:
 
 ```
 design/packages.ts        approveDesignFreeze
@@ -42,36 +50,36 @@ finance/finance.ts        certifyBillingMilestone, certifyProgressClaim,
 payroll/payroll.ts        approveRateTable, approvePeriod
 pipeline/proposals.ts     approveInternalReview, approveWon
 construction/reports.ts   approveSiteReport
-inventory/inventory.ts    approveAdjustment            (already correct — use as the model)
+inventory/inventory.ts    approveAdjustment            (already blocks — leave it blocking)
 om/om.ts                  approveVisitSignOff
 foundation/gates.ts       approveRequest
 ```
 Plus the purchase order approval and issue path in `procurement/`, and the document revision
-publish path in `documents/`. **Enumerate them yourself and report the full list** — if the count
-is not sixteen, say what you found.
+publish path in `documents/`. **Enumerate them yourself and report the full list.**
 
-**1b. The message must name the rule, not the gate number.** *"You raised this request, so you
-cannot approve it. It needs a second person."*
+**1c. The switch.** One row in `configuration_values`, which already exists with a `by_tenant_key`
+index:
 
-**1c. Do not offer an action that cannot succeed.** Where the signed-in person raised the record,
-the Approve control must be disabled or hidden, with a note saying a second person is required.
-Today the button is rendered and only refuses after it is pressed.
+```
+key:   "self_approval_mode"
+value: "record"              "record" or "block"
+```
 
-**1d.** This applies to the console holder and to the Chief Executive Officer. It is a
-same-person rule, not an authority rule — exactly as `inventory.ts:432` already treats it.
+While it reads `record`, the helper only marks. When a console holder changes it to `block`, the
+same helper refuses, with the message *"You raised this request, so you cannot approve it. It needs
+a second person."* **Ship it set to `record`.** Changing it is a console-holder action on
+Administration and is itself audited.
 
-**1e. The guard lives in the domain layer, not in the screen.** `convex/mcp/` reimplements writes
-inline rather than calling the domain modules, so a check added only to a page or only to a
-mutation the interface happens to call will not bind the protocol. Put it where both paths must
-pass through it, and confirm in your report that a record raised over the protocol cannot then be
-approved over the protocol by the same actor.
+**1d. Make it countable.** A record approved by the person who raised it shows a quiet marker on
+screen; the Board Pack carries a tile counting them; the Exception Report lists each one with who,
+what and when. This costs nobody any time and it means the history is complete rather than silent.
 
-**1f. An agent session is an actor like any other.** A protocol session carries a person identity.
-It may raise a record, or approve one, and never both on the same record. There is no exemption
-for automation.
+**1e. The helper lives in the domain layer, not in the screen.** `convex/mcp/` reimplements writes
+inline rather than calling the domain modules, so a check added only to a page will not bind the
+protocol. Put it where both paths pass through it.
 
-**1g. There is exactly one exception, and it is in item 12.** Build item 1 as an absolute rule
-first, then add item 12 on top of it.
+**1f. An agent session is an actor like any other** and is marked the same way. When the mode is
+later set to `block`, it is bound like anyone else.
 
 ## 2. Stop presenting the approval gate as a choice
 
@@ -249,95 +257,33 @@ that page.
 
 ---
 
-# PART D — the one exception, and who may operate it
+# PART D — what the protocol may see and do
 
-## 12. The start-up period — an owner override that turns itself off
-
-Sixty-three people start on Tuesday on a platform nobody has used. Things will be raised wrongly,
-people will be away, and somebody senior has to be able to unblock a record without waiting. That
-allowance must exist, must be visible, and **must switch itself off** rather than depending on
-anyone remembering to remove it.
-
-Build all three properties. An override with no expiry and no counter is how a temporary allowance
-becomes permanent.
-
-### 12a. The switch
-
-One row in `configuration_values`, which already exists with a `by_tenant_key` index:
-
-```
-key:   "startup_period_ends"
-value: "2026-09-30"          ISO date, Philippine time
-```
-
-**Evaluate it at read time.** There is no scheduler, no `runAfter`, no `runAt` and no cron anywhere
-in this codebase and there must not be one now — compare today's Philippine date against the stored
-date on each call.
-
-### 12b. What it permits, and only this
-
-While today is on or before that date, **a console holder — and nobody else** — sees a second
-action on a record they raised themselves: **"Approve as owner override"**.
-
-- It requires a **typed reason**. No default text, no dropdown, no empty submit.
-- It records who, when, and the reason, and marks the approval as an owner override.
-- Everyone who is not a console holder is refused outright, exactly as item 1 says. There is no
-  second action for them.
-- **A protocol or agent session may never use it**, whatever identity it holds. This is a human
-  judgement, so it needs a human.
-
-### 12c. Two things it may never override
-
-Absolute, inside the start-up period and outside it:
-
-1. **Approving a statutory rate table** (Gate 32)
-2. **Approving or disbursing a payroll period** (Gate 30)
-
-Those two reach a real person's pay. Everything else on the platform is a record that can be
-corrected; these two are not.
-
-### 12d. It has to be visible while it is on
-
-- A banner on every screen: *"Start-up period — an owner may approve their own request until
-  30 September 2026."* Sixty-three people should know the state of the rule they are working under.
-- **Board Pack:** a tile counting owner overrides used.
-- **Exception Report:** every override listed individually, with who, when, what and the reason.
-
-An override nobody can count is indistinguishable from no rule at all.
-
-### 12e. Turning it off
-
-- **Automatically**, when the date passes. Nothing breaks — approvals simply need a second person.
-- **Early**, by a console holder, with one action on Administration. That action is itself audited.
-- Extending the date is a console-holder action and is also audited. **Do not make it silent.**
-
-## 13. What the protocol may see and do
+## 12. The assistant's boundary
 
 The Chief Executive Officer works with an assistant that operates this platform over the protocol
-endpoint. It must be able to report on the state of these controls, and to carry out changes he
-has approved — and it must be bound by every rule above.
+endpoint. It must be able to report on the state of these controls and carry out changes he has
+approved.
 
-**13a. Readable over the protocol:** whether the start-up period is on and when it ends; how many
-owner overrides have been used, by whom, and for what reason; which records are awaiting approval
-and who is being waited on.
+**12a. Readable over the protocol:** the value of `self_approval_mode`; how many self-approvals have
+been recorded, by whom, and on what; which records are awaiting approval and who is being waited on.
 
-**13b. Writable only under the `decide` scope**, which is short-lived and issued deliberately:
-ending the start-up period early, and changing its end date. Every such change is audited with the
-session identifier that made it.
+**12b. Writable only under the short-lived `decide` scope:** changing `self_approval_mode`. Every
+such change is audited with the session identifier that made it.
 
-**13c. Never available over the protocol, under any scope:** using the owner override, approving
-any record the same session raised, and anything excluded by item 12c.
+**12c. Never available over the protocol, under any scope:** approving a statutory rate table
+(Gate 32), and approving or disbursing a payroll period (Gate 30). Those two reach a real person's
+pay and need a human at the keyboard.
 
-The rule is the same one item 1 states for people. It does not weaken because the actor is
-software.
-
-# 14. What to report back
+# 13. What to report back
 
 Do not report that these are done. Report each with its proof.
 
-1. **Self-approval.** List every approval mutation you found and confirm the guard is on each.
-   Then raise a write-off and try to approve it as the same person. Paste what happened.
-2. **Second person.** Confirm the Approve control is not offered to the raiser.
+1. **Self-approval.** List every approval mutation you found and confirm the helper is called from
+   each. Then raise a write-off and approve it yourself: confirm it **succeeds**, is marked, and
+   appears on the Board Pack tile and in the Exception Report.
+2. **The switch.** Set `self_approval_mode` to `block`, repeat the same test, paste the refusal,
+   then set it back to `record` and confirm it succeeds again. Ship it on `record`.
 3. **Gate from amount.** Raise four write-offs — ₱50,000 and ₱5,000,000, each at minor and major
    severity — and give me the four gates as a table. Confirm the two copies of the rule now agree.
 4. **Validation.** Try all five impossible values in the table at item 3 and paste each refusal.
@@ -349,10 +295,8 @@ Do not report that these are done. Report each with its proof.
 10. **Prefix delete.** Run it in preview mode for `Z1-` and paste the list it says it would delete.
     Do not run it for real — the Chief Executive Officer will.
 11. **Gates.** Say what the landing page reads now.
-12. **Start-up period.** With it on, self-approve one record as a console holder and paste the
-    reason you typed. Then set the date to yesterday and try the same thing again.
-13. **Protocol.** Confirm a record raised over the protocol cannot be approved over the protocol by
-    the same session, and that the owner override is not reachable over the protocol at all.
+12. **Protocol.** Confirm `self_approval_mode` is readable over the protocol, changeable only under
+    the `decide` scope, and that rate table and payroll approval are unreachable over it entirely.
 
 If any item cannot be built as written, say which and why **before** publishing the rest. Do not
 substitute a different fix without saying so.
