@@ -45,7 +45,7 @@ it, payroll is blocked for want of an approved table, which is safe but will con
 
 ## 2. The shape of Monday
 
-One prompt, twelve items, all verified. It is deliberately smaller than the full defect list because
+One prompt, thirteen items, all verified. It is deliberately smaller than the full defect list because
 **you have one day and you cannot publish something large the night before sixty-three people
 arrive.**
 
@@ -55,6 +55,7 @@ arrive.**
 | **Part B — small repairs** | Progress claims (one line) · Philippine-time dates · error boundary · safety stop without a project · video attachments |
 | **Part C — before Tuesday** | Delete-by-prefix tool · screen refreshes after a write · remember the selected project · the gate count |
 | **Part D — the boundary** | What the assistant may read, may change under your approval, and may never touch |
+| **Part E — the backup** | The export already exists and **silently misses twenty-two tables, including every message ever sent.** Fix the list, report per-table counts, add a read-only verify |
 
 Each is independently verifiable, so if Hercules runs out of time you can still publish the ones
 that landed.
@@ -74,7 +75,9 @@ that landed.
 
 ### After Hercules publishes (thirty minutes)
 
-- [ ] Work section 13 of the prompt yourself. It is twelve checks and each one is a single action.
+- [ ] Work section 14 of the prompt yourself. It is thirteen checks and each one is a single action.
+- [ ] **Take a backup Tuesday morning, before anyone signs in**, and run Verify on it. That file is
+      your clean starting point — the one you can always go back to.
 - [ ] Check the Board Pack shows a **self-approval counter**. That number is the only thing that
       tells you later whether the practice stayed rare or became the norm.
 - [ ] **Run the delete-by-prefix tool in preview for `Z1-` and `Z2-`.** Read the list before you
@@ -185,8 +188,16 @@ So the register is below. Some of it is a switch; most of it is work with a trig
 | 7 | **One person record** | Merge or bridge the workforce roster and the platform roster | Before the next intake of field staff |
 | 8 | **Variation orders** | Add the button; `createVariationOrder` already exists on the server | When the first variation is raised on a live job |
 | 9 | **The lease constant** | Decide whether ₱6.70 is per kilowatt-hour or per square metre, then fix the formula or the constant | **Before the next proposal goes to a client.** It is currently out by roughly 182× |
+| 10 | **Restore from a backup** | Build the import: identifier remapping, dependency order, chunked writes | First item of the next prompt. Monday only makes the backups honest; it does not make them restorable |
 
 Items 2 and 9 have real deadlines. The rest move when the trigger arrives.
+
+**On backups.** Monday's item 13 makes the export complete and checkable. It does **not** build the
+restore — writing 117 tables back means remapping every internal identifier, importing in
+dependency order and chunking around the write limits, and that must not be built untested the
+night before onboarding. So from Tuesday you will have honest monthly backups that you have
+verified, and no way to load one back until the next prompt. That is the right order: a backup you
+cannot trust is worse than no backup, and a restore you have never tested is worse still.
 
 ## 6. The register
 
