@@ -192,8 +192,22 @@ So the register is below. Some of it is a switch; most of it is work with a trig
 | 8 | **Variation orders** | Add the button; `createVariationOrder` already exists on the server | When the first variation is raised on a live job |
 | 9 | **The lease constant** | Decide whether ₱6.70 is per kilowatt-hour or per square metre, then fix the formula or the constant | **Before the next proposal goes to a client.** It is currently out by roughly 182× |
 | 10 | **Restore from a backup** | Build the import: identifier remapping, dependency order, chunked writes | First item of the next prompt. Monday only makes the backups honest; it does not make them restorable |
+| 11 | **Deployment independence** | Code to GitHub, own Convex account, swap the identity provider, migrate the data | **Deferred by decision — to run in parallel once the platform is operating sustainably.** Not urgent, and it should not compete with onboarding |
 
 Items 2 and 9 have real deadlines. The rest move when the trigger arrives.
+
+**On deployment independence (register item 11).** Measured, so the number exists when you want it:
+the platform is standard except for one package. `@usehercules/auth` appears in five files, and it is
+plain OpenID Connect — `authority`, `client_id`, `redirect_uri`, `scope`. Convex is a public product
+you can hold your own account with; the frontend is a Vite build that runs on any static host; the
+Google Drive credentials are already yours. **Empty deployment: half a day to a day. With your data
+moved and verified: about a week**, almost all of it the same identifier-remapping problem as item 10.
+
+One fact that only moves in one direction: the `users` table holds **five** rows today — five people
+have actually signed in. Changing identity provider invalidates each stored sign-in link and they
+re-link by email on next sign-in. Five people re-linking is nothing; sixty-three is a morning of
+support calls. So the auth swap gets modestly more expensive after Tuesday and then stays there.
+That is not a reason to delay onboarding. It is the reason this line is written down.
 
 **On backups.** Monday's item 13 makes the export complete and checkable. It does **not** build the
 restore — writing 117 tables back means remapping every internal identifier, importing in
