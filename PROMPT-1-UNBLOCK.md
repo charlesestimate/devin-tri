@@ -193,26 +193,28 @@ must never be blocked by a dropdown.
 
 ---
 
-## 6. Clear All Test Data is one click away from every administrator
+## 6. Separate Clear All Test Data from the seeding operations
 
-Administration → Setup and Migration lists "Migrate Hard Blocks to Specification",
-"Seed Roles", "Backfill General Channel", "Seed Project Names" — and in the same
-scrolling list, **"Clear All Test Data": one click, irreversible, every operational
-record**.
+**Correction to what a tester reported.** One tester described Clear All Test Data
+as "one click, irreversible". That is what the screen looks like, but it is not what
+the control does — the tester never pressed it. **The confirmation already exists and
+is well built:** `src/pages/admin/page.tsx:2110` requires the person to type
+`CLEAR ALL TEST DATA` exactly, the button stays disabled until it matches (line 2122),
+and `convex/foundation/clearTestData.ts:28` re-validates the phrase on the server.
+**Do not build a confirmation. It is already there.**
 
-Both testers deliberately refused to press it. Sixty staff arrive next week.
+Two smaller things are worth changing.
 
-### What to change
+**6a.** It sits in the same scrolling list as Seed Roles, Backfill General Channel and
+Seed Project Names. Move it out of that list, to the foot of the screen, visually
+separated and plainly marked as destructive. Presentation only — do not touch the
+confirmation logic.
 
-**6a.** Move it out of the list, to the foot of the screen, visually separated and
-plainly marked as destructive.
-
-**6b.** Require the person to type the workspace short code to confirm. A dialog
-with a button is not enough.
-
-**6c.** State what it deletes and that it cannot be undone, before they type.
-
----
+**6b. `trades` is in the wrong list.** `convex/foundation/clearTestDataInternal.ts`
+clears `trades` along with the operational data. Trades are reference data, like roles
+and gates, and the header comment of `clearTestData.ts` says reference data is
+preserved. **Move `trades` out of `TABLES_TO_CLEAR` and into the preserved set**, so
+that clearing test data does not leave a workspace unable to add a worker.
 
 ## 7. The landing page says twenty-nine gates. There are thirty.
 
@@ -251,7 +253,8 @@ Do not report that these are done. Report each one with its proof.
 5. **Time.** State the current Philippine date and time, then open New Permit to
    Work and say what date it defaults to.
 6. **Safety stop.** Raise one with no project and say whether it saved.
-7. **Clear All Test Data.** Describe what a person now has to do to reach it.
+7. **Clear All Test Data.** Confirm you did **not** change the confirmation logic,
+   and that `trades` is now preserved rather than cleared.
 8. **Gates.** Say what the landing page reads now.
 
 If any item cannot be built as written, say which and why **before** publishing the
