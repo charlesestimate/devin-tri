@@ -1,16 +1,16 @@
-# Monday — thirteen changes, then publish. Sixty-three people arrive Tuesday.
+# Monday — fourteen changes, then publish. Sixty-three people arrive Tuesday.
 
 Two automated testers swept the live platform on Saturday and raised 74 findings. This prompt
-contains **only the thirteen that must be true before sixty-three employees start using it**.
+contains **only the fourteen that must be true before sixty-three employees start using it**.
 Everything else is deliberately held.
 
-I have verified every line reference below against the current source. **Build all thirteen. Do
+I have verified every line reference below against the current source. **Build all fourteen. Do
 not redesign anything. Do not fix anything not listed here. Do not reply with a plan — build it,
-publish it, and report against section 14.**
+publish it, and report against section 15.**
 
 Order matters: Part A protects money, Part B is four small repairs, Part C lets the test data be
 removed before anyone sees it, Part D bounds what the assistant may do, and Part E repairs the
-backup so Tuesday's data can actually be recovered.
+backup so Tuesday's data can actually be recovered, and Part F is four lines for the phone.
 
 ---
 
@@ -340,7 +340,47 @@ platform's write limits — that is real work and it must not be built untested 
 sixty-three people arrive. It is the first item of the next prompt. Item 13e is what makes the
 backups you take in the meantime worth having.
 
-# 14. What to report back
+---
+
+# PART F — the phone, for the crews arriving Tuesday
+
+## 14. Four lines that decide whether a foreman can use this on site
+
+Field crews in Sorsogon and Dumaguete work from a phone, in gloves, in sun and rain. Four separate
+one-line faults make that harder than it needs to be. **This is the smallest item in this prompt.**
+
+**14a. Every control is below the minimum touch size.** `src/components/ui/button.tsx:24` sets the
+default height to `h-9` — **36 pixels**. The `sm` size is `h-8` (32px) and is used for most toolbar
+actions. Apple's minimum is 44 and Android's is 48. Raise the default and `sm` heights at the mobile
+breakpoint only, so the desktop layout is unchanged.
+
+**14b. The project picker is not width-constrained, and it overflows five modules.** In
+`construction/page.tsx:47` and the equivalent in `design/`, `procurement/`, `om/` and `finance/`, the
+picker is a fixed row whose label carries `truncate max-w-48` — 192 pixels for the text alone, before
+padding, gap and chevron. Comfortable at desktop width; at 375 pixels it pushes the page sideways.
+Measured on Saturday: **Design +5px, Operations and Maintenance +13px, Procurement +16px, Finance
++53px.** Constrain it responsively — one change, five modules.
+
+**14c. Payroll's tab strip cannot scroll.** `src/pages/payroll/page.tsx:30` renders
+`<TabsList className="mb-4">` with no scroll container. `src/pages/reports/page.tsx:473` already has
+the working pattern — `flex gap-1 mt-4 overflow-x-auto`. Apply it to Payroll. **Statutory Rate
+Tables is behind that strip and payroll cannot run without it.**
+
+**14d. Safety's header row does not wrap, and it clips the Raise Stop button.**
+`src/pages/safety/page.tsx:317` is `flex items-center justify-between gap-2` with no wrapping. At
+phone width the red **Raise Stop** button is pushed past the right edge and the pane does not scroll
+sideways. **This is the one control on the platform that exists for an emergency, it is always used
+on a phone, and on a phone it cannot be pressed.** Let the row wrap below 640 pixels, or make the
+action full-width beneath the filter.
+
+**14e.** Also give the mobile menu button an accessible name. It is 20×20 pixels with no label, and
+it is the first control anyone touches.
+
+**Do not redesign anything else for mobile.** A tester swept six modules at 375 pixels on Saturday
+and found **nothing absent and nothing unusable** — there is a real mobile layout and it works. These
+four faults are the exceptions.
+
+# 15. What to report back
 
 Do not report that these are done. Report each with its proof.
 
@@ -366,6 +406,8 @@ Do not report that these are done. Report each with its proof.
     `om_visits`, `payroll_lines`, `files` and `configuration_values` all appear with non-zero counts,
     and that `drive_connection` and `mcp_sessions` appear nowhere in the file. Then run
     **Verify backup file** against that same file and paste what it reports.
+14. **Phone.** At 375 pixels wide: press Raise Stop on Safety, reach Statutory Rate Tables on
+    Payroll, and confirm Finance no longer scrolls sideways. Say what the default button height is.
 
 If any item cannot be built as written, say which and why **before** publishing the rest. Do not
 substitute a different fix without saying so.
