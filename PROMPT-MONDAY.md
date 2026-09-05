@@ -1,15 +1,15 @@
-# Monday — eleven changes, then publish. Sixty-three people arrive Tuesday.
+# Monday — thirteen changes, then publish. Sixty-three people arrive Tuesday.
 
 Two automated testers swept the live platform on Saturday and raised 74 findings. This prompt
-contains **only the eleven that must be true before sixty-three employees start using it**.
+contains **only the thirteen that must be true before sixty-three employees start using it**.
 Everything else is deliberately held.
 
-I have verified every line reference below against the current source. **Build all eleven. Do not
-redesign anything. Do not fix anything not listed here. Do not reply with a plan — build it,
-publish it, and report against section 12.**
+I have verified every line reference below against the current source. **Build all thirteen. Do
+not redesign anything. Do not fix anything not listed here. Do not reply with a plan — build it,
+publish it, and report against section 14.**
 
 Order matters: Part A protects money, Part B is four small repairs, Part C lets the test data be
-removed before anyone sees it.
+removed before anyone sees it, and Part D is the one exception to Part A and who may operate it.
 
 ---
 
@@ -53,6 +53,13 @@ is not sixteen, say what you found.
 **1b. The message must name the rule, not the gate number.** *"You raised this request, so you
 cannot approve it. It needs a second person."*
 
+**1c. Do not offer an action that cannot succeed.** Where the signed-in person raised the record,
+the Approve control must be disabled or hidden, with a note saying a second person is required.
+Today the button is rendered and only refuses after it is pressed.
+
+**1d.** This applies to the console holder and to the Chief Executive Officer. It is a
+same-person rule, not an authority rule — exactly as `inventory.ts:432` already treats it.
+
 **1e. The guard lives in the domain layer, not in the screen.** `convex/mcp/` reimplements writes
 inline rather than calling the domain modules, so a check added only to a page or only to a
 mutation the interface happens to call will not bind the protocol. Put it where both paths must
@@ -65,13 +72,6 @@ for automation.
 
 **1g. There is exactly one exception, and it is in item 12.** Build item 1 as an absolute rule
 first, then add item 12 on top of it.
-
-**1c. Do not offer an action that cannot succeed.** Where the signed-in person raised the record,
-the Approve control must be disabled or hidden, with a note saying a second person is required.
-Today the button is rendered and only refuses after it is pressed.
-
-**1d.** This applies to the console holder and to the Chief Executive Officer. It is a
-same-person rule, not an authority rule — exactly as `inventory.ts:432` already treats it.
 
 ## 2. Stop presenting the approval gate as a choice
 
@@ -331,7 +331,7 @@ any record the same session raised, and anything excluded by item 12c.
 The rule is the same one item 1 states for people. It does not weaken because the actor is
 software.
 
-# 12. What to report back
+# 14. What to report back
 
 Do not report that these are done. Report each with its proof.
 

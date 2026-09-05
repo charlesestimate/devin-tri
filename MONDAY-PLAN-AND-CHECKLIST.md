@@ -45,7 +45,7 @@ it, payroll is blocked for want of an approved table, which is safe but will con
 
 ## 2. The shape of Monday
 
-One prompt, eleven items, all verified. It is deliberately smaller than the full defect list because
+One prompt, thirteen items, all verified. It is deliberately smaller than the full defect list because
 **you have one day and you cannot publish something large the night before sixty-three people
 arrive.**
 
@@ -54,6 +54,7 @@ arrive.**
 | **Part A — protects money** | Self-approval guard on all sixteen approvals · gate derived from amount, not chosen · five validations that let impossible things through |
 | **Part B — small repairs** | Progress claims (one line) · Philippine-time dates · error boundary · safety stop without a project · video attachments |
 | **Part C — before Tuesday** | Delete-by-prefix tool · screen refreshes after a write · remember the selected project · the gate count |
+| **Part D — the exception** | The start-up period: an owner override that counts itself and switches itself off on 30 September · what the protocol may see and do |
 
 Each is independently verifiable, so if Hercules runs out of time you can still publish the ones
 that landed.
@@ -68,13 +69,18 @@ that landed.
       around it.
 - [ ] **Do not press Disburse on PAY-2026-002.** It is approved and one click from paying on fake
       rates.
-- [ ] Decide whether you want an explicit **owner override** on approvals — a named action that
-      records who, when and why — or a hard rule with no exception. Tell me and I will add it to the
-      prompt before you send it. **Right now there is neither, which is the worst of the three.**
+- [ ] **Confirm the start-up period end date.** The prompt says **30 September 2026**. That is
+      three weeks of settling in and it lands before the October pay run. Change it in the prompt if
+      you want longer or shorter — but set a date, because the date is what turns it off.
+- [ ] Confirm you are happy that **two things can never be overridden**: approving a statutory rate
+      table, and approving or disbursing a payroll period. Those are the only two that reach a real
+      person's pay.
 
 ### After Hercules publishes (thirty minutes)
 
-- [ ] Work section 12 of the prompt yourself. It is eleven checks and each one is a single action.
+- [ ] Work section 14 of the prompt yourself. It is thirteen checks and each one is a single action.
+- [ ] Check the **start-up period banner** appears, and that the Board Pack has an override counter.
+      If you cannot see the override being counted, the exception is not safe to keep.
 - [ ] **Run the delete-by-prefix tool in preview for `Z1-` and `Z2-`.** Read the list before you
       confirm it. 87 records; the audit entries stay and that is correct.
 - [ ] Check PRJ-2026-0006 is gone with them. It is the test project carrying the 2027 contract, the
@@ -102,6 +108,10 @@ Open everything **except three modules**, for one week.
 Documents · Manpower · Permits · Pipeline
 
 **Hold for one week:** **Finance · Procurement approvals · Payroll**
+
+If item 1 and item 12 both land on Monday, this hold is unnecessary — open everything. The reason
+to hold was that an approval recorded with no control is permanent in the audit chain. With the
+guard in place and the override counted, the record is honest either way.
 
 Not because money will be lost — nothing on the platform moves cash — but because until the guard
 lands, every approval recorded is an approval your audit chain will show as uncontrolled. **The
