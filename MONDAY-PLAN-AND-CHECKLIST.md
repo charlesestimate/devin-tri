@@ -45,7 +45,7 @@ it, payroll is blocked for want of an approved table, which is safe but will con
 
 ## 2. The shape of Monday
 
-One prompt, thirteen items, all verified. It is deliberately smaller than the full defect list because
+One prompt, fourteen items, all verified. It is deliberately smaller than the full defect list because
 **you have one day and you cannot publish something large the night before sixty-three people
 arrive.**
 
@@ -56,6 +56,7 @@ arrive.**
 | **Part C — before Tuesday** | Delete-by-prefix tool · screen refreshes after a write · remember the selected project · the gate count |
 | **Part D — the boundary** | What the assistant may read, may change under your approval, and may never touch |
 | **Part E — the backup** | The export already exists and **silently misses twenty-two tables, including every message ever sent.** Fix the list, report per-table counts, add a read-only verify |
+| **Part F — the phone** | Four one-line faults: touch targets below the minimum, the picker that overflows five modules, Payroll's unscrollable tabs, and **Raise Stop clipped off the screen** |
 
 Each is independently verifiable, so if Hercules runs out of time you can still publish the ones
 that landed.
@@ -75,7 +76,9 @@ that landed.
 
 ### After Hercules publishes (thirty minutes)
 
-- [ ] Work section 14 of the prompt yourself. It is thirteen checks and each one is a single action.
+- [ ] Work section 15 of the prompt yourself. It is fourteen checks and each one is a single action.
+- [ ] **On your own phone**, press Raise Stop on Safety and open Statutory Rate Tables on Payroll.
+      Those two are what the field crews meet on day one.
 - [ ] **Take a backup Tuesday morning, before anyone signs in**, and run Verify on it. That file is
       your clean starting point — the one you can always go back to.
 - [ ] Check the Board Pack shows a **self-approval counter**. That number is the only thing that

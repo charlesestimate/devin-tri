@@ -9,7 +9,7 @@ not redesign anything. Do not fix anything not listed here. Do not reply with a 
 publish it, and report against section 15.**
 
 Order matters: Part A protects money, Part B is four small repairs, Part C lets the test data be
-removed before anyone sees it, Part D bounds what the assistant may do, and Part E repairs the
+removed before anyone sees it, Part D bounds what the assistant may do, Part E repairs the
 backup so Tuesday's data can actually be recovered, and Part F is four lines for the phone.
 
 ---
