@@ -276,6 +276,14 @@ such change is audited with the session identifier that made it.
 (Gate 32), and approving or disbursing a payroll period (Gate 30). Those two reach a real person's
 pay and need a human at the keyboard.
 
+**This is not currently true, and it is the sharpest example of the protocol bypassing the domain
+layer.** `convex/mcp/group3cInternals.ts:137` — `toolUpdatePayrollPeriod` — accepts a `status`
+argument and, at line 143, if the string is `"approved"` it stamps `approvedAt`/`approvedBy`, and
+if it is `"disbursed"` it stamps `disbursedAt`/`disbursedBy`. **No parallel runs, no Gate 30
+reference, no run guard** — the browser enforces all three; the protocol patches the row. Remove
+`approved` and `disbursed` from the statuses that tool will accept, and make the browser's
+`approvePeriod` the only path to either.
+
 ---
 
 # PART E — the backup is not backing everything up
