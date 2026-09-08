@@ -1,0 +1,180 @@
+<html><body style='font-family:Arial;font-size:10.5pt'><h1>Part 9 of 10 — Govern</h1>
+<p><b>Level-1 cross-functional map · as specified · 8 September 2026</b> <b>Companion files:</b> <code>Part 9 — Govern (A3 landscape).pdf</code> and <code>.svg</code> in the same folder</p>
+<hr/>
+<h2>1. What this process is for</h2>
+<p>Parts 2 to 8 mapped what the company does. This part maps <b>who is allowed to change the rules those parts run on</b>, and how anyone would later prove what was changed and by whom.</p>
+<p>Four chains. <b>Stand the console up</b> creates the two people who hold the keys. <b>Configure</b> changes the numbers and the approvers — thresholds, system constants, gate assignments. <b>Grant authority</b> decides who holds which role and what a role may do. <b>Prove it</b> is the audit chain, the export and the erasure.</p>
+<p><b>Starts:</b> the first sign-in, before any project exists. <b>Ends:</b> an export that a regulator, an auditor or a buyer could read.</p>
+<p>This is the part where the platform's own safeguards are the subject rather than the tool, and it produced the sharpest single finding of the series.</p>
+<hr/>
+<h2>2. The finding</h2>
+<p><b>Fifty-six role grants are live in the company. Exactly one carries a gate 24 approval, and that one was raised and approved by the same person.</b></p>
+<p>I counted this on the live platform this afternoon, person by person: 56 rows in <code>person_roles</code>, 2 revoked, and one single row carrying a <code>gateRequestId</code>. That request (<code>j971ag7x740fhjej2f57wp4hr18dpbfa</code>) has <code>requestedBy</code> and <code>decidedBy</code> set to the same person — you — with timestamps exactly one minute apart on the round minute, which is the signature of a row written directly rather than one produced by an approval screen.</p>
+<p>Six of the fifty-five ungated grants I made myself, an hour before writing this, when I added the Design and Permitting teams. The tool let me. It asked nothing.</p>
+<p>That is not a criticism of the tool call. It is the point of the part: <b>the platform's authority model is currently a convention, not a control.</b> Everyone has behaved well, so nothing has gone wrong. Nothing in the code would have stopped it if someone had not.</p>
+<hr/>
+<h2>3. Lanes in this map</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>Lane</th><th>Who</th><th>Why it is here</th></tr>
+<tr><td>Console Holders</td><td>The two key-holders</td><td>The only bypass the platform admits to in writing</td></tr>
+<tr><td>Executive</td><td>Chief Executive Officer, Chief Operating Officer</td><td>Named on gates 22, 31 and 32</td></tr>
+<tr><td>Department Heads</td><td>Directors, Head of Finance</td><td>Named on gate 24</td></tr>
+<tr><td>Document Control</td><td>Document Controller</td><td>Named on gate 33</td></tr>
+<tr><td>Model Context Protocol</td><td>The second door</td><td>Governance is where the two doors differ most</td></tr>
+<tr><td>The Platform</td><td>Derived and automatic</td><td>Seeding, the audit chain, the sidebar</td></tr>
+</table>
+<p>The Model Context Protocol earns a lane of its own in this part and no other. Everywhere else it is a convenience. Here it is a second writer to the same tables with different rules, and in three places the difference is destructive.</p>
+<hr/>
+<h2>4. Standing the console up</h2>
+<p>The platform admits exactly two console holders. <code>addConsoleHolder</code> refuses a third, and <code>removeConsoleHolder</code> refuses to remove the last one. Both refusals are correct and both are written plainly.</p>
+<p>Neither mutation checks that the caller is a console holder.</p>
+<p>While fewer than two holders exist, any signed-in person can add themselves. A console holder may then use <code>directAssignRole</code>, which is the one honest bypass in the platform: it is console-holder only, and its audit entry records <code>bypassedGate: "24"</code> in as many words. So the escalation path is short and it is not hypothetical — it is: add yourself as the second holder, then grant yourself any role including Chief Executive Officer.</p>
+<p>The live rows show the mechanism half-built. There are two holders, both added by the same person. The first carries <code>holderRank: "second"</code> — the bootstrap sets that literal on the first holder — and the second carries no rank at all. Gate 32's specification reads <i>"first console holder only"</i>. <b>Against this data there is no first console holder.</b> The rule cannot be evaluated even in principle.</p>
+<hr/>
+<h2>5. Configuring</h2>
+<h3>The five governing gates have no approver</h3>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>Gate</th><th><code>seed.ts</code> says</th><th>The live row says</th><th>Primary approver</th><th>Alternate</th></tr>
+<tr><td>22</td><td>System Constant Change</td><td>System Constant Change</td><td><b>none</b></td><td>none</td></tr>
+<tr><td>24</td><td>Role Assignment</td><td><b>Employment Offer</b></td><td><b>none</b></td><td>none</td></tr>
+<tr><td>31</td><td>Threshold and Configuration Change</td><td>Threshold Configuration</td><td><b>none</b></td><td>none</td></tr>
+<tr><td>32</td><td>Role Permission Change</td><td><b>Access Review</b></td><td><b>none</b></td><td>none</td></tr>
+<tr><td>33</td><td>Document Classification</td><td>Document Classification</td><td><b>none</b></td><td>none</td></tr>
+</table>
+<p>Every one of the five has <code>primaryRoleName</code> and <code>primaryPersonId</code> empty. The roles they name — Chief Executive Officer, Chief Operating Officer, Director, Head of Finance, Document Controller — all exist, are active, and are marked as approvers. <b>This is unconfigured, not unconfigurable.</b> It is an afternoon's work on the Administration screen.</p>
+<p>It has one immediate consequence. <code>assignRole</code> refuses to run when gate 24 has no primary approver, with the message <i>"Gate 24 (Role Assignment) has no primary approver assigned. Contact an administrator."</i> <b>Role assignment through the Administration screen cannot succeed today.</b> That is why every grant in section 2 arrived by tool call or direct assignment: the front door is bolted and the side door is open.</p>
+<p>Gate 24 also carries the register problem from Part 5 in its purest form. <code>seed.ts</code> calls it Role Assignment; the live row calls it Employment Offer; the human resources module uses it for offers and the identity module uses it for role grants. An approver opening that request sees "Employment Offer" and is in fact approving a grant of authority.</p>
+<p>Gate 32 has three claimants: <code>seed.ts</code> calls it Role Permission Change, <code>compliance.ts</code> calls it Access Review, and <code>identity.ts</code> uses it for permission upserts. The live row sides with compliance.</p>
+<h3>Changing a gate is itself ungated</h3>
+<p><code>updateGateConfig</code> takes no approval reference at all — there is no argument for one. It enforces one rule correctly (a no-alternate gate can never be given an alternate, F3.6) and nothing else.</p>
+<p>It can change the approver on <b>gate 31 itself</b>. The guard can move its own guard, in one call, with no second signature.</p>
+<h3>The system constants</h3>
+<p><code>changeConstant</code> does the right thing structurally: it closes the open version by setting <code>effectiveTo</code>, then inserts a new row. The timeline is preserved rather than overwritten.</p>
+<p>Its <code>approvalRequestId</code> is an <b>optional</b> argument, stored into <code>changedByGate</code> without being looked up, without being checked for approval, and without being checked to be a gate 22 request at all. The comment above it says <i>"requires gate 22 approval"</i>. It does not.</p>
+<p>Live: nine constant rows, four keys, six changes made — and <code>changedByGate</code> is empty on every single row. Gate 22 has never fired.</p>
+<h3>The second writer has already done damage</h3>
+<p><code>update_system_constant</code>, over the Model Context Protocol, patches <code>numericValue</code> <b>in place</b>. It does not close a version and open a new one. It rewrites what a constant used to be.</p>
+<p>The result is visible in the live data:</p>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>Key</th><th>From</th><th>To</th><th>Value</th></tr>
+<tr><td>markup_major_equipment</td><td>2026-09-03</td><td>2030-01-01</td><td>115</td></tr>
+<tr><td>markup_major_equipment</td><td><b>2030-01-01</b></td><td><b>2026-09-07</b></td><td>116</td></tr>
+<tr><td>markup_major_equipment</td><td>2026-09-07</td><td>open</td><td>120</td></tr>
+</table>
+<p>The middle row begins three years and four months after it ends. Two consequences follow mechanically from <code>getConstantAtDate</code>, which filters on <code>effectiveFrom &lt;= date</code> and takes the last:</p>
+<ul><li><b>Today</b>, the 115 row claims to be in force until 2030 while the lookup returns 120 from 7 September. The stored window is a lie; the answer happens to be right.</li><li><b>From 1 January 2030</b>, the lookup selects the 116 row, sees its <code>effectiveTo</code> has already passed, and <b>throws</b> rather than returning a number. A pricing constant with a fixed future failure date.</li></ul>
+<p>Nothing in this is exotic. Two writers were given the same table and different ideas about what "change" means.</p>
+<hr/>
+<h2>6. Granting authority</h2>
+<h3>The role goes live before the gate is answered</h3>
+<p><code>assignRole</code> raises a real gate 24 request — one of the few places in the platform that builds one properly, copying the approver role off the gate row. In the same transaction it inserts the <code>person_roles</code> row with <code>revoked: false</code>.</p>
+<p>The comment calls this "a pending state". Nothing anywhere treats it as one. Every consumer — the sidebar, the person list, and <code>checkGateAuthorisation</code> in the gate engine itself — filters on <code>revoked</code>, never on whether the governing request was approved. And no code path revokes the row if the request is refused. A refused gate 24 leaves the role in place for ever.</p>
+<p>This composes into something worse. Because the role is live immediately, and because R6 refuses <b>the requester</b>, not the subject:</p>
+<p><b>A assigns B the Chief Operating Officer role. B holds it from that instant. B is now authorised on every gate whose primary is Chief Operating Officer — including gate 24. B approves the request that granted B the role.</b></p>
+<p>R6 is never touched. It is working exactly as written. The hole is that the grant is effective before the decision.</p>
+<h3>Removing authority needs nothing at all</h3>
+<p><code>revokeRole</code> takes a person-role id and an optional reason. No gate, no role check, no console holder. Granting authority raises a request that nobody answers; taking it away raises nothing. If a hostile actor ever reached the platform, revoking the Chief Operating Officer's roles would be the first thing available to them and the cheapest.</p>
+<h3>The second door again</h3>
+<p><code>create_person_role</code> over the Model Context Protocol raises no gate, checks no duplicate and checks no console holder. <code>create_role</code> has no uniqueness check on the machine name, while the screen path <code>createRole</code> does — and gate authorisation resolves by machine name. A duplicate <code>chief_operating_officer</code> role would confer every Chief Operating Officer gate on whoever holds it. Worse, the screen path reads that name with <code>.unique()</code>, so once a duplicate exists the Administration screen throws on that role permanently.</p>
+<p><code>update_person_role</code> accepts <code>revoked: false</code> and silently ignores it — only <code>true</code> is acted on. It returns "updated" either way.</p>
+<h3>Permissions decide the menu and nothing else</h3>
+<p><code>setRolePermission</code> carries its own confession in the comment above it: <i>"Requires gate 32 approval — but for now records it directly and logs it. Full gate enforcement will be layered in Milestone 1 conformance fix."</i> Gate 32 is a to-do note.</p>
+<p>That matters less than it looks, because the <code>permissions</code> table has exactly one consumer in the entire product: <code>getMyVisibleObjectTypes</code>, the query behind the navigation sidebar. <b>No mutation anywhere asks whether the caller holds a permission before writing.</b> Permissions paint the menu. They do not restrain anyone.</p>
+<p>There is also a duplicate register underneath: <code>roles</code> carries <code>recordScope</code> and <code>moneyVisibility</code>, and every <code>permissions</code> row carries its own. Two places hold the same fact and no code reconciles them.</p>
+<hr/>
+<h2>7. Documents</h2>
+<p>Document control is the best-built module in this part and it is governed by the weakest gate.</p>
+<p><b>Gate 33 is named for an act the platform cannot perform.</b> The register calls it Document Classification — <i>"classify or reclassify a document"</i>. <code>documentClass</code> is set at <code>createDocument</code> and there is no reclassification path anywhere: not in the module, not on the screen, not in the tool surface. <code>update_document</code> takes title, status, legal hold and tags, and not the class. A document filed under the wrong class is filed under the wrong class for ever, and each revision snapshots that class as it is published.</p>
+<p>The one thing gate 33 does enforce is the precondition: an <code>unclassified</code> document cannot be published in force. That is hard block 4 and it works. The <i>approval</i> half has no code at all — <code>publishRevision</code> has no gate, no approver check and no self-approval refusal.</p>
+<p><code>publishRevision</code> is otherwise careful: it supersedes the current in-force revision, sets <code>in_force_to</code>, links the supersession and moves the document pointer, all in one transaction. Its <code>in_force_from</code> is a free argument, so a revision can be recorded as having been in force before it existed, and the superseded revision's end date moves with it.</p>
+<p>Three more, briefly:</p>
+<ul><li><b>Legal hold is a free boolean.</b> It is the strongest control in the module — it blocks new revisions, blocks voiding, blocks the retention timer — and any signed-in person can set it and any signed-in person can clear it, with no reason recorded and no gate.</li><li><b><code>update_document_revision</code> takes <code>status</code> as free text</b> over the Model Context Protocol. A revision can be set to <code>in_force</code> without the unclassified refusal and without superseding the current one. Two in-force revisions then break <code>publishRevision</code> for that document permanently, because it reads the current one with <code>.unique()</code>.</li><li><b><code>doc_requirements.requiredByGateId</code> is a number.</b> Gates 25a and 25b are strings. Those two gates can never be expressed as a document requirement.</li></ul>
+<hr/>
+<h2>8. Proving it</h2>
+<p>Two things in this part are completely right, and they are the two that matter most to an auditor.</p>
+<p><b>The audit chain.</b> Every write appends a hash-linked, sequence-numbered entry, and <code>verifyAuditChain</code> walks it, recomputes each hash over a canonical ordering of the same fields, and reports the first sequence at which it breaks. It is on the Administration screen. It works. It is the second piece of the platform, after the gate engine, that is finished and correct.</p>
+<p><b>The attested export.</b> Initiated by a person and attested by a person, with no scheduler anywhere — exactly as the locked principles require. The shape of it is right, and it is the nearest thing to a complete picture of the company that anyone can hold.</p>
+<p>It is not, however, complete, and it has a flaw that will matter the day a second tenant exists. The schema defines 116 tables. The export names 98. Three of those 98 are not tables at all — <code>payroll_workers</code>, <code>payroll_rate_tables</code> and <code>payroll_disbursements</code> do not exist — and the loop's <code>catch</code> quietly reports them as empty rather than failing. <b>Twenty-one real tables are missing</b>, among them every operations-and-maintenance table (visits, readings, defects, schedules), <code>payroll_lines</code> — the actual pay amounts — the statutory rate tables, <code>identity_links</code>, <code>files</code>, <code>configuration_values</code>, and the whole of internal messaging.</p>
+<p>The flaw is in the fallback. Each table is read through its <code>by_tenant</code> index; if that index does not exist the code catches the error and re-reads the table <b>unfiltered</b>, taking up to 1,000 rows. Fourteen of the exported tables have no <code>by_tenant</code> index, and they include <code>audit_entries</code>, <code>encryption_keys</code> and <code>supplier_bank_accounts</code>. On a single-tenant deployment this is invisible and harmless. On the day a second tenant is created, the compliance export — the artefact whose entire purpose is to be handed to an outsider — begins including another company's audit chain, key rows and supplier bank details.</p>
+<p>Each table is also capped at 10,000 rows with no flag to say it was truncated. <code>audit_entries</code> will pass that line first, and when it does the export will silently stop being the record it claims to be.</p>
+<p>And then there is the one that is not right at all.</p>
+<h3>Cryptographic erasure</h3>
+<p><code>performErasure</code> destroys a person's encryption key permanently. Their audit entries become unreadable for ever. It is the only genuinely irreversible operation in the platform.</p>
+<p>It requires: a reason string that is not blank.</p>
+<p>No gate — no gate in the register covers it. No role check. No console-holder check. No second signature. Any signed-in person can erase any other person, including a console holder, and the audit entry recording that they did so is written into a chain that the erasure has just made partly unreadable.</p>
+<p>This is the item from Part 9 that should not wait for Monday.</p>
+<hr/>
+<h2>9. The RACI</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>Step</th><th>Console Holder</th><th>CEO</th><th>COO</th><th>Director</th><th>Doc Controller</th><th>Everyone signed in</th></tr>
+<tr><td>9.1 First console holder</td><td><b>R / A</b></td><td><b>I</b></td><td>I</td><td></td><td></td><td></td></tr>
+<tr><td>9.2 Second console holder</td><td><b>A</b></td><td><b>C</b></td><td><b>C</b></td><td>I</td><td></td><td><b>R today</b></td></tr>
+<tr><td>9.3 Gate rows seeded</td><td><b>I</b></td><td>I</td><td>I</td><td></td><td></td><td></td></tr>
+<tr><td>9.4 Configure a gate (G31)</td><td><b>C</b></td><td><b>C</b></td><td><b>R / A</b></td><td>I</td><td>I</td><td><b>R today</b></td></tr>
+<tr><td>9.5 Gates unconfigured</td><td>I</td><td><b>I</b></td><td><b>I</b></td><td>I</td><td>I</td><td></td></tr>
+<tr><td>9.6 Change a constant (G22)</td><td>I</td><td>I</td><td><b>R / A</b></td><td><b>C</b></td><td></td><td><b>R today</b></td></tr>
+<tr><td>9.7 Constant by tool call</td><td>I</td><td>I</td><td><b>I</b></td><td></td><td></td><td><b>R</b></td></tr>
+<tr><td>9.8 The timeline</td><td></td><td></td><td><b>I</b></td><td></td><td></td><td></td></tr>
+<tr><td>9.9 Assign a role (G24)</td><td>C</td><td>I</td><td><b>A</b></td><td><b>R</b></td><td></td><td><b>R today</b></td></tr>
+<tr><td>9.10 Screen path refuses</td><td>I</td><td>I</td><td><b>I</b></td><td><b>I</b></td><td></td><td></td></tr>
+<tr><td>9.11 Role by tool call</td><td><b>I</b></td><td>I</td><td><b>I</b></td><td>I</td><td></td><td><b>R</b></td></tr>
+<tr><td>9.12 Direct assignment</td><td><b>R / A</b></td><td>I</td><td>I</td><td>I</td><td></td><td></td></tr>
+<tr><td>9.13 Change permissions (G32)</td><td><b>C</b></td><td><b>R / A</b></td><td><b>C</b></td><td>I</td><td></td><td><b>R today</b></td></tr>
+<tr><td>9.14 Sidebar painted</td><td></td><td></td><td>I</td><td></td><td></td><td><b>I</b></td></tr>
+<tr><td>9.15 Classify a document (G33)</td><td></td><td></td><td>I</td><td>C</td><td><b>R / A</b></td><td><b>R today</b></td></tr>
+<tr><td>9.16 Publish a revision</td><td></td><td></td><td>I</td><td>C</td><td><b>A</b></td><td><b>R today</b></td></tr>
+<tr><td>9.17 Revision by tool call</td><td></td><td></td><td>I</td><td></td><td><b>I</b></td><td><b>R</b></td></tr>
+<tr><td>9.18 Legal hold</td><td></td><td><b>C</b></td><td><b>C</b></td><td>I</td><td><b>A</b></td><td><b>R today</b></td></tr>
+<tr><td>9.19 Audit chain</td><td><b>I</b></td><td><b>I</b></td><td><b>I</b></td><td>I</td><td>I</td><td></td></tr>
+<tr><td>9.20 Cryptographic erasure</td><td><b>C</b></td><td><b>A</b></td><td><b>C</b></td><td>I</td><td></td><td><b>R today</b></td></tr>
+<tr><td>9.21 Export and attest</td><td><b>R</b></td><td><b>A</b></td><td><b>C</b></td><td>I</td><td>I</td><td><b>R today</b></td></tr>
+</table>
+<p><b>Reading the matrix.</b> The right-hand column is the finding. On nine of the twenty-one steps, the person who is Responsible in the live build is <i>anyone with a sign-in</i> — and on seven of those nine, the specification names a specific officer. The gap between column six and columns two to five is the whole of Part 9.</p>
+<p>The Chief Executive Officer appears as Accountable exactly twice, on permissions and on erasure, and holds neither control today.</p>
+<hr/>
+<h2>10. Hand-offs</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>From → To</th><th>At step</th><th>What crosses</th><th>What stalls it</th></tr>
+<tr><td>Console → Executive</td><td>9.2 → 9.4</td><td>The right to configure</td><td>Nothing checks it</td></tr>
+<tr><td><b>Executive → every other part</b></td><td><b>9.4 → all</b></td><td><b>Who approves what</b></td><td><b>Nothing. One call, no signature</b></td></tr>
+<tr><td>Executive → Finance and Sales</td><td>9.6 → Parts 2, 4, 6</td><td>Markups, yields, rates</td><td>Already inconsistent — see section 5</td></tr>
+<tr><td><b>Department Head → the gate engine</b></td><td><b>9.9 → all</b></td><td><b>A person's authority</b></td><td><b>The grant is live before the answer</b></td></tr>
+<tr><td>Executive → the sidebar</td><td>9.13 → 9.14</td><td>What a role may see</td><td>Nothing else consumes it</td></tr>
+<tr><td>Document Control → Site</td><td>9.16 → Part 5</td><td>A revision in force</td><td>Correct, and ungated</td></tr>
+<tr><td>Platform → the auditor</td><td>9.19 → 9.21</td><td>The proof</td><td>Erasure can quietly remove part of it, and the export omits 21 tables</td></tr>
+</table>
+<hr/>
+<h2>11. Where the live build differs from this map</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>#</th><th>The map says</th><th>The live build</th><th>Severity</th></tr>
+<tr><td>G-1</td><td>Erasure is authorised</td><td>Reason string only; no gate, no role, irreversible</td><td><b>Highest</b></td></tr>
+<tr><td>G-2</td><td>Gates 22, 24, 31, 32, 33 have approvers</td><td>All five empty</td><td><b>Highest</b></td></tr>
+<tr><td>G-3</td><td>A role takes effect when gate 24 is approved</td><td>Live on insert; refusal never revokes</td><td><b>Highest</b></td></tr>
+<tr><td>G-4</td><td>Role assignment works on the screen</td><td>Refuses — gate 24 has no primary</td><td>High</td></tr>
+<tr><td>G-5</td><td>Constant changes carry a gate reference</td><td>Six changes, zero references</td><td>High</td></tr>
+<tr><td>G-6</td><td>One writer per table</td><td>Tool calls overwrite constant history; one key is already incoherent</td><td>High</td></tr>
+<tr><td>G-7</td><td>Gate config is approved</td><td><code>updateGateConfig</code> takes no approval argument and can rewrite gate 31</td><td>High</td></tr>
+<tr><td>G-8</td><td>Console holders are added by console holders</td><td>Neither add nor remove checks the caller</td><td>High</td></tr>
+<tr><td>G-9</td><td>Gate 32 governs permissions</td><td>Comment admits no enforcement; permissions only paint the sidebar</td><td>Medium</td></tr>
+<tr><td>G-10</td><td>Gate 33 governs reclassification</td><td>No reclassification path exists</td><td>Medium</td></tr>
+<tr><td>G-11</td><td>Legal hold is controlled</td><td>Free boolean, either direction, no reason</td><td>Medium</td></tr>
+<tr><td>G-12</td><td>Revisions become in force through publish</td><td>Tool call sets the status directly and can break the document</td><td>Medium</td></tr>
+<tr><td>G-13</td><td>Removing a role is governed</td><td><code>revokeRole</code> needs nothing</td><td>Medium</td></tr>
+<tr><td>G-14</td><td>A gate has one meaning</td><td>Gate 24 has two, gate 32 has three</td><td>Medium</td></tr>
+<tr><td>G-15</td><td>There is a first console holder</td><td>One row says "second", the other says nothing</td><td>Low</td></tr>
+<tr><td>G-16</td><td>Document requirements can name any gate</td><td><code>requiredByGateId</code> is a number; 25a and 25b cannot be expressed</td><td>Low</td></tr>
+<tr><td>G-17</td><td>The export is the complete record</td><td>98 of 116 tables, three of them phantom; every O&amp;M table and <code>payroll_lines</code> missing</td><td>High</td></tr>
+<tr><td>G-18</td><td>The export is tenant-scoped</td><td>14 tables fall back to an unfiltered read — including <code>audit_entries</code>, <code>encryption_keys</code>, <code>supplier_bank_accounts</code></td><td><b>Highest on a second tenant</b></td></tr>
+</table>
+<p>Eighteen items. Three of them — G-1, G-2 and G-18 — are worth more than the other fifteen together. G-2 is an afternoon on a screen that already exists. G-18 costs nothing today and costs everything on the day the platform serves a second company.</p>
+<hr/>
+<h2>12. What this changes about Monday</h2>
+<p>Part 8 reduced twelve reported defects to one instruction: <i>route every approval through <code>foundation/gates.ts</code></i>. Part 9 adds four more, and three of them are smaller than they look.</p>
+<ol><li><b>Configure the five governing gates.</b> No code. The screen exists, the roles exist. This alone turns G-2, G-4 and half of G-3 from findings into settings.</li><li><b>Make the grant follow the decision, not precede it.</b> One filter — a role is effective when it has no governing request, or its governing request is approved — applied in <code>checkGateAuthorisation</code> and in the two queries that list a person's roles.</li><li><b>Put a gate on erasure</b>, or until then, remove the button. It is the one thing here that cannot be undone.</li><li><b>Delete the unfiltered fallback in the export.</b> Add the missing <code>by_tenant</code> indexes and let the read fail loudly rather than succeed across tenants. Four lines, and it stops being a data-protection incident waiting for a second customer.</li></ol>
+<p>The Model Context Protocol findings (G-6, G-12) are a different shape and belong in a separate instruction: the tool surface should call the same mutations the screens call, not reimplement them. That is the theme of Part 10.</p>
+<hr/>
+<h2>13. What is deliberately not in this part</h2>
+<p>Money thresholds and amount bands are gate 31's subject in name, but they live in the gate rows and in code constants, not in <code>configuration_values</code> — which holds two sequence counters and nothing else. Mapping where each threshold actually lives belongs with the consolidated register in Part 10, not here.</p>
+<p>Tenant setup, the retention policy and the backup log are governance too. They are single-screen records with no cross-lane flow, and a swimlane map would flatter them.</p>
+<hr/>
+<p><b>Next: Part 10 — the consolidated RACI and the gate register, as a Google Sheet.</b></p></body></html>
