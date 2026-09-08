@@ -1,0 +1,152 @@
+Part 10 of 10 — Process register · Magnus Workspace Platform · 8 September 2026
+
+SECTION 1 — PROCESS STEPS
+Part,Process,Step,Lane,Action,Record → state,Gate or block,What the live build does today
+2,Win the Work,2.1,Sales,"Create account, contact and site",parties · contacts · sites,,Site accepts negative area and voltage (1-11)
+2,Win the Work,2.2,Sales,Create opportunity,opportunities → prospect,,
+2,Win the Work,2.3,Sales,Start assessment,opportunities → assessing,,
+2,Win the Work,2.4,Client,"Grants site access, shares load data",—,,
+2,Win the Work,2.5,Sales,Record site assessment,site_assessments → proceed · proceed_with_conditions · do_not_proceed,,Accepts a future assessment date (1-09)
+2,Win the Work,2.6,Sales,Proceed?,decision,,
+2,Win the Work,2.7,Sales,Mark lost or on hold,opportunities → lost · on_hold,,
+2,Win the Work,2.8,Sales,"Create proposal — cost build-up, markups, contingency, yield",proposals → draft · opportunities → proposing,,Annual lease figure multiplies roof area by a per-kilowatt-hour rate — out by ~182× (§3.3 of the sweep analysis)
+2,Win the Work,2.9,Sales,Submit for internal review,proposals → submitted_for_review · approval_requests → pending,,
+2,Win the Work,2.10,Executive,Review proposal: approve or reject,proposals → approved_internal · rejected_internal,,RC-A the raiser can approve their own request
+2,Win the Work,2.11,Sales,Send to client,proposals → sent_to_client,,No confirmation; one mis-click sends a commercial document (1-20)
+2,Win the Work,2.12,Client,"Reviews, negotiates, accepts or declines",proposals → under_negotiation → accepted · declined,,
+2,Win the Work,2.13,Sales,Submit for won decision,opportunities → negotiating · approval_requests → pending,,Register: G7 is specified as markup more than five points below policy — a conditional gate. The code raises it on every won decision
+2,Win the Work,2.14,Executive,Decide won,opportunities → won · or back to proposing,,RC-A
+2,Win the Work,2.15,Platform,"Automatic: project created, proposal frozen, eight risk terms seeded",projects → setup · proposals → frozen · risk_terms × 8 → not_yet_read,,
+2,Win the Work,2.16,Projects,"Create contract — type, value, retention, warranty",contracts → draft,,Contract record stays draft forever; nothing on the Contract tab can sign it (1-14)
+2,Win the Work,2.17,Client,Signs the agreement,—,,
+2,Win the Work,2.18,Projects,Attach signed contract document and date,projects.contractSignedAt set,,G9 is specified but no code raises it. Signed date accepts 31 December 2027 and immediately unlocks the setup gate (1-08)
+2,Win the Work,2.19,Projects,Acknowledge the eight risk terms; contract risk review,risk_terms → acknowledged · accepted · rejected,,"G10 is specified but no code raises it. The schema carries a riskReviewOutcome (approved · proceeded without review · rejected) that nothing sets. Terms display no text, so acknowledgement is uninformed (1-23)"
+2,Win the Work,2.20,Projects,Assign project parties — ten seat roles from Project Manager to Client Representative,project_parties,,assignProjectParty exists as a mutation; no control in the interface (1-04)
+2,Win the Work,2.21,Platform,Automatic: advance from setup,projects → design,,"Enforced. But the live HB6 row describes a different rule (RC-N); the enforcement here is a stage check, not the named block"
+3,Design and Permit,3.1,Engineering,Create design package — one of ten disciplines,design_packages → draft,—,
+3,Design and Permit,3.2,Engineering,Work the package,→ in_progress,—,
+3,Design and Permit,3.3,Engineering,"Add deliverables — nine types, from layout plan to commissioning checklist",design_deliverables → draft,—,
+3,Design and Permit,3.4,Engineering,"Record professional seal — engineer, licence, expiry, discipline",professional_seals,—,"Recorded, then never displayed back. No badge on the deliverable, and a second contradictory seal can be added on top (2-13)"
+3,Design and Permit,3.5,Engineering,Issue for review,→ issued_for_review,—,
+3,Design and Permit,3.6,Engineering,Deliverable review,design_deliverables → in_review → approved,—,A deliverable can go straight from draft to approved by the person who drew it. in_review can be skipped and no reviewer is named (2-06)
+3,Design and Permit,3.7,Engineering,Issue for approval,→ issued_for_approval,—,
+3,Design and Permit,3.8,Engineering,Submit design freeze,approval_requests → pending,G18 raised,Refused unless the package is at issued_for_approval — a correct precondition
+3,Design and Permit,3.9,Executive,Approve the design freeze,approval_requests → approved,G18 · Design Engineer · — · —,RC-A the raiser can approve their own request
+3,Design and Permit,3.10,Platform,Automatic: package released,→ issued_for_construction,—,This is the one gate fully enforced in the product. updateDesignPackage refuses to set issued_for_construction without an approved gate 18
+3,Design and Permit,3.11,Engineering,Bill of materials — seven categories,bill_of_materials_lines,—,"Item code is free text, not a picker from the catalogue. Nothing checks a line against stock on hand (2-02)"
+3,Design and Permit,3.12,Administration,Maintain the permit type library,permit_types,—,"A negative default duration is accepted, so a permit type can expire before it is issued (1-17). The library ships empty, so every customer types the same Philippine permit set from memory (2-28)"
+3,Design and Permit,3.13,Administration,Raise a project permit,project_permits → draft,—,
+3,Design and Permit,3.14,Administration,Set requirements from the library,project_permit_requirements → open,—,
+3,Design and Permit,3.15,Platform,Automatic: requirement observed — the library accumulates,permit_requirements.timesObserved,—,"The raw field name timesObserved is printed to the user (1-18). The behaviour is correct — this is L5, accumulate rather than maintain — only the wording is wrong"
+3,Design and Permit,3.16,Administration,Requirements ready,→ requirements_set,—,Refused unless the permit is in draft
+3,Design and Permit,3.17,Executive,Engage a permit consultant,—,G20 · COO · Director · —,G20 is specified but no code raises it anywhere. The only occurrence of gate 20 in the whole codebase is the seed definition
+3,Design and Permit,3.18,Administration,Submit to the authority,→ submitted,—,
+3,Design and Permit,3.19,External,The authority decides,→ approved · rejected,—,
+3,Design and Permit,3.20,Administration,Record the decision,→ approved · rejected,—,
+3,Design and Permit,3.21,Administration,Close the permit,→ closed,—,Correctly refused unless the permit is approved
+3,Design and Permit,3.22,Projects,The approved permit is what mobilisation checks for,project_permits at approved,—,"HB4 fires in Part 5, not here"
+4,Buy and Store,4.1,Procurement,Create the purchase order against a project and a supplier,purchase_orders → draft,—,"The order number is PO-YYYYMM-nnn, counted from orders on that project, so two projects in the same month both produce PO-202609-001"
+4,Buy and Store,4.2,Procurement,"Add order lines, each optionally linked to a bill of materials line",purchase_order_lines → open,—,"The link is optional, and material readiness only counts linked lines"
+4,Buy and Store,4.3,Procurement,Submit for approval,→ pending_approval,G4 or G5 raised,Correctly refused unless the order has at least one line
+4,Buy and Store,4.4,Executive,Approve the order,→ approved,"G4 ≤ ₱100,000 · Procurement Head · Director · 2 days — G5 > ₱100,000 · Director · Chief Operating Officer · 2 days","The approval is not real. The browser sends manual-<timestamp> as the approval reference. No approval request is created, no approver is named, no role is checked, and the amount is never looked at"
+4,Buy and Store,4.5,Procurement,Issue the order to the supplier — committed cost begins,→ issued,—,"HB6 is checked here, and passes on any non-empty reference"
+4,Buy and Store,4.6,External,The supplier delivers,—,—,
+4,Buy and Store,4.7,Warehouse,Record the goods receipt,goods_receipts → pending,—,"Nothing enters stock. Delivered quantity above ordered quantity is accepted. accepted + rejected is never checked against delivered. The three inspection statuses — accepted, partially accepted, rejected — cannot be reached: no mutation sets them"
+4,Buy and Store,4.8,Platform,Automatic: delivery status recomputed,→ partially_delivered · fully_delivered,—,Correct
+4,Buy and Store,4.9,Platform,"Automatic: material readiness — computed on read, never stored",—,—,Counts only order lines linked to a bill of materials line. An unlinked line reads as zero readiness however much has arrived
+4,Buy and Store,4.10,Procurement,Amend an issued order,—,—,"Does not exist. The schema reserves gate5ApprovalId for it; no mutation writes that field. An issued order is frozen — the error says ""Use an amendment (Gate 5)"" and there is nothing to use"
+4,Buy and Store,4.11,Procurement,Add the supplier's bank account,supplier_bank_accounts → confirmed = false,—,
+4,Buy and Store,4.12,Procurement,A second person confirms the account,→ confirmed = true,—,Enforced. The person who added the account cannot confirm it. Adding a new account supersedes the old one
+4,Buy and Store,4.13,Warehouse,Maintain locations and the item catalogue — seven categories,locations · items,—,"Item code and location code are unique, and correctly refused on collision"
+4,Buy and Store,4.14,Warehouse,Create a stock transfer — four directions,stock_transfers → draft,—,Source and destination must differ; at least one line required. Both correct
+4,Buy and Store,4.15,Warehouse,Dispatch,→ dispatched,"G25a inter-island · G25b within-island > ₱100,000",No stock check. Dispatching more than exists drives on-hand negative with no warning. Neither gate is raised anywhere
+4,Buy and Store,4.16,Projects and Site,Receive at destination,→ received · discrepancy,—,
+4,Buy and Store,4.17,Platform,Automatic: discrepancy flagged,stock_positions updated,—,"The shortfall vanishes. In-transit is reduced by the dispatched quantity, on-hand is increased by the received quantity, and the difference is written off silently — no quarantine, no variance record, no adjustment raised"
+4,Buy and Store,4.18,Warehouse,Raise a stock adjustment — write up or write off,stock_adjustments → pending_approval,—,Quantity must be positive. Correct
+4,Buy and Store,4.19,Executive,Approve the adjustment,"→ approved, stock moves",G26 · Warehouse Custodian · Project Manager,"The only same-person refusal in the platform. ""You cannot approve your own adjustment (Gate 26)"""
+4,Buy and Store,4.20,Warehouse,Open a physical count — stock is snapshotted into count lines,physical_counts → open,G27 opening stock lock,"lockDate is stored and locks nothing — transfers and adjustments can move stock while the count is open. G27 has no code anywhere. Only items that already have a stock position are snapshotted, so material physically present but never recorded cannot be counted in"
+4,Buy and Store,4.21,Warehouse,Submit the counted quantities,"→ submitted, variance computed per line",—,
+4,Buy and Store,4.22,Warehouse,Close the count,→ closed,—,"Every variance is written straight into stock with no approval at all. The same person can open, submit and close it"
+4,Buy and Store,4.23,Projects and Site,Issue material to site,stock_transfers warehouse_to_site,—,"HB5 — quarantined material cannot be issued. The quarantined quantity is never set by any code, so the block can never fire"
+5,Build Safely,5.1,Manpower,Raise a resource request,resource_requests → open,—,A request can be declined but never formally accepted — allocation happens by deploying against it
+5,Build Safely,5.2,Manpower,Create the deployment,deployments → planned,—,The workforce person is marked deployed and the request allocation advances. Nothing checks they are at this project's site
+5,Build Safely,5.3,Manpower,Mobilise the deployment,→ mobilised,HB1 · HB4,Checks only that the deployment is planned. HB1 insurance certificate and HB4 prerequisite permit belong here and neither exists in code
+5,Build Safely,5.4,Site,Assign equipment to the project,equipment_deployments,—,"Assign and return only. No condition on return, no calibration date, no operator"
+5,Build Safely,5.5,Platform,Automatic: the project stage should become construction,projects,—,"The only stage mutation in the platform is setup → design. No code sets a project to procurement, construction, commissioning or handover. A project can never leave design"
+5,Build Safely,5.6,Site,Open the site report for the day,site_reports → draft,—,"One per project per day, correctly refused on a duplicate. A date in the future is accepted. createdOnDevice is recorded but never surfaced"
+5,Build Safely,5.7,Site,Record the toolbox meeting and who attended,toolbox_meetings,—,photographRef is in the schema and no screen uses it — the toolbox photograph cannot be attached
+5,Build Safely,5.8,Site,Add the day's activities against blocks,site_report_activities,—,"Every activity must name a block — correct. Cumulative percent complete is never checked against the previous entry, so progress can go backwards without comment"
+5,Build Safely,5.9,Site,Submit the report,→ submitted,—,Refused without a toolbox meeting. The one enforced safety precondition in this part
+5,Build Safely,5.10,Projects,Approve the report,→ approved,—,No role check and no same-person check — the person who submitted can approve
+5,Build Safely,5.11,Platform,Automatic: block completion computed on read,project_blocks,—,Correct — never stored. This is L5 working as designed
+5,Build Safely,5.12,Platform,Automatic: days worked derived from toolbox attendance,payroll,—,"Correct, and important. Presence is never tracked; a person is paid for a day because their name is on that day's toolbox meeting"
+5,Build Safely,5.13,External,The Department of Labor and Employment approves the Construction Safety and Health Program,—,HB2,"No code checks it, and the programme has no record in the platform at all — there is nowhere to file the approval"
+5,Build Safely,5.14,Safety,Create a permit to work — six types,permits_to_work → draft,—,"The issuer is supplied by the caller, not taken from the person acting. The same-day rule the schema promises is not enforced, and expired is unreachable — no code ever sets it"
+5,Build Safely,5.15,Safety,Issue the permit,→ issued,G28 · Safety Officer · no alternate,No Safety Officer check. issuePermitToWork verifies only that the permit is a draft. Anyone signed in can issue a hot-work or confined-space permit. The competency list the schema names does not exist anywhere
+5,Build Safely,5.16,Site,Any person raises a safety stop,safety_stops → active,—,Correct. Any person may raise it and the actor is recorded from the session
+5,Build Safely,5.17,Safety,Lift the safety stop,→ cleared,G29 · Safety Officer · no alternate,No Safety Officer check and no same-person check. The person who raised the stop can lift it. The clearance note is optional
+5,Build Safely,5.18,Safety,Record an incident — eighteen fields,incidents → open,—,"The statutory deadline is typed by hand, never derived from type or severity"
+5,Build Safely,5.19,Safety,Report a near miss,near_misses → open,—,"Genuinely anonymous. There is no reporter field on the record at all — not hidden, absent. Correct, and rare"
+5,Build Safely,5.20,Safety,"Safety inspection — pre-work, weekly, incident-triggered",safety_inspections → open,—,Findings are free text
+5,Build Safely,5.21,Safety,Corrective action — hierarchy of controls,corrective_actions → open,—,Must link to an incident or an inspection — enforced. The five levels of the hierarchy of controls are recorded properly
+5,Build Safely,5.22,Site,Raise a non-conformance report,non_conformance_reports → open,—,
+5,Build Safely,5.23,Projects,Review the report,→ pending_closure_approval,—,Transitions are validated against a state table — correct
+5,Build Safely,5.24,Executive,Close the report,→ closed,G19 · Project Manager · Director · 3 days,The approval reference is a string the caller supplies. The same pattern as gate 4: the check is that the string is not empty
+5,Build Safely,5.25,Platform,Automatic: no project reaches commissioning with an open report,—,HB3,"The mutation the schema names does not exist. And there is no block B0 — the spine starts at Mobilization, and blocks have no status, so ""B0 signed off"" is not a state anything can be in"
+6,Get Paid,6.1,Billing,Create a billing milestone on the contract,billing_milestones → pending,—,
+6,Get Paid,6.2,Billing,Raise a progress claim,progress_claims → draft,—,"Percent complete is derived from block activities and cannot be typed — correct, and one of the better pieces of design in the platform. The claimed amount is checked against nothing: not the contract value, not the milestone, not the percent complete"
+6,Get Paid,6.3,Billing,Submit the claim to the client,→ submitted,G11 · Head of Finance · Director,"The code raises gate 25a, which the specification reserves for inter-island inventory transfers. The approval reference is a string the caller supplies and it is not even checked for emptiness"
+6,Get Paid,6.4,External,The client reviews and certifies,→ certified · disputed,—,
+6,Get Paid,6.5,Billing,Record the certification,→ certified,G11 · Head of Finance · Director,"The code raises gate 25b. Certified is correctly a separate field from claimed — and is never compared to it, so a claim of ₱1,000,000 can be certified at ₱9,000,000"
+6,Get Paid,6.6,Billing,Mark the milestone paid,billing_milestones → paid,—,The paid amount is not checked against the certified amount
+6,Get Paid,6.7,Billing,Raise the retention invoice at the release date,—,G12 · Retention Invoice,Does not exist. There is no retention invoice record anywhere. Retention percent and release months are stored on the contract and a release date is derived at turnover — and nothing bills it
+6,Get Paid,6.8,Treasury,Raise a fund request,fund_requests → pending,HB6,"Enforced, and well written. ""Hard Block 6: Fund request FR-… is released but not yet liquidated. Liquidate the outstanding advance before raising a new request."" It names the block, the condition and the release"
+6,Get Paid,6.9,Executive,Approve the request,→ approved,G23 · Head of Finance · Director,"No role check, no same-person check. The approved amount is not bounded by the requested amount"
+6,Get Paid,6.10,Treasury,Release the funds,→ released,—,The person who approved can release. Two of the three cash controls are the same person
+6,Get Paid,6.11,Treasury,Liquidate the advance,→ liquidated,—,"A liquidation reference is required — correct. Nothing checks what it points at, and there is no amount"
+6,Get Paid,6.12,Treasury,Raise a write-off — seven categories,write_offs → pending_approval,—,"The gate is derived at creation, from severity"
+6,Get Paid,6.13,Executive,Approve the write-off,→ approved,"G1 ≤ ₱50,000 · G2 ₱50,000–₱100,000 · G3 > ₱100,000","The gate is read from severity, not from the amount. gateIdForSeverity maps minor→1, moderate→2, major→3. A ₱5,000,000 write-off marked minor raises gate 1"
+6,Get Paid,6.14,Projects,Raise a variation order,variation_orders → draft,—,The mutation exists and no screen calls it — the whole variation order feature is reachable only through the protocol
+6,Get Paid,6.15,Executive,Approve the variation order,—,G8 · Director · Chief Operating Officer,"No approve mutation exists. gate9ApprovalId is never written by anything, so the value adjustment reaches nothing. The schema comment calls this gate 9; the specification says gate 9 is the signed customer agreement and gate 8 is the variation order — the two are swapped"
+6,Get Paid,6.16,Treasury,"Cash forecast — secured, gated, projected",cash_forecast_lines,—,A gated line must carry a gate — correctly refused otherwise. The three bands are exactly as specified
+6,Get Paid,6.17,Platform,Automatic: three-month gap detected on read,—,—,"Correct. Three consecutive future months with no secured or gated line. Computed, never stored"
+6,Get Paid,6.18,Platform,Automatic: pay a supplier,—,—,"There is no accounts payable. No supplier invoice, no subcontractor invoice, no payment, no remittance. The forecast covers cash in only"
+7,People and Pay,7.1,Human Resource,Raise a headcount requisition,hr_requisitions → open,—,Optionally linked to a resource request from Part 5
+7,People and Pay,7.2,Human Resource,Add candidates,candidates → applied,—,Retention expiry is diarised on the candidate — correct
+7,People and Pay,7.3,Human Resource,Schedule and record interviews,interview_records,—,The record is hidden from the candidate until it is submitted — correct
+7,People and Pay,7.4,Human Resource,Create the offer,hr_offers → draft,—,
+7,People and Pay,7.5,Executive,Record the approval and issue the offer,→ issued,G24 · Human Resource Head · Director,"The reference is required and trimmed — stricter than gates 11, 19 and 23. But G24 in the specification is Role Assignment, not an offer"
+7,People and Pay,7.6,External,The candidate responds,→ accepted · declined,—,The candidate status moves to hired or rejected in the same transaction — correct
+7,People and Pay,7.7,Human Resource,Create the employee record,employees,—,"The employee record is separate from the person record, and nothing links a hired candidate to it. Someone re-types the name"
+7,People and Pay,7.8,Platform,Automatic: regularisation diarised at six months,regularization_records,—,"A diary entry, never an automatic conversion. Exactly right — the platform reminds, a person decides"
+7,People and Pay,7.9,Staff,An employee requests leave — seven types,leave_requests → pending,,
+7,People and Pay,7.10,Managers,The manager reviews it,→ approved · declined,,"No same-person check — an employee can approve their own leave. An over-application clamps the balance to zero rather than refusing, so ten days taken against a four-day balance silently becomes four"
+7,People and Pay,7.11,Staff,The employee writes their own objectives,performance_objectives,,"Written by the person, not set for them — correct"
+7,People and Pay,7.12,Managers,The manager acknowledges them,→ acknowledged,,
+7,People and Pay,7.13,Human Resource,"Quarterly review — self assessment, manager review, acknowledgement",performance_reviews,,Reasons are required and there is no numeric score — correct. A three-step review with the employee acknowledging at the end
+7,People and Pay,7.14,Staff,Engagement survey response,engagement_responses,,"Fully anonymous. No person is stored, and no audit entry is written either — the code says so in a comment, because an audit row would break the anonymity. This is the most careful piece of privacy design in the platform"
+7,People and Pay,7.15,Human Resource,Enter the four statutory rate tables and their brackets,statutory_rate_tables → draft,—,"Three bracket shapes: fixed, percentage, graduated. Correct for Philippine contributions and Bureau of Internal Revenue bands"
+7,People and Pay,7.16,Payroll,Approve each table — immutable afterwards,→ approved,—,"Refused without at least one bracket; the previous approved table is superseded in the same transaction. Both correct. The code names this G32, which the specification reserves for Role Permission Change, and nothing checks that a Finance role approves"
+7,People and Pay,7.17,Payroll,Open the payroll period,payroll_periods → open,—,An overlapping open period is correctly refused
+7,People and Pay,7.18,Payroll,Add workers — never removed,payroll_lines → computed,—,Article 116 honoured: there is no remove mutation at all. A days adjustment needs a reason of at least ten characters
+7,People and Pay,7.19,Platform,"Automatic: run payroll, three times",→ running → ready_to_approve,—,"Refused unless all four tables are approved, with a message naming all four. The table versions are locked to the period on the first run and stamped on every line. Nothing compares the three runs — it is a count, not a reconciliation"
+7,People and Pay,7.20,Executive,Approve the period,→ approved,G30 · Chief Operating Officer · no alternate,Three runs are required first — enforced. G30 in the specification is Incident Investigation Closure
+7,People and Pay,7.21,Staff,The worker acknowledges the payslip,payroll_lines → acknowledged,—,"Refused unless the period is approved — correct. Signature, biometric or witness"
+7,People and Pay,7.22,Executive,Disburse,→ disbursed,G31 · Head of Finance · no alternate,G31 in the specification is Threshold and Configuration Change
+7,People and Pay,7.23,Platform,The protocol can set any status directly,—,—,"toolUpdatePayrollPeriod writes the status straight through, and stamps disbursedAt and disbursedBy when it does"
+8,Operate and Maintain,8.1,Projects,Commissioning and snagging complete,project_blocks 8 and 9,—,Completion is computed from site activities — correct. The project stage still cannot move; it is stuck in design from Part 5
+8,Operate and Maintain,8.2,External,The client accepts the system,—,—,"There is no acceptance record. No certificate, no signature, no date, nothing to attach"
+8,Operate and Maintain,8.3,Executive,Record the turnover date,projects.turnoverDate,G21 · Director · Chief Operating Officer,G21 has no code anywhere. recordTurnoverDate is ungated and any signed-in person can call it
+8,Operate and Maintain,8.4,Platform,Automatic: retention release and warranty expiry derived,projects,—,"Both dates are derived from the contract in a single transaction — correct, and one of the cleanest pieces of code in the product"
+8,Operate and Maintain,8.5,Finance,Raise the retention invoice at the release date,—,G12,No record exists — Part 6. The release date is derived correctly and then nothing reads it
+8,Operate and Maintain,8.6,Operations,Create the maintenance schedule,om_schedules,—,Frequency in calendar days; a next visit date is set once
+8,Operate and Maintain,8.7,Operations,Create a visit,om_visits → draft,—,"Refused after warranty expiry, with a readable message naming the date. The schema calls this hard block 5 — a fourth meaning of that number"
+8,Operate and Maintain,8.8,Operations,Work the visit — nine activity types,→ in_progress → completed,—,"Three outcomes per activity: satisfactory, requires attention, not applicable"
+8,Operate and Maintain,8.9,Operations,Record readings,om_readings,—,"Reading type and unit are free text. Energy, irradiation and performance ratio are not a fixed list, so nothing can be trended reliably"
+8,Operate and Maintain,8.10,Operations,Raise a defect,om_defects → open → acknowledged → in_repair → resolved · escalated,—,"Four severities and five states — and no gate on escalation, including for a critical defect"
+8,Operate and Maintain,8.11,Operations,Submit the visit for sign-off,approval_requests → pending,—,"A real approval request, built from the gate row with the approver role copied onto it. This is the right pattern and one of only three places it is used"
+8,Operate and Maintain,8.12,Executive,Approve the sign-off,om_visits → signed_off,G34 · O&M Lead · no alternate,"Approved by its own patch: no R6 refusal and no role check. The field is gate30ApprovalId, the request is raised against gate 34, and the specification calls neither of them a service report sign-off"
+8,Operate and Maintain,8.13,Platform,Automatic: the next visit date advances,om_schedules,—,Never happens. The schema says it is updated after each visit and no code does it. Nothing ever falls due
+8,Operate and Maintain,8.14,Operations,Submit a warranty claim,G34 · Warranty Claim Submission,G34 · Warranty Claim Submission,There is no warranty claim record anywhere. warranty_claim exists only as a document category in the file module. The gate reserved for it is being consumed by the visit sign-off at 8.12
+8,Operate and Maintain,8.15,Platform,The gate engine,—,—,See section 2
+

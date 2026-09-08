@@ -1,0 +1,112 @@
+Part 10 of 10 — Process register · Magnus Workspace Platform · 8 September 2026
+
+SECTION 2 — NUMBERED DEVIATIONS
+Part,Process,#,What is wrong,Step,Reference or severity
+2,Win the Work,1,The raiser can approve their own proposal review and won decision,"2.10, 2.14",RC-A
+2,Win the Work,2,"Gate 7 is raised on every won decision. The specification's gate 7 is markup more than five points below policy — meant to fire only when a proposal undercuts policy, not on every deal",2.13,Register
+2,Win the Work,3,"Gate 9 — signed customer agreement, Chief Executive Officer — is specified but nothing raises it. A signed contract is attached with no approval at all",2.18,Register
+2,Win the Work,4,"Gate 10 — contract risk review, Director — is specified but nothing raises it. The schema has the outcome field; nothing sets it",2.19,Register
+2,Win the Work,5,"Project parties: the mutation exists, the control does not",2.20,1-04
+2,Win the Work,6,A contract signed date of 31 December 2027 is accepted and unlocks the setup gate,2.18,1-08
+2,Win the Work,7,A site assessment dated 2027 is accepted,2.5,1-09
+2,Win the Work,8,Risk terms have no text; all eight can be acknowledged with one click each,2.19,1-23
+2,Win the Work,9,Send to Client has no confirmation dialog,2.11,1-20
+2,Win the Work,10,The contract record reads draft permanently; only the project header knows it was signed,2.16,1-14
+2,Win the Work,11,The proposal's annual lease figure multiplies square metres by a per-kilowatt-hour rate,2.8,sweep §3.3
+2,Win the Work,12,Nobody is notified at any hand-off,all,RC-H
+3,Design and Permit,1,G20 permit consultant is specified and never raised. Its only appearance in the codebase is the seed row,3.17,Register
+3,Design and Permit,2,A deliverable goes draft → approved with no reviewer named,3.6,2-06
+3,Design and Permit,3,A professional seal is recorded and never displayed; a second can be layered on top,3.4,2-13
+3,Design and Permit,4,"The bill of materials item code is free text, disconnected from the catalogue and from stock",3.11,2-02
+3,Design and Permit,5,Permit types accept a negative default duration,3.12,1-17
+3,Design and Permit,6,The permit type library ships empty,3.12,2-28
+3,Design and Permit,7,timesObserved is printed to the user,3.15,1-18
+3,Design and Permit,8,The raiser can approve their own design freeze,3.9,RC-A
+3,Design and Permit,9,No file can be attached to a deliverable or a permit — the only upload in the product is the chat composer,"3.3, 3.14",2-09
+3,Design and Permit,10,Nobody is notified at any hand-off,all,RC-H
+4,Buy and Store,1,A goods receipt does not move stock. Procurement and inventory share no data at all,4.7,Structural
+4,Buy and Store,2,"The gate 4 approval is a string the browser invents. No approval request, no approver, no role check",4.4,RC-A
+4,Buy and Store,3,"Gates 4 and 5 are collapsed into one field, so the ₱100,000 band is never applied",4.4,Register
+4,Buy and Store,4,"Closing a physical count rewrites stock with no approval, by one person, unopposed",4.22,New
+4,Buy and Store,5,"Gate 26 sits on the adjustment, not on the count — the specification puts it on the count","4.19, 4.22",Register
+4,Buy and Store,6,"The quarantined quantity is never set by any code, so hard block 5 can never fire",4.23,Register
+4,Buy and Store,7,"Gates 25a, 25b and 27 have no code anywhere — transfers need no approval at any value","4.15, 4.20",Register
+4,Buy and Store,8,Dispatching more than exists drives on-hand negative with no warning,4.15,2-04
+4,Buy and Store,9,A transfer discrepancy writes the shortfall off silently,4.17,New
+4,Buy and Store,10,Over-receipt is accepted; the three goods-receipt inspection statuses are unreachable,4.7,New
+4,Buy and Store,11,"An issued order cannot be amended, and the error tells you to use the amendment that does not exist",4.10,New
+4,Buy and Store,12,"Order numbers are counted per project, so two projects collide in the same month",4.1,New
+4,Buy and Store,13,"An issued order cannot be sent to the supplier — no print, no export, no attachment",4.5,2-09
+4,Buy and Store,14,Nobody is notified at any hand-off,all,RC-H
+5,Build Safely,1,Gate 28 has no Safety Officer check — anyone can issue a permit to work,5.15,New
+5,Build Safely,2,Gate 29 has no Safety Officer check and no same-person check — the raiser can lift their own stop,5.17,New
+5,Build Safely,3,"Hard blocks 1, 2, 3 and 4 have no code anywhere. The hard-block helper functions exist and nothing calls them","5.3, 5.13, 5.25",Structural
+5,Build Safely,4,A project can never leave design — the only stage mutation is setup → design,5.5,Structural
+5,Build Safely,5,There is no block B0. The spine starts at Mobilization and blocks have no status,5.25,Register
+5,Build Safely,6,The competency list the schema names does not exist,5.15,New
+5,Build Safely,7,The same-day rule on permits is not enforced; expired is unreachable,5.14,New
+5,Build Safely,8,The permit issuer is supplied by the caller rather than taken from the actor,5.14,New
+5,Build Safely,9,Gate 19's approval reference is a string the caller supplies,5.24,RC-A
+5,Build Safely,10,An active safety stop blocks nothing — work can continue and be reported,5.16,New
+5,Build Safely,11,The statutory reporting deadline on an incident is typed by hand,5.18,New
+5,Build Safely,12,The toolbox photograph has a field and no way to attach a file,5.7,2-09
+5,Build Safely,13,A site report can be filed for a date in the future,5.6,New
+5,Build Safely,14,The person who submits a site report can approve it,5.10,RC-A
+5,Build Safely,15,Nobody is notified at any hand-off,all,RC-H
+6,Get Paid,1,There is no accounts payable — the platform cannot record or pay a supplier bill,6.18,Structural
+6,Get Paid,2,"The write-off gate is read from severity, not the amount",6.13,1-A
+6,Get Paid,3,Gate 11 has no code; finance raises 25a and 25b instead,"6.3, 6.5",Register
+6,Get Paid,4,"Gate 12, the retention invoice, has no record at all",6.7,Register
+6,Get Paid,5,Gate 8 has no approve mutation and the schema calls it gate 9,6.15,Register
+6,Get Paid,6,"The progress claim screen passes the project id where a contract id is required, so the claim cannot be created from the interface",6.2,1-01
+6,Get Paid,7,The certified amount is never compared with the claimed amount,6.5,New
+6,Get Paid,8,The paid amount is never compared with the certified amount,6.6,New
+6,Get Paid,9,The claimed amount is never compared with the contract value or the percent complete,6.2,New
+6,Get Paid,10,The approved amount on a fund request is not bounded by the requested amount,6.9,New
+6,Get Paid,11,"One person can raise, approve, release and liquidate an advance",6.8–6.11,RC-A
+6,Get Paid,12,Gate 23's approval reference is an unchecked string,6.9,RC-A
+6,Get Paid,13,The variation order has no screen,6.14,1-15
+6,Get Paid,14,Nobody is notified at any hand-off,all,RC-H
+7,People and Pay,1,"The protocol can set a payroll period to any status, bypassing three runs and both gates",7.23,Structural
+7,People and Pay,2,"The four statutory rate tables in the live database are Agent 1's deliberately fake ones, and they are approved and immutable","7.15, 7.16",1-warning
+7,People and Pay,3,"Gates 24, 30, 31 and 32 all mean something else in the specification","7.5, 7.16, 7.20, 7.22",Register
+7,People and Pay,4,An employee can approve their own leave,7.10,RC-A
+7,People and Pay,5,An over-application clamps the leave balance to zero instead of refusing,7.10,New
+7,People and Pay,6,No role check on any of the five pay-chain approvals,7.16–7.22,New
+7,People and Pay,7,"The three parallel runs are counted, never compared",7.19,New
+7,People and Pay,8,A hired candidate does not become an employee record — it is re-typed,7.7,New
+7,People and Pay,9,There is no payslip document to give a worker,7.21,2-09
+7,People and Pay,10,Payroll disbursement does not appear in the cash forecast,7.22,New
+7,People and Pay,11,Nobody is notified at any hand-off,all,RC-H
+8,Operate and Maintain,1,Twelve approval points bypass the working gate engine,8.15,Structural
+8,Operate and Maintain,2,"Gate 21, the turnover date, has no code — the field that sets retention and warranty is ungated",8.3,Register
+8,Operate and Maintain,3,"Gate 34 is consumed by the visit sign-off, and the warranty claim it names has no record","8.12, 8.14",Register
+8,Operate and Maintain,4,"The visit sign-off is approved by its own patch — no R6, no role check",8.12,RC-A
+8,Operate and Maintain,5,The next visit date never advances — nothing ever falls due,8.13,New
+8,Operate and Maintain,6,There is no client acceptance record,8.2,New
+8,Operate and Maintain,7,"Warranty expiry blocks recording a visit, with no paid-maintenance path afterwards",8.7,New
+8,Operate and Maintain,8,Reading types and units are free text,8.9,New
+8,Operate and Maintain,9,A critical defect can be escalated with no approval,8.10,New
+8,Operate and Maintain,10,A defect cannot become a purchase order or a stock issue,8.10,New
+8,Operate and Maintain,11,The derived retention release date is read by nothing,"8.4, 8.5",Register
+8,Operate and Maintain,12,Nobody is notified at any hand-off,all,RC-H
+9,Govern,G-1,"Erasure is authorised — Reason string only; no gate, no role, irreversible",,Highest
+9,Govern,G-2,"Gates 22, 24, 31, 32, 33 have approvers — All five empty",,Highest
+9,Govern,G-3,A role takes effect when gate 24 is approved — Live on insert; refusal never revokes,,Highest
+9,Govern,G-4,Role assignment works on the screen — Refuses — gate 24 has no primary,,High
+9,Govern,G-5,"Constant changes carry a gate reference — Six changes, zero references",,High
+9,Govern,G-6,One writer per table — Tool calls overwrite constant history; one key is already incoherent,,High
+9,Govern,G-7,Gate config is approved — updateGateConfig takes no approval argument and can rewrite gate 31,,High
+9,Govern,G-8,Console holders are added by console holders — Neither add nor remove checks the caller,,High
+9,Govern,G-9,Gate 32 governs permissions — Comment admits no enforcement; permissions only paint the sidebar,,Medium
+9,Govern,G-10,Gate 33 governs reclassification — No reclassification path exists,,Medium
+9,Govern,G-11,"Legal hold is controlled — Free boolean, either direction, no reason",,Medium
+9,Govern,G-12,Revisions become in force through publish — Tool call sets the status directly and can break the document,,Medium
+9,Govern,G-13,Removing a role is governed — revokeRole needs nothing,,Medium
+9,Govern,G-14,"A gate has one meaning — Gate 24 has two, gate 32 has three",,Medium
+9,Govern,G-15,"There is a first console holder — One row says ""second"", the other says nothing",,Low
+9,Govern,G-16,Document requirements can name any gate — requiredByGateId is a number; 25a and 25b cannot be expressed,,Low
+9,Govern,G-17,"The export is the complete record — 98 of 116 tables, three of them phantom; every O&M table and payroll_lines missing",,High
+9,Govern,G-18,"The export is tenant-scoped — 14 tables fall back to an unfiltered read — including audit_entries, encryption_keys, supplier_bank_accounts",,Highest on a second tenant
+
+
