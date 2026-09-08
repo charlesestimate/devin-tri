@@ -1,0 +1,106 @@
+<html><body style='font-family:Arial;font-size:10.5pt'><h1>Part 2 of 10 — Win the Work: Pipeline to Contract</h1>
+<p><b>Level-1 cross-functional map · as specified · 8 September 2026</b> <b>Companion files:</b> <code>Part 2 — Win the Work (A3 landscape).pdf</code> and <code>.svg</code> in the same folder</p>
+<hr/>
+<h2>1. What this process is for</h2>
+<p>To take an enquiry from a prospective client to a <b>signed contract and a project that is allowed to leave setup</b> — with the company's two commercial controls applied on the way: an internal review before a proposal leaves the building, and a won decision before a project exists.</p>
+<p><b>Starts:</b> a Sales role creates an account. <b>Ends:</b> the platform advances the project from <code>setup</code> to <code>design</code>, which it will only do once a signed contract is attached — hard block 6. Part 3 begins there.</p>
+<p>Every step below names the record it moves and the state it leaves it in. All states are values the schema permits; all transitions are mutations that exist in the code.</p>
+<hr/>
+<h2>2. Lanes in this map</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>Lane</th><th>Roles</th><th>Why they are here</th></tr>
+<tr><td><b>Client</b></td><td>The customer</td><td>Grants site access, reviews and accepts the proposal, signs the agreement. Drawn dashed: outside the company</td></tr>
+<tr><td><b>Executive</b></td><td>Director · Chief Operating Officer · Chief Executive Officer</td><td>Holds all four gates in this part</td></tr>
+<tr><td><b>Sales and Pipeline</b></td><td>Account Manager · Sales Engineer · Account Officer · Business Development Officer · Vice President for Sales</td><td>Responsible for every step from account to won</td></tr>
+<tr><td><b>Projects and Site</b></td><td>Project Manager</td><td>Takes over at contract</td></tr>
+<tr><td><b>The Platform</b></td><td>—</td><td>Creates the project, freezes the proposal, seeds the risk terms, and enforces hard block 6</td></tr>
+</table>
+<hr/>
+<h2>3. The steps</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>#</th><th>Lane</th><th>Action</th><th>Record → state</th><th>Gate · A · C · window</th><th>Block</th><th>Deviation today</th></tr>
+<tr><td>2.1</td><td>Sales</td><td>Create account, contact and site</td><td><code>parties</code> · <code>contacts</code> · <code>sites</code></td><td>—</td><td>—</td><td>Site accepts negative area and voltage (1-11)</td></tr>
+<tr><td>2.2</td><td>Sales</td><td>Create opportunity</td><td><code>opportunities</code> → <code>prospect</code></td><td>—</td><td>—</td><td></td></tr>
+<tr><td>2.3</td><td>Sales</td><td>Start assessment</td><td><code>opportunities</code> → <code>assessing</code></td><td>—</td><td>—</td><td></td></tr>
+<tr><td>2.4</td><td>Client</td><td>Grants site access, shares load data</td><td>—</td><td>—</td><td>—</td><td></td></tr>
+<tr><td>2.5</td><td>Sales</td><td>Record site assessment</td><td><code>site_assessments</code> → <code>proceed</code> · <code>proceed_with_conditions</code> · <code>do_not_proceed</code></td><td>—</td><td>—</td><td>Accepts a future assessment date (1-09)</td></tr>
+<tr><td>2.6</td><td>Sales</td><td><b>Proceed?</b></td><td>decision</td><td>—</td><td>—</td><td></td></tr>
+<tr><td>2.7</td><td>Sales</td><td>Mark lost or on hold</td><td><code>opportunities</code> → <code>lost</code> · <code>on_hold</code></td><td>—</td><td>—</td><td></td></tr>
+<tr><td>2.8</td><td>Sales</td><td>Create proposal — cost build-up, markups, contingency, yield</td><td><code>proposals</code> → <code>draft</code> · <code>opportunities</code> → <code>proposing</code></td><td>—</td><td>—</td><td>Annual lease figure multiplies roof area by a per-kilowatt-hour rate — out by ~182× (§3.3 of the sweep analysis)</td></tr>
+<tr><td>2.9</td><td>Sales</td><td>Submit for internal review</td><td><code>proposals</code> → <code>submitted_for_review</code> · <code>approval_requests</code> → <code>pending</code></td><td><b>G6</b> raised</td><td>—</td><td></td></tr>
+<tr><td>2.10</td><td>Executive</td><td>Review proposal: approve or reject</td><td><code>proposals</code> → <code>approved_internal</code> · <code>rejected_internal</code></td><td><b>G6 · Director · COO · —</b></td><td>—</td><td><b>RC-A</b> the raiser can approve their own request</td></tr>
+<tr><td>2.11</td><td>Sales</td><td>Send to client</td><td><code>proposals</code> → <code>sent_to_client</code></td><td>—</td><td>—</td><td>No confirmation; one mis-click sends a commercial document (1-20)</td></tr>
+<tr><td>2.12</td><td>Client</td><td>Reviews, negotiates, accepts or declines</td><td><code>proposals</code> → <code>under_negotiation</code> → <code>accepted</code> · <code>declined</code></td><td>—</td><td>—</td><td></td></tr>
+<tr><td>2.13</td><td>Sales</td><td>Submit for won decision</td><td><code>opportunities</code> → <code>negotiating</code> · <code>approval_requests</code> → <code>pending</code></td><td><b>G7</b> raised</td><td>—</td><td><b>Register:</b> G7 is specified as <i>markup more than five points below policy</i> — a conditional gate. The code raises it on every won decision</td></tr>
+<tr><td>2.14</td><td>Executive</td><td>Decide won</td><td><code>opportunities</code> → <code>won</code> · or back to <code>proposing</code></td><td><b>G7 · Director · — · —</b></td><td>—</td><td><b>RC-A</b></td></tr>
+<tr><td>2.15</td><td>Platform</td><td><b>Automatic:</b> project created, proposal frozen, eight risk terms seeded</td><td><code>projects</code> → <code>setup</code> · <code>proposals</code> → <code>frozen</code> · <code>risk_terms</code> × 8 → <code>not_yet_read</code></td><td>—</td><td>—</td><td></td></tr>
+<tr><td>2.16</td><td>Projects</td><td>Create contract — type, value, retention, warranty</td><td><code>contracts</code> → <code>draft</code></td><td>—</td><td>—</td><td>Contract record stays <code>draft</code> forever; nothing on the Contract tab can sign it (1-14)</td></tr>
+<tr><td>2.17</td><td>Client</td><td>Signs the agreement</td><td>—</td><td>—</td><td>—</td><td></td></tr>
+<tr><td>2.18</td><td>Projects</td><td>Attach signed contract document and date</td><td><code>projects.contractSignedAt</code> set</td><td><b>G9 · CEO · — · —</b></td><td>—</td><td><b>G9 is specified but no code raises it.</b> Signed date accepts 31 December 2027 and immediately unlocks the setup gate (1-08)</td></tr>
+<tr><td>2.19</td><td>Projects</td><td>Acknowledge the eight risk terms; contract risk review</td><td><code>risk_terms</code> → <code>acknowledged</code> · <code>accepted</code> · <code>rejected</code></td><td><b>G10 · Director · COO · —</b></td><td>—</td><td><b>G10 is specified but no code raises it.</b> The schema carries a <code>riskReviewOutcome</code> (approved · proceeded without review · rejected) that nothing sets. Terms display no text, so acknowledgement is uninformed (1-23)</td></tr>
+<tr><td>2.20</td><td>Projects</td><td>Assign project parties — ten seat roles from Project Manager to Client Representative</td><td><code>project_parties</code></td><td>—</td><td>—</td><td><code>assignProjectParty</code> exists as a mutation; <b>no control in the interface</b> (1-04)</td></tr>
+<tr><td>2.21</td><td>Platform</td><td><b>Automatic:</b> advance from setup</td><td><code>projects</code> → <code>design</code></td><td>—</td><td><b>HB6</b> no signed contract, project cannot leave setup</td><td>Enforced. But the <i>live</i> HB6 row describes a different rule (RC-N); the enforcement here is a stage check, not the named block</td></tr>
+</table>
+<hr/>
+<h2>4. The RACI</h2>
+<p>One <b>A</b> per step. Where a step has a gate, A is the gate's primary approver and C its alternate. Where it has none, A is the role that owns the record. <b>I</b> is who the specification intends to be told — and nobody is told today (RC-H).</p>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>Step</th><th>Sales role</th><th>VP Sales</th><th>Director</th><th>COO</th><th>CEO</th><th>Project Manager</th><th>Head of Finance</th><th>Client</th></tr>
+<tr><td>2.1 Account, contact, site</td><td><b>R / A</b></td><td>I</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>2.2 Opportunity</td><td><b>R / A</b></td><td>I</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>2.3 Start assessment</td><td><b>R</b></td><td><b>A</b></td><td></td><td></td><td></td><td></td><td></td><td>I</td></tr>
+<tr><td>2.4 Site access</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td><b>R</b></td></tr>
+<tr><td>2.5 Site assessment</td><td><b>R</b></td><td><b>A</b></td><td></td><td></td><td></td><td>C</td><td></td><td></td></tr>
+<tr><td>2.6 Proceed?</td><td><b>R</b></td><td><b>A</b></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>2.7 Lost / on hold</td><td><b>R</b></td><td><b>A</b></td><td>I</td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>2.8 Create proposal</td><td><b>R</b></td><td><b>A</b></td><td></td><td></td><td></td><td>C</td><td>C</td><td></td></tr>
+<tr><td>2.9 Submit for review</td><td><b>R</b></td><td>I</td><td>I</td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>2.10 Review proposal (G6)</td><td>I</td><td>I</td><td><b>A</b></td><td>C</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>2.11 Send to client</td><td><b>R</b></td><td><b>A</b></td><td>I</td><td></td><td></td><td></td><td></td><td><b>I</b></td></tr>
+<tr><td>2.12 Client decision</td><td>I</td><td>I</td><td></td><td></td><td></td><td></td><td></td><td><b>R</b></td></tr>
+<tr><td>2.13 Submit for won</td><td><b>R</b></td><td>I</td><td>I</td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>2.14 Decide won (G7)</td><td>I</td><td>I</td><td><b>A</b></td><td></td><td></td><td>I</td><td>I</td><td></td></tr>
+<tr><td>2.15 Project created</td><td>I</td><td></td><td></td><td></td><td></td><td><b>I</b></td><td>I</td><td></td></tr>
+<tr><td>2.16 Create contract</td><td></td><td></td><td></td><td></td><td></td><td><b>R / A</b></td><td>C</td><td></td></tr>
+<tr><td>2.17 Client signs</td><td></td><td></td><td></td><td></td><td></td><td>I</td><td></td><td><b>R</b></td></tr>
+<tr><td>2.18 Attach signed contract (G9)</td><td></td><td></td><td></td><td></td><td><b>A</b></td><td><b>R</b></td><td>I</td><td></td></tr>
+<tr><td>2.19 Risk terms and review (G10)</td><td></td><td></td><td><b>A</b></td><td>C</td><td></td><td><b>R</b></td><td></td><td></td></tr>
+<tr><td>2.20 Project parties</td><td></td><td></td><td>I</td><td></td><td></td><td><b>R / A</b></td><td></td><td></td></tr>
+<tr><td>2.21 Advance from setup</td><td></td><td></td><td></td><td></td><td></td><td>I</td><td>I</td><td></td></tr>
+</table>
+<p><b>Reading the matrix.</b> Sales is Responsible for fourteen of the twenty-one steps and never Accountable for money — the Vice President for Sales is, until a gate hands accountability to the Director. The Director is Accountable on three of the four gates. The Chief Executive Officer appears exactly once, on the signed agreement, which is the one commercial act the specification reserves for the top of the company. The Project Manager takes over at 2.16 and is not consulted before it, except on the assessment and the proposal — the two places where what is promised becomes what must be built.</p>
+<hr/>
+<h2>5. Hand-offs — where this process stalls</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>From → To</th><th>At step</th><th>What crosses</th><th>What stalls it</th></tr>
+<tr><td>Client → Sales</td><td>2.4 → 2.5</td><td>Site access and load data</td><td>The client. The assessment cannot be recorded without a visit</td></tr>
+<tr><td>Sales → Executive</td><td>2.9 → 2.10</td><td>A proposal awaiting review</td><td><b>Nobody is told</b> the request exists (RC-H). The approver finds it only by opening the record</td></tr>
+<tr><td>Executive → Sales</td><td>2.10 → 2.11</td><td>An approved proposal</td><td>Same</td></tr>
+<tr><td>Sales → Client</td><td>2.11 → 2.12</td><td>The proposal</td><td>The client's own timeline. <code>under_negotiation</code> is the holding state</td></tr>
+<tr><td>Sales → Executive</td><td>2.13 → 2.14</td><td>A won decision</td><td>Same as 2.9</td></tr>
+<tr><td>Platform → Projects</td><td>2.15 → 2.16</td><td>A new project in setup</td><td>The Project Manager is not told a project exists (RC-H)</td></tr>
+<tr><td>Projects → Client</td><td>2.16 → 2.17</td><td>The contract</td><td>The client's signature</td></tr>
+<tr><td>Client → Projects</td><td>2.17 → 2.18</td><td>The signed agreement</td><td>The physical document reaching whoever attaches it</td></tr>
+</table>
+<p>Four of the eight hand-offs stall on the same cause: nothing tells the next person. That is why the approvals inbox is the first item of the next fix prompt.</p>
+<hr/>
+<h2>6. Where the live build differs from this map</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th></th><th>Deviation</th><th>Step</th><th>Reference</th></tr>
+<tr><td>1</td><td>The raiser can approve their own proposal review and won decision</td><td>2.10, 2.14</td><td>RC-A</td></tr>
+<tr><td>2</td><td><b>Gate 7 is raised on every won decision.</b> The specification's gate 7 is <i>markup more than five points below policy</i> — meant to fire only when a proposal undercuts policy, not on every deal</td><td>2.13</td><td>Register</td></tr>
+<tr><td>3</td><td><b>Gate 9 — signed customer agreement, Chief Executive Officer — is specified but nothing raises it.</b> A signed contract is attached with no approval at all</td><td>2.18</td><td>Register</td></tr>
+<tr><td>4</td><td><b>Gate 10 — contract risk review, Director — is specified but nothing raises it.</b> The schema has the outcome field; nothing sets it</td><td>2.19</td><td>Register</td></tr>
+<tr><td>5</td><td>Project parties: the mutation exists, the control does not</td><td>2.20</td><td>1-04</td></tr>
+<tr><td>6</td><td>A contract signed date of 31 December 2027 is accepted and unlocks the setup gate</td><td>2.18</td><td>1-08</td></tr>
+<tr><td>7</td><td>A site assessment dated 2027 is accepted</td><td>2.5</td><td>1-09</td></tr>
+<tr><td>8</td><td>Risk terms have no text; all eight can be acknowledged with one click each</td><td>2.19</td><td>1-23</td></tr>
+<tr><td>9</td><td>Send to Client has no confirmation dialog</td><td>2.11</td><td>1-20</td></tr>
+<tr><td>10</td><td>The contract record reads <code>draft</code> permanently; only the project header knows it was signed</td><td>2.16</td><td>1-14</td></tr>
+<tr><td>11</td><td>The proposal's annual lease figure multiplies square metres by a per-kilowatt-hour rate</td><td>2.8</td><td>sweep §3.3</td></tr>
+<tr><td>12</td><td>Nobody is notified at any hand-off</td><td>all</td><td>RC-H</td></tr>
+</table>
+<p><b>What this means for the register decision.</b> Of the four gates the specification places in this part, the code enforces two — and one of those two it enforces on the wrong condition. Gates 9 and 10 are the two that guard the contract, and today the contract is the least-controlled step in the process: a date typed into a box unlocks everything downstream. Whichever register you choose, these two gates need to exist in code.</p>
+<hr/>
+<h2>7. What is deliberately not in this part</h2>
+<ul><li><b>The proposal's arithmetic</b> — markups, contingency, yield, lease. It is a calculation, not a process step. Its one defect is noted at 2.8.</li><li><b>Variation orders.</b> They belong to the contract but happen during construction; they are in Part 6 with the rest of the money.</li><li><b>Messages on the opportunity or project.</b> A channel, not a step.</li><li><b>The register conflict itself.</b> Stated once in Part 0; marked where it bites here.</li></ul></body></html>

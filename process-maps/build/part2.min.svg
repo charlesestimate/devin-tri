@@ -1,0 +1,209 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2200" height="745" viewBox="0 0 2200 745" font-family="Arial, Helvetica, sans-serif">
+<rect width="2200" height="745" fill="#fff"/>
+<text x="12" y="20" font-size="16" font-weight="bold" fill="#1F2A24">Part 2 — Win the Work: Pipeline to Contract</text>
+<text x="12" y="36" font-size="9.6" fill="#5B6B62">Level-1 cross-functional map · as specified · account to signed contract · gates 6, 7, 9, 10 · hard block 6 · 8 September 2026</text>
+<text x="2188" y="20" font-size="9.6" text-anchor="end" fill="#5B6B62">Magnus Workspace Platform · Process Maps and RACI</text>
+<rect x="8" y="87.0" width="2184" height="92.8" fill="#FFFFFF" stroke="#D6DED9"/>
+<rect x="8" y="87.0" width="124" height="92.8" fill="#154D2C"/>
+<text x="70.0" y="137.4" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">Client</text>
+<rect x="8" y="179.8" width="2184" height="128.2" fill="#F3F6F4" stroke="#D6DED9"/>
+<rect x="8" y="179.8" width="124" height="128.2" fill="#154D2C"/>
+<text x="70.0" y="247.9" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">Executive</text>
+<rect x="8" y="308.0" width="2184" height="103.6" fill="#FFFFFF" stroke="#D6DED9"/>
+<rect x="8" y="308.0" width="124" height="103.6" fill="#154D2C"/>
+<text x="70.0" y="357.3" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">Sales and</text>
+<text x="70.0" y="370.3" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">Pipeline</text>
+<rect x="8" y="411.6" width="2184" height="129.8" fill="#F3F6F4" stroke="#D6DED9"/>
+<rect x="8" y="411.6" width="124" height="129.8" fill="#154D2C"/>
+<text x="70.0" y="474.0" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">Projects and</text>
+<text x="70.0" y="487.0" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">Site</text>
+<rect x="8" y="541.4" width="2184" height="112.4" fill="#EAF1EC" stroke="#D6DED9"/>
+<rect x="8" y="541.4" width="124" height="112.4" fill="#3C5A48"/>
+<text x="70.0" y="601.6" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">The Platform</text>
+<rect x="143.0" y="333.2" width="104.1" height="51.2" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="195.1" y="345.7" font-size="9" text-anchor="middle" fill="#1F2A24">Create account,</text>
+<text x="195.1" y="356.7" font-size="9" text-anchor="middle" fill="#1F2A24">contact and site</text>
+<text x="195.1" y="367.7" font-size="7.4" text-anchor="middle" fill="#5B6B62">parties · contacts ·</text>
+<text x="195.1" y="376.3" font-size="7.4" text-anchor="middle" fill="#5B6B62">sites</text>
+<rect x="257.1" y="338.7" width="104.1" height="40.2" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="309.2" y="351.2" font-size="9" text-anchor="middle" fill="#1F2A24">Create opportunity</text>
+<text x="309.2" y="362.2" font-size="7.4" text-anchor="middle" fill="#5B6B62">opportunities</text>
+<text x="309.2" y="370.8" font-size="7.4" text-anchor="middle" fill="#5B6B62">[prospect]</text>
+<rect x="371.2" y="338.7" width="104.1" height="40.2" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="423.3" y="351.2" font-size="9" text-anchor="middle" fill="#1F2A24">Start assessment</text>
+<text x="423.3" y="362.2" font-size="7.4" text-anchor="middle" fill="#5B6B62">opportunities</text>
+<text x="423.3" y="370.8" font-size="7.4" text-anchor="middle" fill="#5B6B62">[assessing]</text>
+<rect x="371.2" y="116.9" width="104.1" height="31.0" rx="5" fill="#fff" stroke="#8A6D3B" stroke-width="1.3" stroke-dasharray="4,3"/>
+<text x="423.3" y="129.4" font-size="9" text-anchor="middle" fill="#1F2A24">Grants site access</text>
+<text x="423.3" y="140.4" font-size="9" text-anchor="middle" fill="#1F2A24">· shares load data</text>
+<rect x="485.3" y="318.0" width="104.1" height="59.8" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="537.4" y="330.5" font-size="9" text-anchor="middle" fill="#1F2A24">Record site</text>
+<text x="537.4" y="341.5" font-size="9" text-anchor="middle" fill="#1F2A24">assessment</text>
+<text x="537.4" y="352.5" font-size="7.4" text-anchor="middle" fill="#5B6B62">site_assessments</text>
+<text x="537.4" y="361.1" font-size="7.4" text-anchor="middle" fill="#5B6B62">[proceed | conditions |</text>
+<text x="537.4" y="369.7" font-size="7.4" text-anchor="middle" fill="#5B6B62">do not proceed]</text>
+<text x="537.4" y="389.6" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">⚠ accepts a future</text>
+<text x="537.4" y="399.0" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">date (1-09)</text>
+<polygon points="651.5,341.8 707.6,358.8 651.5,375.8 595.4,358.8" fill="#fff" stroke="#E4702A" stroke-width="1.4"/>
+<text x="651.5" y="361.3" font-size="9" text-anchor="middle" fill="#1F2A24">Proceed?</text>
+<rect x="713.6" y="333.2" width="104.1" height="51.2" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="765.6" y="345.7" font-size="9" text-anchor="middle" fill="#1F2A24">Mark lost or on</text>
+<text x="765.6" y="356.7" font-size="9" text-anchor="middle" fill="#1F2A24">hold</text>
+<text x="765.6" y="367.7" font-size="7.4" text-anchor="middle" fill="#5B6B62">opportunities [lost |</text>
+<text x="765.6" y="376.3" font-size="7.4" text-anchor="middle" fill="#5B6B62">on_hold]</text>
+<rect x="827.7" y="338.7" width="104.1" height="40.2" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="879.7" y="351.2" font-size="9" text-anchor="middle" fill="#1F2A24">Create proposal</text>
+<text x="879.7" y="362.2" font-size="7.4" text-anchor="middle" fill="#5B6B62">proposals [draft · opp:</text>
+<text x="879.7" y="370.8" font-size="7.4" text-anchor="middle" fill="#5B6B62">proposing]</text>
+<rect x="941.8" y="333.2" width="104.1" height="51.2" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="993.8" y="345.7" font-size="9" text-anchor="middle" fill="#1F2A24">Submit for internal</text>
+<text x="993.8" y="356.7" font-size="9" text-anchor="middle" fill="#1F2A24">review</text>
+<text x="993.8" y="367.7" font-size="7.4" text-anchor="middle" fill="#5B6B62">proposals</text>
+<text x="993.8" y="376.3" font-size="7.4" text-anchor="middle" fill="#5B6B62">[submitted_for_review]</text>
+<rect x="1055.9" y="203.9" width="104.1" height="40.2" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="1107.9" y="216.4" font-size="9" text-anchor="middle" fill="#1F2A24">Review proposal</text>
+<text x="1107.9" y="227.4" font-size="7.4" text-anchor="middle" fill="#5B6B62">approval_requests</text>
+<text x="1107.9" y="236.0" font-size="7.4" text-anchor="middle" fill="#5B6B62">[approved | rejected]</text>
+<rect x="1066.2" y="247.1" width="83.5" height="13" rx="6.5" fill="#1F6F3F"/>
+<text x="1107.9" y="256.7" font-size="7.6" font-weight="bold" text-anchor="middle" fill="#fff">G6 Director·COO</text>
+<text x="1107.9" y="271.9" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">⚠ RC-A raiser can</text>
+<text x="1107.9" y="281.3" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">approve own request</text>
+<rect x="1170.0" y="323.1" width="104.1" height="40.2" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="1222.1" y="335.6" font-size="9" text-anchor="middle" fill="#1F2A24">Send to client</text>
+<text x="1222.1" y="346.6" font-size="7.4" text-anchor="middle" fill="#5B6B62">proposals</text>
+<text x="1222.1" y="355.2" font-size="7.4" text-anchor="middle" fill="#5B6B62">[sent_to_client]</text>
+<text x="1222.1" y="375.1" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">⚠ no confirmation</text>
+<text x="1222.1" y="384.5" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">before it leaves</text>
+<text x="1222.1" y="393.9" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">(1-20)</text>
+<rect x="1170.0" y="97.0" width="104.1" height="70.8" rx="5" fill="#fff" stroke="#8A6D3B" stroke-width="1.3" stroke-dasharray="4,3"/>
+<text x="1222.1" y="109.5" font-size="9" text-anchor="middle" fill="#1F2A24">Reviews ·</text>
+<text x="1222.1" y="120.5" font-size="9" text-anchor="middle" fill="#1F2A24">negotiates ·</text>
+<text x="1222.1" y="131.5" font-size="9" text-anchor="middle" fill="#1F2A24">accepts or declines</text>
+<text x="1222.1" y="142.5" font-size="7.4" text-anchor="middle" fill="#5B6B62">proposals</text>
+<text x="1222.1" y="151.1" font-size="7.4" text-anchor="middle" fill="#5B6B62">[under_negotiation →</text>
+<text x="1222.1" y="159.7" font-size="7.4" text-anchor="middle" fill="#5B6B62">accepted | declined]</text>
+<rect x="1284.1" y="333.2" width="104.1" height="51.2" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="1336.2" y="345.7" font-size="9" text-anchor="middle" fill="#1F2A24">Submit for won</text>
+<text x="1336.2" y="356.7" font-size="9" text-anchor="middle" fill="#1F2A24">decision</text>
+<text x="1336.2" y="367.7" font-size="7.4" text-anchor="middle" fill="#5B6B62">opportunities</text>
+<text x="1336.2" y="376.3" font-size="7.4" text-anchor="middle" fill="#5B6B62">[negotiating]</text>
+<rect x="1398.2" y="189.8" width="104.1" height="40.2" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="1450.3" y="202.3" font-size="9" text-anchor="middle" fill="#1F2A24">Decide won</text>
+<text x="1450.3" y="213.3" font-size="7.4" text-anchor="middle" fill="#5B6B62">approval_requests [won</text>
+<text x="1450.3" y="221.9" font-size="7.4" text-anchor="middle" fill="#5B6B62">| rejected]</text>
+<rect x="1418.3" y="233.0" width="63.9" height="13" rx="6.5" fill="#1F6F3F"/>
+<text x="1450.3" y="242.6" font-size="7.6" font-weight="bold" text-anchor="middle" fill="#fff">G7 Director</text>
+<text x="1450.3" y="257.8" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">⚠ G7 is specified as</text>
+<text x="1450.3" y="267.2" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">conditional: markup &gt;5</text>
+<text x="1450.3" y="276.6" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">points below policy.</text>
+<text x="1450.3" y="286.0" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">Live raises it on</text>
+<text x="1450.3" y="295.4" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">every won</text>
+<rect x="1512.3" y="551.4" width="104.1" height="90.4" rx="5" fill="#F6F8F6" stroke="#5B6B62" stroke-width="1.3"/>
+<text x="1564.4" y="563.9" font-size="9" text-anchor="middle" fill="#1F2A24">Project created ·</text>
+<text x="1564.4" y="574.9" font-size="9" text-anchor="middle" fill="#1F2A24">proposal frozen ·</text>
+<text x="1564.4" y="585.9" font-size="9" text-anchor="middle" fill="#1F2A24">eight risk terms</text>
+<text x="1564.4" y="596.9" font-size="9" text-anchor="middle" fill="#1F2A24">seeded</text>
+<text x="1564.4" y="607.9" font-size="7.4" text-anchor="middle" fill="#5B6B62">projects [setup] ·</text>
+<text x="1564.4" y="616.5" font-size="7.4" text-anchor="middle" fill="#5B6B62">proposals [frozen] ·</text>
+<text x="1564.4" y="625.1" font-size="7.4" text-anchor="middle" fill="#5B6B62">risk_terms</text>
+<text x="1564.4" y="633.7" font-size="7.4" text-anchor="middle" fill="#5B6B62">[not_yet_read]</text>
+<rect x="1626.4" y="459.7" width="104.1" height="31.6" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="1678.5" y="472.2" font-size="9" text-anchor="middle" fill="#1F2A24">Create contract</text>
+<text x="1678.5" y="483.2" font-size="7.4" text-anchor="middle" fill="#5B6B62">contracts [draft]</text>
+<rect x="1626.4" y="122.4" width="104.1" height="20.0" rx="5" fill="#fff" stroke="#8A6D3B" stroke-width="1.3" stroke-dasharray="4,3"/>
+<text x="1678.5" y="134.9" font-size="9" text-anchor="middle" fill="#1F2A24">Signs agreement</text>
+<rect x="1740.6" y="421.6" width="104.1" height="51.2" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="1792.6" y="434.1" font-size="9" text-anchor="middle" fill="#1F2A24">Attach signed</text>
+<text x="1792.6" y="445.1" font-size="9" text-anchor="middle" fill="#1F2A24">contract</text>
+<text x="1792.6" y="456.1" font-size="7.4" text-anchor="middle" fill="#5B6B62">contracts ·</text>
+<text x="1792.6" y="464.7" font-size="7.4" text-anchor="middle" fill="#5B6B62">projects.contractSignedAt</text>
+<rect x="1772.9" y="475.8" width="39.4" height="13" rx="6.5" fill="#1F6F3F"/>
+<text x="1792.6" y="485.4" font-size="7.6" font-weight="bold" text-anchor="middle" fill="#fff">G9 CEO</text>
+<text x="1792.6" y="500.6" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">⚠ G9 specified, not</text>
+<text x="1792.6" y="510.0" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">enforced · signed date</text>
+<text x="1792.6" y="519.4" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">accepts the future</text>
+<text x="1792.6" y="528.8" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">(1-08)</text>
+<rect x="1854.7" y="422.0" width="104.1" height="59.8" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="1906.7" y="434.5" font-size="9" text-anchor="middle" fill="#1F2A24">Acknowledge risk</text>
+<text x="1906.7" y="445.5" font-size="9" text-anchor="middle" fill="#1F2A24">terms · risk review</text>
+<text x="1906.7" y="456.5" font-size="7.4" text-anchor="middle" fill="#5B6B62">risk_terms</text>
+<text x="1906.7" y="465.1" font-size="7.4" text-anchor="middle" fill="#5B6B62">[acknowledged |</text>
+<text x="1906.7" y="473.7" font-size="7.4" text-anchor="middle" fill="#5B6B62">accepted | rejected]</text>
+<rect x="1862.5" y="484.8" width="88.4" height="13" rx="6.5" fill="#1F6F3F"/>
+<text x="1906.7" y="494.4" font-size="7.6" font-weight="bold" text-anchor="middle" fill="#fff">G10 Director·COO</text>
+<text x="1906.7" y="509.6" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">⚠ G10 specified, not</text>
+<text x="1906.7" y="519.0" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">enforced · terms show</text>
+<text x="1906.7" y="528.4" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">no text to read (1-23)</text>
+<rect x="1968.8" y="434.3" width="104.1" height="51.2" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="2020.8" y="446.8" font-size="9" text-anchor="middle" fill="#1F2A24">Assign project</text>
+<text x="2020.8" y="457.8" font-size="9" text-anchor="middle" fill="#1F2A24">parties</text>
+<text x="2020.8" y="468.8" font-size="7.4" text-anchor="middle" fill="#5B6B62">project_parties [ten</text>
+<text x="2020.8" y="477.4" font-size="7.4" text-anchor="middle" fill="#5B6B62">seat roles]</text>
+<text x="2020.8" y="497.3" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">⚠ mutation exists; no</text>
+<text x="2020.8" y="506.7" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">control in the</text>
+<text x="2020.8" y="516.1" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">interface (1-04)</text>
+<rect x="2082.9" y="562.9" width="104.1" height="31.6" rx="5" fill="#F6F8F6" stroke="#5B6B62" stroke-width="1.3"/>
+<text x="2134.9" y="575.4" font-size="9" text-anchor="middle" fill="#1F2A24">Advance from setup</text>
+<text x="2134.9" y="586.4" font-size="7.4" text-anchor="middle" fill="#5B6B62">projects [design]</text>
+<rect x="2082.9" y="597.5" width="104.1" height="34.8" rx="3" fill="#FDECEA" stroke="#B3261E" stroke-width="1.3"/>
+<text x="2134.9" y="608.1" font-size="7.8" font-weight="bold" text-anchor="middle" fill="#B3261E">HB6 — no signed</text>
+<text x="2134.9" y="617.7" font-size="7.8" font-weight="bold" text-anchor="middle" fill="#B3261E">contract, project</text>
+<text x="2134.9" y="627.3" font-size="7.8" font-weight="bold" text-anchor="middle" fill="#B3261E">cannot leave setup</text>
+<path d="M247.1,358.8 L252.1,358.8 L252.1,358.8 L252.1,358.8" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="251.1,355.3 257.1,358.8 251.1,362.3" fill="#3C5A48"/>
+<path d="M361.2,358.8 L366.2,358.8 L366.2,358.8 L366.2,358.8" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="365.2,355.3 371.2,358.8 365.2,362.3" fill="#3C5A48"/>
+<path d="M475.3,358.8 L480.3,358.8 L480.3,347.9 L480.3,347.9" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="479.3,344.4 485.3,347.9 479.3,351.4" fill="#3C5A48"/>
+<path d="M475.3,132.4 L480.3,132.4 L480.3,347.9 L480.3,347.9" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="479.3,344.4 485.3,347.9 479.3,351.4" fill="#3C5A48"/>
+<path d="M589.4,347.9 L594.4,347.9 L594.4,358.8 L594.4,358.8" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="593.4,355.3 599.4,358.8 593.4,362.3" fill="#3C5A48"/>
+<path d="M703.6,358.8 L765.6,358.8 L765.6,358.8 L822.7,358.8" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="821.7,355.3 827.7,358.8 821.7,362.3" fill="#3C5A48"/>
+<path d="M931.8,358.8 L936.8,358.8 L936.8,358.8 L936.8,358.8" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="935.8,355.3 941.8,358.8 935.8,362.3" fill="#3C5A48"/>
+<path d="M1045.9,358.8 L1050.9,358.8 L1050.9,224.0 L1050.9,224.0" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="1049.9,220.5 1055.9,224.0 1049.9,227.5" fill="#3C5A48"/>
+<path d="M1160.0,224.0 L1165.0,224.0 L1165.0,343.2 L1165.0,343.2" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="1164.0,339.7 1170.0,343.2 1164.0,346.7" fill="#3C5A48"/>
+<path d="M1222.1,323.1 L1222.1,72.0 L1222.1,72.0 L1222.1,92.0" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="1218.6,91.0 1222.1,97.0 1225.6,91.0" fill="#3C5A48"/>
+<path d="M1274.1,132.4 L1279.1,132.4 L1279.1,358.8 L1279.1,358.8" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="1278.1,355.3 1284.1,358.8 1278.1,362.3" fill="#3C5A48"/>
+<path d="M1388.2,358.8 L1393.2,358.8 L1393.2,209.9 L1393.2,209.9" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="1392.2,206.4 1398.2,209.9 1392.2,213.4" fill="#3C5A48"/>
+<path d="M1502.3,209.9 L1507.3,209.9 L1507.3,596.6 L1507.3,596.6" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="1506.3,593.1 1512.3,596.6 1506.3,600.1" fill="#3C5A48"/>
+<path d="M1616.4,596.6 L1621.4,596.6 L1621.4,475.5 L1621.4,475.5" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="1620.4,472.0 1626.4,475.5 1620.4,479.0" fill="#3C5A48"/>
+<path d="M1678.5,459.7 L1678.5,63.0 L1678.5,63.0 L1678.5,117.4" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="1675.0,116.4 1678.5,122.4 1682.0,116.4" fill="#3C5A48"/>
+<path d="M1730.6,132.4 L1735.6,132.4 L1735.6,447.2 L1735.6,447.2" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="1734.6,443.7 1740.6,447.2 1734.6,450.7" fill="#3C5A48"/>
+<path d="M1844.7,447.2 L1849.7,447.2 L1849.7,451.9 L1849.7,451.9" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="1848.7,448.4 1854.7,451.9 1848.7,455.4" fill="#3C5A48"/>
+<path d="M1958.8,451.9 L1963.8,451.9 L1963.8,459.9 L1963.8,459.9" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="1962.8,456.4 1968.8,459.9 1962.8,463.4" fill="#3C5A48"/>
+<path d="M2072.9,459.9 L2077.9,459.9 L2077.9,578.7 L2077.9,578.7" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="2076.9,575.2 2082.9,578.7 2076.9,582.2" fill="#3C5A48"/>
+<path d="M703.6,358.8 L708.6,358.8 L708.6,358.8 L708.6,358.8" fill="none" stroke="#E4702A" stroke-width="1.2" stroke-dasharray="4,3"/>
+<polygon points="707.6,355.3 713.6,358.8 707.6,362.3" fill="#E4702A"/>
+<text x="711.6" y="355.8" font-size="7.4" fill="#E4702A">no</text>
+<path d="M1107.9,203.9 L1107.9,54.0 L879.7,54.0 L879.7,333.7" fill="none" stroke="#E4702A" stroke-width="1.2" stroke-dasharray="4,3"/>
+<polygon points="876.2,332.7 879.7,338.7 883.2,332.7" fill="#E4702A"/>
+<text x="993.8" y="51.0" font-size="7.4" text-anchor="middle" fill="#E4702A">rejected: back to draft</text>
+<path d="M1450.3,189.8 L1450.3,45.0 L879.7,45.0 L879.7,333.7" fill="none" stroke="#E4702A" stroke-width="1.2" stroke-dasharray="4,3"/>
+<polygon points="876.2,332.7 879.7,338.7 883.2,332.7" fill="#E4702A"/>
+<text x="1165.0" y="42.0" font-size="7.4" text-anchor="middle" fill="#E4702A">rejected: back to proposing</text>
+<rect x="8" y="659" width="2184" height="26" fill="#FFF4E5" stroke="#E4702A"/>
+<text x="16" y="675" font-size="9" fill="#1F2A24"><tspan font-weight="bold" fill="#E4702A">⚠ Live build deviates here today:</tspan> RC-A one same-person check in sixteen approvals · G7 raised on every won decision, specified as conditional · G9 and G10 specified but never raised in code · project parties: mutation exists, no control · future dates accepted on assessment and signature</text>
+<text x="12" y="698" font-size="9.6" font-weight="bold" fill="#1F2A24">How to read</text>
+<rect x="92" y="688" width="46" height="13" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/><text x="144" y="698" font-size="8.8" fill="#1F2A24">A step by a person, with the record and its new state beneath.</text>
+<polygon points="115,704 138,712 115,720 92,712" fill="#fff" stroke="#E4702A" stroke-width="1.3"/><text x="144" y="715" font-size="8.8" fill="#1F2A24">A decision the process branches on.   </text>
+<rect x="422" y="688" width="46" height="13" rx="5" fill="#F6F8F6" stroke="#5B6B62" stroke-width="1.3"/><text x="474" y="698" font-size="8.8" fill="#1F2A24">Automatic — the platform acts, nobody is Responsible.</text>
+<rect x="422" y="705" width="46" height="13" rx="5" fill="#fff" stroke="#8A6D3B" stroke-width="1.3" stroke-dasharray="4,3"/><text x="474" y="715" font-size="8.8" fill="#1F2A24">Outside the company — client, supplier, authority.</text>
+<rect x="792" y="688" width="72" height="13" rx="6.5" fill="#1F6F3F"/><text x="796" y="697.5" font-size="7.4" font-weight="bold" fill="#fff">G6 Director·COO</text><text x="870" y="698" font-size="8.8" fill="#1F2A24">Gate: number · primary (Accountable) · alternate (Consulted) · window.</text>
+<rect x="792" y="705" width="46" height="13" rx="3" fill="#FDECEA" stroke="#B3261E" stroke-width="1.3"/><text x="798" y="715" font-size="7.8" font-weight="bold" fill="#B3261E">HB6</text><text x="870" y="715" font-size="8.8" fill="#1F2A24">Hard block: cannot proceed until the precondition exists.  <tspan fill="#E4702A">⚠ live deviation</tspan>  <tspan fill="#E4702A" stroke-dasharray="4,3">- - orange: return path</tspan></text>
+<text x="2188" y="729" font-size="8" text-anchor="end" fill="#5B6B62">Key: CEO Chief Executive Officer · COO Chief Operating Officer · PM Project Manager · PIC Person In Charge · 2d/3d working-day window · [state] from the schema</text>
+</svg>
