@@ -33,22 +33,40 @@ unread count when a new message arrives — a live thread should surface again.
 **Wanted:** `General (5)` in the list, and `Message (X)` on the dashboard where X is the total
 unread.
 
-**Today: most of this already works and is not being shown.** `unreadCount` is maintained on
-the membership row on every send, cleared on read, returned per channel by `listMyChannels`,
-and summed by `myUnreadCounts` into direct, spaces and mentions. The Messages page already
-renders those badges.
+**Karl is right — this is a bug, not a missing feature. I traced it today.** The counting works;
+the screen simply does not draw it. Four separate defects, all small:
 
-**What is missing is only the surfacing:**
-- **The left navigation has no badge at all.** `myUnreadCounts` is called by the Messages page
-  and nowhere else. `AppLayout` never reads it. So you have to be inside Messages to see that
-  you have anything.
-- **The dashboard has no Message tile.** The Today page shows Open Tasks and Priority; it does
-  not show messages.
-- Give the nav item **Messages (X)** and the dashboard a **Message (X)** tile, both from the
-  same `myUnreadCounts` query, with X = direct + spaces (mentions is a subset, do not double
-  count).
+1. **`src/pages/messages/page.tsx` line 771 — the Company channel row is not given the badge.**
+   `<ChannelItem>` accepts an `unread` prop and renders an amber badge when it is above zero.
+   The company row passes `channel`, `selected`, `onClick`, `persons`, `currentPersonId` — and
+   no `unread`. So General can never show a number.
+2. **Line 805 — the Direct channel rows are not given it either.** Same omission.
+3. **Line 838 — Spaces is the only one wired** (`unread={ch.unreadCount}`), which is why
+   group chats are the only place a badge has ever appeared.
+4. **The Company section header shows the wrong number.** It passes
+   `count={companyChannels.length}` — how many company channels exist, which is one — and no
+   `unread`. Direct and Spaces both pass `unread`.
 
-This one is small and worth doing first — the data is already correct.
+And one defect in the backend query:
+
+5. **`myUnreadCounts` excludes company channels from the total.** The `spaces` sum walks the
+   person's memberships and adds `unreadCount` only when the channel type is `group` or
+   `account`. A company channel is neither, so **General contributes nothing to any total** even
+   once the badges are wired.
+
+Minor, same area: `listMyChannels` accepts a `channelType` filter of direct, account or group —
+`company` is not an accepted value. The page works around it by calling the query unfiltered.
+
+**So the work is:** pass `unread={ch.unreadCount}` at lines 771 and 805; give the Company
+header an `unread` sum; add `company` to the `myUnreadCounts` filter; then surface the total as
+**Messages (X)** in `AppLayout` and **Message (X)** on the dashboard, both from
+`myUnreadCounts`, with X = direct + spaces.
+
+**Ask Hercules to verify against the database, not the screen.** The counters in
+`channel_members.unreadCount` are almost certainly already correct — they are incremented for
+every active member except the author on each send, and cleared by `markChannelRead`. If a
+count is wrong at the row level, that is a second and different bug and I want to see it named
+separately.
 
 ## A3. Task (X) on the dashboard that persists until the task is delivered
 
@@ -67,43 +85,71 @@ clear until they are delivered.
 cancelled — surfaced as **Task (X)** on both the dashboard and the nav, and unchanged by
 anything except delivery or cancellation.
 
-## A4. More than one company channel — Announcement, FAQ, Q&A
+## A4. An Announcement channel beside General — admin-only, and editable
 
-**Wanted:** several General-type channels for company-wide information.
+**Decided 8 September:** General stays open to everyone. Add a separate **Announcement** channel
+sitting next to it, where only administrators — Karl and Beda — may post, and where a posted
+message can be **edited afterwards**, because an announcement changes as the situation changes.
 
-**Today: the platform allows exactly one.** `ensureCompanyChannel` looks for an existing
-channel of type `company` and returns it if it finds one, so a second can never be created
-through that path, and there is no other mutation that creates one. `autoJoinCompanyChannel`
-finds the company channel the same way and joins people to that one only — so even if a second
-row were inserted directly, nobody would be a member of it.
+**Today, three things block it:**
 
-**What is needed:** allow multiple company channels, each with its own name; auto-join every
-person to all of them on first sign-in and on creation; and add a **post permission** on the
-company channel, because Announcement and FAQ should be read-only for most of the company
-while Q&A is open to everyone. That permission does not exist today — any member of a company
-channel can post. This is the one item of your five that needs a real design decision, and it
-is the one I would ask you to settle before Hercules starts: **who may post in each company
-channel.**
+1. **The platform allows exactly one company channel.** `ensureCompanyChannel` returns the
+   first channel of type `company` it finds and there is no other mutation that creates one.
+   `autoJoinCompanyChannel` finds the company channel the same way and joins people to that one
+   only — so even if a second row were inserted directly, nobody would be a member of it.
+2. **There is no post permission on a company channel.** Any member may post. Nothing in the
+   schema or the code distinguishes a readable channel from a writable one.
+3. **There is no way to edit a message anywhere in the platform.** No `editMessage` mutation,
+   and no `editedAt` or edit-history field on `channel_messages`. The only thing that can be
+   done to a posted message is `hideChannelMessage`.
+
+**What is needed:**
+- Allow more than one company channel, each named, each auto-joined by every person on creation
+  and on first sign-in.
+- Add a **post permission** to the channel row — my suggestion is `postRestrictedTo` holding a
+  role name or a small list of person ids, empty meaning everyone. Announcement gets Karl and
+  Beda; General stays empty.
+- Add an **edit** mutation, restricted to the message author within the channel's post
+  permission, that keeps the previous text. An announcement people acted on yesterday should
+  still be reconstructable, so store the revision rather than overwriting it, show
+  *edited* with the time, and append an audit entry. This is the same discipline as the
+  document revisions in Part 9, at a much smaller scale.
+- The two channels sit side by side in the Company section: **General** open, **Announcement**
+  read-only for everyone else.
+
+Later, on the same mechanism, you get FAQ and Q&A for free — FAQ restricted like Announcement,
+Q&A open like General.
 
 ## A5. A person card on People — number, email, photograph, how else to reach them
 
 **Wanted:** click a person, see their number, email, picture and a note such as an alternative
-way to contact them.
+way to contact them, so nobody has to ask *what is the number of so-and-so*.
 
-**Today: none of that data exists.** The `persons` table holds full name, display name,
-aliases, population, employment basis, home region, sign-in email and status. **There is no
-telephone number, no photograph and no notes field anywhere on a person.** The email that
-exists is the sign-in address, which is not always the address you would use to reach someone.
+**Decided 8 September: the photograph goes to Google Drive.** That is the right call and it is
+already possible — the Drive connection is live and working. Checked today:
+`get_drive_status` returns connected, account `karl.magnuscorp@gmail.com`, root folder
+`1Xnk7akftMLYDletDKnZPtT56IuBvIL31`, nothing stuck in staging. The `files` module has the whole
+pipe: `insertFileRecord`, `pushFileToGoogleDrive`, `markFileInDrive`, `serveFile`, and a
+storage lifecycle of staged → in_drive → verified → erased. **Nothing new needs building for
+storage. What is missing is an upload control anywhere other than the chat composer.**
+
+**Today the person data does not exist.** `persons` holds full name, display name, aliases,
+population, employment basis, home region, sign-in email and status. **There is no telephone
+number, no photograph and no notes field.** The only email is the sign-in address, which is not
+always the address you would use to reach someone.
 
 **What is needed:**
 - Add to `persons`: `mobileNumber`, `alternateNumber`, `contactEmail` (separate from the
-  sign-in address), `photographFileId`, `contactNote`.
+  sign-in address), `photographFileId` (pointing at a `files` row, therefore at Drive), and
+  `contactNote` — free text for *reach him on the site radio*, *she is on leave until the
+  fifteenth*, and the like.
 - A person card that opens from the People list and from a name anywhere else — a message
-  author, a task assignee, an approver.
-- **The photograph needs file storage.** There is no working file upload in the product except
-  the chat composer, so this item carries the attachment work with it (see B14).
-- Decide who may see a mobile number. My recommendation: everyone signed in can see it, and
-  the change is audited — the point of the field is that people can be reached.
+  author, a task assignee, an approver, a site report.
+- An upload control on that card that uses the existing Drive pipe. Because it is the first
+  upload outside chat, it is also the first half of B14, and I would build it so the second
+  half — purchase orders, payslips, invoices — reuses it.
+- Decide who may see a mobile number. My recommendation: everyone signed in, with the change
+  audited. The point of the field is that people can be reached.
 
 ---
 
@@ -219,7 +265,12 @@ This is the defect that makes every other approval slow.
 The only working upload in the product is the chat composer. There is no way to send a purchase
 order to a supplier, to give a worker a payslip, to send a client an invoice or a signed-off
 service report, to attach a design deliverable, a permit, or the toolbox photograph the schema
-already has a field for. Karl's A5 photograph sits on top of this.
+already has a field for.
+
+**The storage half of this is already solved.** The Google Drive connection is live and the
+`files` module can stage, push, mark and serve. What is missing is upload and download controls
+on the screens that need them, and a document to send in the first place. Karl's A5 photograph
+is the first of these and should set the pattern for the rest.
 
 ## B15. Console holder add and remove check nothing
 
@@ -243,13 +294,25 @@ then use `directAssignRole`, which bypasses gate 24 by design.
 
 # What I would put in front of Hercules first
 
-1. **B1** — configure the thirty gates. No code. One afternoon. It unblocks every approval
+1. **A2** — the unread badges. It is four unwired props and one query filter, and it is the
+   thing Magnus notices every hour. Smallest job on either list, highest daily value.
+2. **B1** — configure the thirty gates. No code. One afternoon. It unblocks every approval
    screen in the product.
-2. **A2** — surface the unread counts. The data is already right; this is display only.
 3. **B4** — gate the erasure, or hide it.
 4. **B5** — delete the unfiltered fallback in the export.
-5. **B2** — then the seventeen approval points, as one change.
+5. **A4** — the Announcement channel, with the message-edit mutation it needs.
+6. **B2** — then the seventeen approval points, as one change.
 
-A1, A3, A4 and A5 are the daily-use work and should run alongside, because they are what
-Magnus will actually touch. A5 needs the attachment work (B14) for the photograph, and A4 needs
-your decision on who may post in each company channel.
+A1, A3 and A5 run alongside as the daily-use work. A5 is now smaller than it looked: Drive is
+connected and the file pipe works, so it is five fields on `persons`, a card, and one upload
+control that the rest of B14 can reuse.
+
+---
+
+## Decisions taken on 8 September, for the record
+
+- **Photographs and attachments go to Google Drive**, using the connection that already exists.
+- **General stays open to everyone.** Announcement is a separate channel beside it, posts
+  restricted to Karl and Beda, and its messages must be editable.
+- **The unread counts are a bug, not a gap.** The numbers are being kept; the screen is not
+  drawing them.
