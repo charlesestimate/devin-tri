@@ -1,0 +1,138 @@
+<html><body style='font-family:Arial;font-size:10.5pt'><h1>Part 6 of 10 — Get Paid</h1>
+<p><b>Level-1 cross-functional map · as specified · 8 September 2026</b> <b>Companion files:</b> <code>Part 6 — Get Paid (A3 landscape).pdf</code> and <code>.svg</code> in the same folder</p>
+<hr/>
+<h2>1. What this process is for</h2>
+<p>Everything in Parts 2 to 5 spends money. This is the part that brings it back.</p>
+<p>Four chains. <b>Billing the client</b> turns work done into a certified claim and a paid invoice. <b>Drawing cash</b> advances money to a project and accounts for it afterwards. <b>Writing off</b> authorises a loss. <b>Variation and forecast</b> adjusts the contract value and projects cash in.</p>
+<p><b>Starts:</b> a signed contract from Part 2 and block progress from Part 5. <b>Ends:</b> money in the bank, and a forecast that shows whether more is coming.</p>
+<p><b>The structural finding of this part: the platform can bill a client but cannot pay a supplier.</b> There is no accounts payable anywhere — no supplier invoice, no subcontractor invoice, no payment record, no remittance. Part 4 can raise a purchase order and receive the goods; there is nowhere to record the bill, and nowhere to pay it. Cash only ever flows in.</p>
+<hr/>
+<h2>2. Lanes in this map</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>Lane</th><th>Roles</th><th>What they do here</th></tr>
+<tr><td><b>External: Client</b></td><td>The client and their certifier</td><td>Certify or dispute the claim. Drawn dashed: outside the company</td></tr>
+<tr><td><b>Executive</b></td><td>Head of Finance · Director · Chief Operating Officer</td><td>Four gates: the fund request, the three write-off bands, the variation order</td></tr>
+<tr><td><b>Finance: Billing</b></td><td>Finance Officer</td><td>Milestones, claims, certification, invoices</td></tr>
+<tr><td><b>Finance: Treasury</b></td><td>Head of Finance</td><td>Fund requests, write-offs, the cash forecast</td></tr>
+<tr><td><b>Projects and Site</b></td><td>Project Manager</td><td>Raises variation orders; supplies the percent complete</td></tr>
+<tr><td><b>The Platform</b></td><td>—</td><td>Derives percent complete, detects the three-month gap</td></tr>
+</table>
+<hr/>
+<h2>3. Billing the client</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>#</th><th>Lane</th><th>Action</th><th>Record → state</th><th>Gate</th><th>Deviation today</th></tr>
+<tr><td>6.1</td><td>Billing</td><td>Create a billing milestone on the contract</td><td><code>billing_milestones</code> → <code>pending</code></td><td>—</td><td></td></tr>
+<tr><td>6.2</td><td>Billing</td><td>Raise a progress claim</td><td><code>progress_claims</code> → <code>draft</code></td><td>—</td><td><b>Percent complete is derived from block activities and cannot be typed — correct, and one of the better pieces of design in the platform.</b> The claimed amount is checked against nothing: not the contract value, not the milestone, not the percent complete</td></tr>
+<tr><td>6.3</td><td>Billing</td><td>Submit the claim to the client</td><td>→ <code>submitted</code></td><td><b>G11 · Head of Finance · Director</b></td><td><b>The code raises gate 25a</b>, which the specification reserves for inter-island inventory transfers. The approval reference is a string the caller supplies and it is not even checked for emptiness</td></tr>
+<tr><td>6.4</td><td>External</td><td>The client reviews and certifies</td><td>→ <code>certified</code> · <code>disputed</code></td><td>—</td><td></td></tr>
+<tr><td>6.5</td><td>Billing</td><td>Record the certification</td><td>→ <code>certified</code></td><td><b>G11 · Head of Finance · Director</b></td><td><b>The code raises gate 25b.</b> Certified is correctly a separate field from claimed — and is never compared to it, so a claim of ₱1,000,000 can be certified at ₱9,000,000</td></tr>
+<tr><td>6.6</td><td>Billing</td><td>Mark the milestone paid</td><td><code>billing_milestones</code> → <code>paid</code></td><td>—</td><td>The paid amount is not checked against the certified amount</td></tr>
+<tr><td>6.7</td><td>Billing</td><td>Raise the retention invoice at the release date</td><td>—</td><td><b>G12 · Retention Invoice</b></td><td><b>Does not exist.</b> There is no retention invoice record anywhere. Retention percent and release months are stored on the contract and a release date is derived at turnover — and nothing bills it</td></tr>
+</table>
+<h3>Gate 11 is the answer to the question Part 4 left open</h3>
+<p>Part 4 flagged that gates 25a and 25b are claimed by two modules: the specification says inventory transfers, the finance schema comments say progress claim submission and certification, and neither module raises them in code.</p>
+<p>That is now settled, and the specification is internally consistent. <b>Gate 11 is <i>Progress Claim or Service Charge</i>.</b> It is the gate the specification provides for exactly this step. Its only appearance in the entire codebase is the label list inside the Administration migration — no code raises it.</p>
+<p>So the finance module did not find a gap and fill it. It reached for two numbers that were already spoken for, while the correct number sat unused. <b>25a and 25b belong to inventory. Gate 11 belongs here.</b> That resolves register item 12's inventory question without a decision from you; what still needs your sentence is the general rule.</p>
+<h3>The retention hole is worth a number</h3>
+<p>Every EPC contract in this company carries retention — commonly five to ten per cent, held back until the release date. The contract record has <code>retentionPercent</code> and <code>retentionReleaseMonths</code>, and <code>recordTurnoverDate</code> correctly derives <code>retentionReleaseDate</code> from them in a single transaction.</p>
+<p><b>And there is no record that can bill it.</b> On a ₱50,000,000 project at five per cent, that is ₱2,500,000 with no route through the platform. It will be invoiced from a spreadsheet, or forgotten. Gate 12 exists in the specification precisely because this is the money most often lost.</p>
+<hr/>
+<h2>4. Drawing cash, and writing off</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>#</th><th>Lane</th><th>Action</th><th>Record → state</th><th>Gate or block</th><th>Deviation today</th></tr>
+<tr><td>6.8</td><td>Treasury</td><td>Raise a fund request</td><td><code>fund_requests</code> → <code>pending</code></td><td><b>HB6</b></td><td><b>Enforced, and well written.</b> <i>"Hard Block 6: Fund request FR-… is released but not yet liquidated. Liquidate the outstanding advance before raising a new request."</i> It names the block, the condition and the release</td></tr>
+<tr><td>6.9</td><td>Executive</td><td>Approve the request</td><td>→ <code>approved</code></td><td><b>G23 · Head of Finance · Director</b></td><td>No role check, no same-person check. The approved amount is not bounded by the requested amount</td></tr>
+<tr><td>6.10</td><td>Treasury</td><td>Release the funds</td><td>→ <code>released</code></td><td>—</td><td>The person who approved can release. Two of the three cash controls are the same person</td></tr>
+<tr><td>6.11</td><td>Treasury</td><td>Liquidate the advance</td><td>→ <code>liquidated</code></td><td>—</td><td>A liquidation reference is required — correct. Nothing checks what it points at, and there is no amount</td></tr>
+<tr><td>6.12</td><td>Treasury</td><td>Raise a write-off — seven categories</td><td><code>write_offs</code> → <code>pending_approval</code></td><td>—</td><td>The gate is derived at creation, from <b>severity</b></td></tr>
+<tr><td>6.13</td><td>Executive</td><td>Approve the write-off</td><td>→ <code>approved</code></td><td><b>G1 ≤ ₱50,000 · G2 ₱50,000–₱100,000 · G3 &gt; ₱100,000</b></td><td><b>The gate is read from severity, not from the amount.</b> <code>gateIdForSeverity</code> maps minor→1, moderate→2, major→3. A ₱5,000,000 write-off marked minor raises gate 1</td></tr>
+</table>
+<h3>Hard block 6 is the third meaning of that number</h3>
+<p>This is the same hard block number in a third, different form:</p>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>Where</th><th>What HB6 means there</th><th>Enforced?</th></tr>
+<tr><td><b>The specification</b> (<code>seed.ts</code>)</td><td><i>No Signed Contract — Funds Blocked.</i> Releases on a signed contract document</td><td><b>No code</b></td></tr>
+<tr><td><b>Procurement</b> (<code>orders.ts</code>)</td><td>A purchase order cannot be issued without a gate 4 approval</td><td>Yes — against a reference the browser invents</td></tr>
+<tr><td><b>Finance</b> (<code>finance.ts</code>)</td><td>A new fund request is refused while an advance is released and not liquidated</td><td><b>Yes, properly</b></td></tr>
+</table>
+<p>Three rules, one number. The finance one is the best-implemented hard block in the platform. The one the specification actually asks for — no funds against an unsigned contract — is the one that does not exist.</p>
+<h3>The write-off gate is the defect Agent 1 proved on the live platform</h3>
+<p>This is the finding behind 1st_AI's four-row experiment: ₱50,000 minor → gate 1, ₱5,000,000 minor → gate 1, ₱50,000 major → gate 3, ₱5,000,000 major → gate 3. The amount changed nothing.</p>
+<p>The specification is explicit that <b>the gate is derived from the amount of money involved and is never chosen by a person</b>. Severity is a person's judgement typed into a dropdown. Deriving the approval band from it hands the choice of approver to the person raising the write-off — which is exactly the thing the rule exists to prevent.</p>
+<p><code>gateIdForSeverity</code> at <code>convex/finance/finance.ts:12</code> is four lines long and the fix is to read <code>args.amount</code> instead. It is the cheapest high-value change on Monday's list.</p>
+<hr/>
+<h2>5. Variation and forecast</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>#</th><th>Lane</th><th>Action</th><th>Record → state</th><th>Gate</th><th>Deviation today</th></tr>
+<tr><td>6.14</td><td>Projects</td><td>Raise a variation order</td><td><code>variation_orders</code> → <code>draft</code></td><td>—</td><td>The mutation exists and <b>no screen calls it</b> — the whole variation order feature is reachable only through the protocol</td></tr>
+<tr><td>6.15</td><td>Executive</td><td>Approve the variation order</td><td>—</td><td><b>G8 · Director · Chief Operating Officer</b></td><td><b>No approve mutation exists.</b> <code>gate9ApprovalId</code> is never written by anything, so the value adjustment reaches nothing. The schema comment calls this gate 9; the specification says gate 9 is the signed customer agreement and gate 8 is the variation order — the two are swapped</td></tr>
+<tr><td>6.16</td><td>Treasury</td><td>Cash forecast — secured, gated, projected</td><td><code>cash_forecast_lines</code></td><td>—</td><td><b>A gated line must carry a gate — correctly refused otherwise.</b> The three bands are exactly as specified</td></tr>
+<tr><td>6.17</td><td>Platform</td><td><b>Automatic:</b> three-month gap detected on read</td><td>—</td><td>—</td><td><b>Correct.</b> Three consecutive future months with no secured or gated line. Computed, never stored</td></tr>
+<tr><td>6.18</td><td>Platform</td><td><b>Automatic:</b> pay a supplier</td><td>—</td><td>—</td><td><b>There is no accounts payable.</b> No supplier invoice, no subcontractor invoice, no payment, no remittance. The forecast covers cash in only</td></tr>
+</table>
+<hr/>
+<h2>6. The RACI</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>Step</th><th>Finance Officer</th><th>Head of Finance</th><th>Director</th><th>Chief Operating Officer</th><th>Project Manager</th><th>Client</th></tr>
+<tr><td>6.1 Billing milestone</td><td><b>R</b></td><td><b>A</b></td><td>I</td><td></td><td>C</td><td>I</td></tr>
+<tr><td>6.2 Raise progress claim</td><td><b>R</b></td><td><b>A</b></td><td>I</td><td></td><td><b>C</b></td><td></td></tr>
+<tr><td>6.3 Submit the claim (G11)</td><td><b>R</b></td><td><b>A</b></td><td>C</td><td></td><td>I</td><td><b>I</b></td></tr>
+<tr><td>6.4 Client certifies</td><td>I</td><td><b>I</b></td><td>I</td><td></td><td>I</td><td><b>R / A</b></td></tr>
+<tr><td>6.5 Record certification (G11)</td><td><b>R</b></td><td><b>A</b></td><td>C</td><td></td><td>I</td><td>I</td></tr>
+<tr><td>6.6 Mark paid</td><td><b>R</b></td><td><b>A</b></td><td>I</td><td></td><td>I</td><td>I</td></tr>
+<tr><td>6.7 Retention invoice (G12)</td><td><b>R</b></td><td><b>A</b></td><td>C</td><td>I</td><td>I</td><td>I</td></tr>
+<tr><td>6.8 Raise fund request</td><td>C</td><td><b>R / A</b></td><td>I</td><td></td><td><b>R</b></td><td></td></tr>
+<tr><td>6.9 Approve the request (G23)</td><td>I</td><td><b>A</b></td><td>C</td><td>I</td><td>I</td><td></td></tr>
+<tr><td>6.10 Release the funds</td><td><b>R</b></td><td><b>A</b></td><td>I</td><td></td><td>I</td><td></td></tr>
+<tr><td>6.11 Liquidate the advance</td><td><b>R</b></td><td><b>A</b></td><td>I</td><td></td><td>C</td><td></td></tr>
+<tr><td>6.12 Raise a write-off</td><td><b>R</b></td><td><b>A</b></td><td>I</td><td></td><td>C</td><td></td></tr>
+<tr><td>6.13 Approve — G1 ≤ ₱50,000</td><td>I</td><td><b>A</b></td><td>C</td><td></td><td>I</td><td></td></tr>
+<tr><td>6.13 Approve — G2 ₱50,000–₱100,000</td><td>I</td><td>C</td><td><b>A</b></td><td>C</td><td>I</td><td></td></tr>
+<tr><td>6.13 Approve — G3 &gt; ₱100,000</td><td>I</td><td>C</td><td>C</td><td><b>A</b></td><td>I</td><td></td></tr>
+<tr><td>6.14 Raise a variation order</td><td>C</td><td>C</td><td>I</td><td></td><td><b>R / A</b></td><td>I</td></tr>
+<tr><td>6.15 Approve the variation order (G8)</td><td>I</td><td>C</td><td><b>A</b></td><td>C</td><td><b>R</b></td><td><b>I</b></td></tr>
+<tr><td>6.16 Cash forecast</td><td><b>R</b></td><td><b>A</b></td><td>I</td><td>I</td><td>C</td><td></td></tr>
+<tr><td>6.17 Three-month gap</td><td>I</td><td><b>I</b></td><td><b>I</b></td><td><b>I</b></td><td>I</td><td></td></tr>
+<tr><td>6.18 Pay a supplier</td><td><b>R</b></td><td><b>A</b></td><td>I</td><td></td><td>I</td><td></td></tr>
+</table>
+<p><b>Reading the matrix.</b> The Head of Finance is Accountable on sixteen of the twenty steps — the highest concentration of accountability anywhere in the series. On the cash chain (6.8 to 6.11) they are Accountable on all four, and the code lets one person raise, approve, release and liquidate an advance without a second pair of eyes at any point. <b>Hard block 6 is what stops that becoming a rolling advance — and it is the only thing that does.</b></p>
+<p>The Client is Responsible for exactly one step, and it is the one the company's cash flow depends on. There is no expected-decision date on a submitted claim and nobody is notified when one is certified.</p>
+<hr/>
+<h2>7. Hand-offs</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>From → To</th><th>At step</th><th>What crosses</th><th>What stalls it</th></tr>
+<tr><td><b>Site → Billing</b></td><td>Part 5 → 6.2</td><td><b>Block percent complete</b></td><td>Nothing. This join works — the claim reads the latest cumulative percent per block and stores a weighted average. It is the strongest link in the product</td></tr>
+<tr><td>Billing → Client</td><td>6.3 → 6.4</td><td>The submitted claim</td><td>There is no way to send it. No invoice document, no export, no attachment</td></tr>
+<tr><td>Client → Billing</td><td>6.4 → 6.5</td><td>Certification</td><td>Someone remembering to check. No expected date, no notification</td></tr>
+<tr><td>Billing → Treasury</td><td>6.5 → 6.8</td><td>A certified claim to draw against</td><td>The link is optional — <code>progressClaimId</code> on a fund request is not required</td></tr>
+<tr><td><b>Procurement → Treasury</b></td><td>Part 4 → 6.18</td><td><b>The supplier's bill</b></td><td><b>There is nowhere for it to land.</b> Committed cost is computed from issued orders; nothing records what is actually owed</td></tr>
+<tr><td>Projects → Executive</td><td>6.14 → 6.15</td><td>A variation order</td><td>No screen raises it and no mutation approves it</td></tr>
+<tr><td>Treasury → Executive</td><td>6.16 → 6.17</td><td>The forecast</td><td>Nothing. The gap detection works</td></tr>
+</table>
+<hr/>
+<h2>8. Where the live build differs from this map</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th></th><th>Deviation</th><th>Step</th><th>Reference</th></tr>
+<tr><td>1</td><td><b>There is no accounts payable</b> — the platform cannot record or pay a supplier bill</td><td>6.18</td><td>Structural</td></tr>
+<tr><td>2</td><td><b>The write-off gate is read from severity, not the amount</b></td><td>6.13</td><td>1-A</td></tr>
+<tr><td>3</td><td><b>Gate 11 has no code; finance raises 25a and 25b instead</b></td><td>6.3, 6.5</td><td>Register</td></tr>
+<tr><td>4</td><td><b>Gate 12, the retention invoice, has no record at all</b></td><td>6.7</td><td>Register</td></tr>
+<tr><td>5</td><td><b>Gate 8 has no approve mutation</b> and the schema calls it gate 9</td><td>6.15</td><td>Register</td></tr>
+<tr><td>6</td><td>The progress claim screen passes the project id where a contract id is required, so the claim cannot be created from the interface</td><td>6.2</td><td>1-01</td></tr>
+<tr><td>7</td><td>The certified amount is never compared with the claimed amount</td><td>6.5</td><td>New</td></tr>
+<tr><td>8</td><td>The paid amount is never compared with the certified amount</td><td>6.6</td><td>New</td></tr>
+<tr><td>9</td><td>The claimed amount is never compared with the contract value or the percent complete</td><td>6.2</td><td>New</td></tr>
+<tr><td>10</td><td>The approved amount on a fund request is not bounded by the requested amount</td><td>6.9</td><td>New</td></tr>
+<tr><td>11</td><td>One person can raise, approve, release and liquidate an advance</td><td>6.8–6.11</td><td>RC-A</td></tr>
+<tr><td>12</td><td>Gate 23's approval reference is an unchecked string</td><td>6.9</td><td>RC-A</td></tr>
+<tr><td>13</td><td>The variation order has no screen</td><td>6.14</td><td>1-15</td></tr>
+<tr><td>14</td><td>Nobody is notified at any hand-off</td><td>all</td><td>RC-H</td></tr>
+</table>
+<p><b>What stands out.</b> The two best-built things in the whole platform are in this part: the percent-complete derivation, which cannot be typed by a person, and hard block 6, which refuses clearly and says how to clear itself. Sitting beside them is the largest missing feature in the product — half of every transaction the company makes has nowhere to go.</p>
+<hr/>
+<h2>9. A correction, and a decision that is now smaller</h2>
+<p><b>Part 4 asked you to settle gates 25a and 25b. You no longer need to.</b> The specification answers it: gate 11 is the progress claim gate, so 25a and 25b are inventory transfer gates, and the finance module simply used the wrong numbers. I said in Part 4 that "the two readings cannot both be right" and asked you to choose — that was the wrong framing. The specification was never ambiguous; only the code was.</p>
+<p>What still needs your sentence is the general rule, and it is unchanged from Part 5: <b>the thirty rows in <code>seed.ts</code> are the register.</b> With that stated, gates 4, 5, 8, 9, 11, 12, 20, 24, 25a, 25b, 30, 31 and 33 all become mechanical corrections rather than judgement calls.</p>
+<hr/>
+<h2>10. What is deliberately not in this part</h2>
+<ul><li><b>Paying people.</b> Part 7 — payroll is the one outbound payment the platform does have.</li><li><b>Turnover, retention release dates and warranty.</b> Part 8, gates 21 and 34. This part shows only that the invoice which should follow the release date does not exist.</li><li><b>The contract itself and the risk review.</b> Part 2, gates 9 and 10.</li><li><b>System constants and the thresholds these gates read.</b> Part 9, gates 22 and 31.</li></ul></body></html>

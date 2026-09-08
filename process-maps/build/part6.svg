@@ -1,0 +1,210 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2200" height="776" viewBox="0 0 2200 776" font-family="Arial, Helvetica, sans-serif">
+<rect width="2200" height="776" fill="#fff"/>
+<text x="12" y="20" font-size="16" font-weight="bold" fill="#1F2A24">Part 6 — Get Paid</text>
+<text x="12" y="36" font-size="9.6" fill="#5B6B62">Level-1 cross-functional map · as specified · billing the client, drawing cash, writing off · gates 1, 2, 3, 8, 11, 12, 23 · hard block 6 · 8 September 2026</text>
+<text x="2188" y="20" font-size="9.6" text-anchor="end" fill="#5B6B62">Magnus Workspace Platform · Process Maps and RACI</text>
+<rect x="8" y="84.0" width="2184" height="73.2" fill="#FFFFFF" stroke="#D6DED9"/>
+<rect x="8" y="84.0" width="124" height="73.2" fill="#154D2C"/>
+<text x="70.0" y="118.1" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">External:</text>
+<text x="70.0" y="131.1" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">Client</text>
+<rect x="8" y="157.2" width="2184" height="129.0" fill="#F3F6F4" stroke="#D6DED9"/>
+<rect x="8" y="157.2" width="124" height="129.0" fill="#154D2C"/>
+<text x="70.0" y="225.7" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">Executive</text>
+<rect x="8" y="286.2" width="2184" height="122.4" fill="#FFFFFF" stroke="#D6DED9"/>
+<rect x="8" y="286.2" width="124" height="122.4" fill="#154D2C"/>
+<text x="70.0" y="344.9" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">Finance:</text>
+<text x="70.0" y="357.9" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">Billing</text>
+<rect x="8" y="408.6" width="2184" height="99.0" fill="#F3F6F4" stroke="#D6DED9"/>
+<rect x="8" y="408.6" width="124" height="99.0" fill="#154D2C"/>
+<text x="70.0" y="455.6" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">Finance:</text>
+<text x="70.0" y="468.6" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">Treasury</text>
+<rect x="8" y="507.6" width="2184" height="75.4" fill="#FFFFFF" stroke="#D6DED9"/>
+<rect x="8" y="507.6" width="124" height="75.4" fill="#154D2C"/>
+<text x="70.0" y="542.8" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">Projects and</text>
+<text x="70.0" y="555.8" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">Site</text>
+<rect x="8" y="583.0" width="2184" height="101.4" fill="#EAF1EC" stroke="#D6DED9"/>
+<rect x="8" y="583.0" width="124" height="101.4" fill="#3C5A48"/>
+<text x="70.0" y="637.7" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">The Platform</text>
+<rect x="147.0" y="319.6" width="132" height="53.6" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="213.0" y="332.1" font-size="9" text-anchor="middle" fill="#1F2A24">Create a billing</text>
+<text x="213.0" y="343.1" font-size="9" text-anchor="middle" fill="#1F2A24">milestone on the</text>
+<text x="213.0" y="354.1" font-size="9" text-anchor="middle" fill="#1F2A24">contract</text>
+<text x="213.0" y="365.1" font-size="7.4" text-anchor="middle" fill="#5B6B62">billing_milestones [pending]</text>
+<rect x="297.0" y="296.2" width="132" height="31.6" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="363.0" y="308.7" font-size="9" text-anchor="middle" fill="#1F2A24">Raise a progress claim</text>
+<text x="363.0" y="319.7" font-size="7.4" text-anchor="middle" fill="#5B6B62">progress_claims [draft]</text>
+<text x="363.0" y="339.6" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">⚠ percent complete is</text>
+<text x="363.0" y="349.0" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">derived from block</text>
+<text x="363.0" y="358.4" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">activities and never typed —</text>
+<text x="363.0" y="367.8" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">correct; the claimed amount</text>
+<text x="363.0" y="377.2" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">is not checked against the</text>
+<text x="363.0" y="386.6" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">contract, the milestone or</text>
+<text x="363.0" y="396.0" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">the percent complete</text>
+<rect x="447.0" y="296.8" width="132" height="42.6" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="513.0" y="309.3" font-size="9" text-anchor="middle" fill="#1F2A24">Submit the claim to the</text>
+<text x="513.0" y="320.3" font-size="9" text-anchor="middle" fill="#1F2A24">client</text>
+<text x="513.0" y="331.3" font-size="7.4" text-anchor="middle" fill="#5B6B62">progress_claims [submitted]</text>
+<rect x="447.0" y="342.4" width="132.0" height="13" rx="6.5" fill="#1F6F3F"/>
+<text x="513.0" y="352.0" font-size="6.9" font-weight="bold" text-anchor="middle" fill="#fff">G11 Head of Finance·Director</text>
+<text x="513.0" y="367.2" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">⚠ the code raises G25a, an</text>
+<text x="513.0" y="376.6" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">inventory transfer gate; the</text>
+<text x="513.0" y="386.0" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">reference is an unchecked</text>
+<text x="513.0" y="395.4" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">string</text>
+<rect x="597.0" y="94.0" width="132" height="51.2" rx="5" fill="#fff" stroke="#8A6D3B" stroke-width="1.3" stroke-dasharray="4,3"/>
+<text x="663.0" y="106.5" font-size="9" text-anchor="middle" fill="#1F2A24">The client reviews and</text>
+<text x="663.0" y="117.5" font-size="9" text-anchor="middle" fill="#1F2A24">certifies</text>
+<text x="663.0" y="128.5" font-size="7.4" text-anchor="middle" fill="#5B6B62">progress_claims [certified |</text>
+<text x="663.0" y="137.1" font-size="7.4" text-anchor="middle" fill="#5B6B62">disputed]</text>
+<rect x="747.0" y="297.6" width="132" height="31.6" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="813.0" y="310.1" font-size="9" text-anchor="middle" fill="#1F2A24">Record the certification</text>
+<text x="813.0" y="321.1" font-size="7.4" text-anchor="middle" fill="#5B6B62">progress_claims [certified]</text>
+<rect x="747.0" y="332.2" width="132.0" height="13" rx="6.5" fill="#1F6F3F"/>
+<text x="813.0" y="341.8" font-size="6.9" font-weight="bold" text-anchor="middle" fill="#fff">G11 Head of Finance·Director</text>
+<text x="813.0" y="357.0" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">⚠ the code raises G25b;</text>
+<text x="813.0" y="366.4" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">certified is correctly a</text>
+<text x="813.0" y="375.8" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">separate field from claimed,</text>
+<text x="813.0" y="385.2" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">and is not checked against</text>
+<text x="813.0" y="394.6" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">it</text>
+<rect x="897.0" y="319.7" width="132" height="31.6" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="963.0" y="332.2" font-size="9" text-anchor="middle" fill="#1F2A24">Mark the milestone paid</text>
+<text x="963.0" y="343.2" font-size="7.4" text-anchor="middle" fill="#5B6B62">billing_milestones [paid]</text>
+<text x="963.0" y="363.1" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">⚠ paid amount is not checked</text>
+<text x="963.0" y="372.5" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">against certified</text>
+<rect x="1047.0" y="305.1" width="132" height="42.0" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="1113.0" y="317.6" font-size="9" text-anchor="middle" fill="#1F2A24">Raise the retention</text>
+<text x="1113.0" y="328.6" font-size="9" text-anchor="middle" fill="#1F2A24">invoice at the release</text>
+<text x="1113.0" y="339.6" font-size="9" text-anchor="middle" fill="#1F2A24">date</text>
+<text x="1113.0" y="358.9" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">⚠ G12 retention invoice has</text>
+<text x="1113.0" y="368.3" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">no code and no record;</text>
+<text x="1113.0" y="377.7" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">retention is stored on the</text>
+<text x="1113.0" y="387.1" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">contract and never billed</text>
+<rect x="147.0" y="418.6" width="132" height="31.6" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="213.0" y="431.1" font-size="9" text-anchor="middle" fill="#1F2A24">Raise a fund request</text>
+<text x="213.0" y="442.1" font-size="7.4" text-anchor="middle" fill="#5B6B62">fund_requests [pending]</text>
+<rect x="147.0" y="453.2" width="132" height="44.4" rx="3" fill="#FDECEA" stroke="#B3261E" stroke-width="1.3"/>
+<text x="213.0" y="463.8" font-size="7.8" font-weight="bold" text-anchor="middle" fill="#B3261E">HB6 — refused while an</text>
+<text x="213.0" y="473.4" font-size="7.8" font-weight="bold" text-anchor="middle" fill="#B3261E">advance is released and</text>
+<text x="213.0" y="483.0" font-size="7.8" font-weight="bold" text-anchor="middle" fill="#B3261E">not liquidated — enforced,</text>
+<text x="213.0" y="492.6" font-size="7.8" font-weight="bold" text-anchor="middle" fill="#B3261E">with a readable message</text>
+<rect x="297.0" y="171.9" width="132" height="31.6" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="363.0" y="184.4" font-size="9" text-anchor="middle" fill="#1F2A24">Approve the request</text>
+<text x="363.0" y="195.4" font-size="7.4" text-anchor="middle" fill="#5B6B62">fund_requests [approved]</text>
+<rect x="297.0" y="206.5" width="132.0" height="13" rx="6.5" fill="#1F6F3F"/>
+<text x="363.0" y="216.1" font-size="6.9" font-weight="bold" text-anchor="middle" fill="#fff">G23 Head of Finance·Director</text>
+<text x="363.0" y="231.3" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">⚠ no role check, no</text>
+<text x="363.0" y="240.7" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">same-person check; the</text>
+<text x="363.0" y="250.1" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">approved amount is not</text>
+<text x="363.0" y="259.5" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">bounded by the requested</text>
+<text x="363.0" y="268.9" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">amount</text>
+<rect x="447.0" y="430.4" width="132" height="31.6" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="513.0" y="442.9" font-size="9" text-anchor="middle" fill="#1F2A24">Release the funds</text>
+<text x="513.0" y="453.9" font-size="7.4" text-anchor="middle" fill="#5B6B62">fund_requests [released]</text>
+<text x="513.0" y="473.8" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">⚠ the person who approved</text>
+<text x="513.0" y="483.2" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">can release</text>
+<rect x="597.0" y="425.7" width="132" height="31.6" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="663.0" y="438.2" font-size="9" text-anchor="middle" fill="#1F2A24">Liquidate the advance</text>
+<text x="663.0" y="449.2" font-size="7.4" text-anchor="middle" fill="#5B6B62">fund_requests [liquidated]</text>
+<text x="663.0" y="469.1" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">⚠ a reference is required —</text>
+<text x="663.0" y="478.5" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">correct; nothing checks what</text>
+<text x="663.0" y="487.9" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">it points at</text>
+<rect x="747.0" y="420.2" width="132" height="42.6" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="813.0" y="432.7" font-size="9" text-anchor="middle" fill="#1F2A24">Raise a write-off —</text>
+<text x="813.0" y="443.7" font-size="9" text-anchor="middle" fill="#1F2A24">seven categories</text>
+<text x="813.0" y="454.7" font-size="7.4" text-anchor="middle" fill="#5B6B62">write_offs [pending_approval]</text>
+<text x="813.0" y="474.6" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">⚠ the gate is derived from</text>
+<text x="813.0" y="484.0" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">severity, not from the</text>
+<text x="813.0" y="493.4" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">amount</text>
+<rect x="897.0" y="167.2" width="132" height="31.6" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="963.0" y="179.7" font-size="9" text-anchor="middle" fill="#1F2A24">Approve the write-off</text>
+<text x="963.0" y="190.7" font-size="7.4" text-anchor="middle" fill="#5B6B62">write_offs [approved]</text>
+<rect x="897.0" y="201.8" width="132.0" height="13" rx="6.5" fill="#1F6F3F"/>
+<text x="963.0" y="211.4" font-size="7.4" font-weight="bold" text-anchor="middle" fill="#fff">G1 or 2 or 3 set by amount</text>
+<text x="963.0" y="226.6" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">⚠ G1 up to ₱50k · G2 ₱50k to</text>
+<text x="963.0" y="236.0" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">₱100k · G3 above ₱100k in</text>
+<text x="963.0" y="245.4" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">the specification; the code</text>
+<text x="963.0" y="254.8" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">reads severity instead, so a</text>
+<text x="963.0" y="264.2" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">₱5,000,000 minor write-off</text>
+<text x="963.0" y="273.6" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">raises G1</text>
+<rect x="1197.0" y="517.6" width="132" height="31.6" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="1263.0" y="530.1" font-size="9" text-anchor="middle" fill="#1F2A24">Raise a variation order</text>
+<text x="1263.0" y="541.1" font-size="7.4" text-anchor="middle" fill="#5B6B62">variation_orders [draft]</text>
+<text x="1263.0" y="561.0" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">⚠ the mutation exists and no</text>
+<text x="1263.0" y="570.4" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">screen calls it</text>
+<rect x="1347.0" y="176.9" width="132" height="31.0" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="1413.0" y="189.4" font-size="9" text-anchor="middle" fill="#1F2A24">Approve the variation</text>
+<text x="1413.0" y="200.4" font-size="9" text-anchor="middle" fill="#1F2A24">order</text>
+<rect x="1371.2" y="210.9" width="83.5" height="13" rx="6.5" fill="#1F6F3F"/>
+<text x="1413.0" y="220.5" font-size="7.6" font-weight="bold" text-anchor="middle" fill="#fff">G8 Director·COO</text>
+<text x="1413.0" y="235.7" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">⚠ no approve mutation</text>
+<text x="1413.0" y="245.1" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">exists; gate9ApprovalId is</text>
+<text x="1413.0" y="254.5" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">never written and the value</text>
+<text x="1413.0" y="263.9" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">adjustment reaches nothing</text>
+<rect x="1497.0" y="424.9" width="132" height="42.6" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="1563.0" y="437.4" font-size="9" text-anchor="middle" fill="#1F2A24">Cash forecast — secured,</text>
+<text x="1563.0" y="448.4" font-size="9" text-anchor="middle" fill="#1F2A24">gated, projected</text>
+<text x="1563.0" y="459.4" font-size="7.4" text-anchor="middle" fill="#5B6B62">cash_forecast_lines</text>
+<text x="1563.0" y="479.3" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">⚠ a gated line must carry a</text>
+<text x="1563.0" y="488.7" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">gate — correct</text>
+<rect x="1647.0" y="601.6" width="132" height="31.0" rx="5" fill="#F6F8F6" stroke="#5B6B62" stroke-width="1.3"/>
+<text x="1713.0" y="614.1" font-size="9" text-anchor="middle" fill="#1F2A24">Three-month gap detected</text>
+<text x="1713.0" y="625.1" font-size="9" text-anchor="middle" fill="#1F2A24">on read</text>
+<text x="1713.0" y="644.4" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">⚠ correct — three</text>
+<text x="1713.0" y="653.8" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">consecutive months with no</text>
+<text x="1713.0" y="663.2" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">secured or gated line</text>
+<rect x="1797.0" y="593.0" width="132" height="20.0" rx="5" fill="#F6F8F6" stroke="#5B6B62" stroke-width="1.3"/>
+<text x="1863.0" y="605.5" font-size="9" text-anchor="middle" fill="#1F2A24">Pay a supplier</text>
+<text x="1863.0" y="624.8" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">⚠ there is no accounts</text>
+<text x="1863.0" y="634.2" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">payable anywhere: no</text>
+<text x="1863.0" y="643.6" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">supplier invoice, no</text>
+<text x="1863.0" y="653.0" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">subcontractor invoice, no</text>
+<text x="1863.0" y="662.4" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">payment record. The forecast</text>
+<text x="1863.0" y="671.8" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">covers cash in only</text>
+<path d="M279.0,346.4 L288.0,346.4 L288.0,312.0 L292.0,312.0" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="291.0,308.5 297.0,312.0 291.0,315.5" fill="#3C5A48"/>
+<path d="M429.0,312.0 L438.0,312.0 L438.0,318.1 L442.0,318.1" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="441.0,314.6 447.0,318.1 441.0,321.6" fill="#3C5A48"/>
+<path d="M579.0,318.1 L588.0,318.1 L588.0,119.6 L592.0,119.6" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="591.0,116.1 597.0,119.6 591.0,123.1" fill="#3C5A48"/>
+<path d="M729.0,119.6 L738.0,119.6 L738.0,313.4 L742.0,313.4" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="741.0,309.9 747.0,313.4 741.0,316.9" fill="#3C5A48"/>
+<path d="M879.0,313.4 L888.0,313.4 L888.0,335.5 L892.0,335.5" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="891.0,332.0 897.0,335.5 891.0,339.0" fill="#3C5A48"/>
+<path d="M1029.0,335.5 L1038.0,335.5 L1038.0,326.1 L1042.0,326.1" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="1041.0,322.6 1047.0,326.1 1041.0,329.6" fill="#3C5A48"/>
+<path d="M279.0,434.4 L288.0,434.4 L288.0,187.7 L292.0,187.7" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="291.0,184.2 297.0,187.7 291.0,191.2" fill="#3C5A48"/>
+<path d="M429.0,187.7 L438.0,187.7 L438.0,446.2 L442.0,446.2" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="441.0,442.7 447.0,446.2 441.0,449.7" fill="#3C5A48"/>
+<path d="M579.0,446.2 L588.0,446.2 L588.0,441.5 L592.0,441.5" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="591.0,438.0 597.0,441.5 591.0,445.0" fill="#3C5A48"/>
+<path d="M729.0,441.5 L738.0,441.5 L738.0,441.5 L742.0,441.5" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="741.0,438.0 747.0,441.5 741.0,445.0" fill="#3C5A48"/>
+<path d="M879.0,441.5 L888.0,441.5 L888.0,183.0 L892.0,183.0" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="891.0,179.5 897.0,183.0 891.0,186.5" fill="#3C5A48"/>
+<path d="M1029.0,183.0 L1113.0,183.0 L1113.0,533.4 L1192.0,533.4" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="1191.0,529.9 1197.0,533.4 1191.0,536.9" fill="#3C5A48"/>
+<path d="M1329.0,533.4 L1338.0,533.4 L1338.0,192.4 L1342.0,192.4" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="1341.0,188.9 1347.0,192.4 1341.0,195.9" fill="#3C5A48"/>
+<path d="M1479.0,192.4 L1488.0,192.4 L1488.0,446.2 L1492.0,446.2" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="1491.0,442.7 1497.0,446.2 1491.0,449.7" fill="#3C5A48"/>
+<path d="M1629.0,446.2 L1638.0,446.2 L1638.0,617.1 L1642.0,617.1" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="1641.0,613.6 1647.0,617.1 1641.0,620.6" fill="#3C5A48"/>
+<path d="M1779.0,617.1 L1788.0,617.1 L1788.0,603.0 L1792.0,603.0" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="1791.0,599.5 1797.0,603.0 1791.0,606.5" fill="#3C5A48"/>
+<path d="M663.0,94.0 L663.0,67.0 L363.0,67.0 L363.0,291.2" fill="none" stroke="#E4702A" stroke-width="1.2" stroke-dasharray="4,3"/>
+<polygon points="359.5,290.2 363.0,296.2 366.5,290.2" fill="#E4702A"/>
+<text x="513.0" y="64.0" font-size="7.4" text-anchor="middle" fill="#E4702A">disputed: the claim is reworked</text>
+<path d="M663.0,425.7 L663.0,56.0 L213.0,56.0 L213.0,413.6" fill="none" stroke="#E4702A" stroke-width="1.2" stroke-dasharray="4,3"/>
+<polygon points="209.5,412.6 213.0,418.6 216.5,412.6" fill="#E4702A"/>
+<text x="438.0" y="53.0" font-size="7.4" text-anchor="middle" fill="#E4702A">liquidated: a new request can be raised</text>
+<rect x="8" y="690" width="2184" height="26" fill="#FFF4E5" stroke="#E4702A"/>
+<text x="16" y="706" font-size="9" fill="#1F2A24"><tspan font-weight="bold" fill="#E4702A">⚠ Live build deviates here today:</tspan> Gate 11 is the specification&#x27;s gate for a progress claim and has no code — finance raises gates 25a and 25b, which the specification reserves for inventory transfers · gate 12 retention invoice has no record at all · the write-off gate is read from severity, not the amount · there is no accounts payable anywhere in the platform</text>
+<text x="12" y="729" font-size="9.6" font-weight="bold" fill="#1F2A24">How to read</text>
+<rect x="92" y="719" width="46" height="13" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/><text x="144" y="729" font-size="8.8" fill="#1F2A24">A step by a person, with the record and its new state beneath.</text>
+<polygon points="115,735 138,743 115,751 92,743" fill="#fff" stroke="#E4702A" stroke-width="1.3"/><text x="144" y="746" font-size="8.8" fill="#1F2A24">A decision the process branches on.   </text>
+<rect x="422" y="719" width="46" height="13" rx="5" fill="#F6F8F6" stroke="#5B6B62" stroke-width="1.3"/><text x="474" y="729" font-size="8.8" fill="#1F2A24">Automatic — the platform acts, nobody is Responsible.</text>
+<rect x="422" y="736" width="46" height="13" rx="5" fill="#fff" stroke="#8A6D3B" stroke-width="1.3" stroke-dasharray="4,3"/><text x="474" y="746" font-size="8.8" fill="#1F2A24">Outside the company — client, supplier, authority.</text>
+<rect x="792" y="719" width="72" height="13" rx="6.5" fill="#1F6F3F"/><text x="796" y="728.5" font-size="7.4" font-weight="bold" fill="#fff">G6 Director·COO</text><text x="870" y="729" font-size="8.8" fill="#1F2A24">Gate: number · primary (Accountable) · alternate (Consulted) · window.</text>
+<rect x="792" y="736" width="46" height="13" rx="3" fill="#FDECEA" stroke="#B3261E" stroke-width="1.3"/><text x="798" y="746" font-size="7.8" font-weight="bold" fill="#B3261E">HB6</text><text x="870" y="746" font-size="8.8" fill="#1F2A24">Hard block: cannot proceed until the precondition exists.  <tspan fill="#E4702A">⚠ live deviation</tspan>  <tspan fill="#E4702A" stroke-dasharray="4,3">- - orange: return path</tspan></text>
+<text x="2188" y="760" font-size="8" text-anchor="end" fill="#5B6B62">Key: CEO Chief Executive Officer · COO Chief Operating Officer · PM Project Manager · PIC Person In Charge · 2d/3d working-day window · [state] from the schema</text>
+</svg>
