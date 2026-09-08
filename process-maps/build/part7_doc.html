@@ -1,0 +1,136 @@
+<html><body style='font-family:Arial;font-size:10.5pt'><h1>Part 7 of 10 — People and Pay</h1>
+<p><b>Level-1 cross-functional map · as specified · 8 September 2026</b> <b>Companion files:</b> <code>Part 7 — People and Pay (A3 landscape).pdf</code> and <code>.svg</code> in the same folder</p>
+<hr/>
+<h2>1. What this process is for</h2>
+<p>Sixty-three people. Three chains: <b>hire</b> them, <b>manage</b> them, <b>pay</b> them.</p>
+<p><b>Starts:</b> a headcount requisition, or a payroll cutoff. <b>Ends:</b> a disbursed payroll period with every worker acknowledged.</p>
+<p>The specification names no gates for payroll at all — and the build has more working controls here than anywhere else in the platform. <b>Payroll is the best-guarded module in the product.</b> Rate tables are immutable once approved. Payroll cannot run until all four are approved. Three parallel runs are required before approval. Workers can be added and never removed. A days adjustment needs a written reason. Every payroll line records which four table versions produced it.</p>
+<p><b>And the protocol can drive a period from <code>open</code> to <code>disbursed</code> in one call, past all of it.</b></p>
+<hr/>
+<h2>2. Lanes in this map</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>Lane</th><th>Roles</th><th>What they do here</th></tr>
+<tr><td><b>External: Candidate and Agencies</b></td><td>The candidate · Social Security System · PhilHealth · Pag-IBIG · Bureau of Internal Revenue</td><td>Accept or decline; set the statutory rates the company must apply</td></tr>
+<tr><td><b>Executive</b></td><td>Human Resource Head · Director · Chief Operating Officer · Head of Finance</td><td>Three approvals: the offer, the period, the disbursement</td></tr>
+<tr><td><b>Human Resource</b></td><td>Human Resource Head</td><td>Recruitment, employee records, reviews, and entering the rate tables</td></tr>
+<tr><td><b>Payroll</b></td><td>Payroll Officer</td><td>Approving tables, the period, the lines</td></tr>
+<tr><td><b>Managers and Staff</b></td><td>Every employee and their manager</td><td>Leave, objectives, engagement, acknowledging the payslip</td></tr>
+<tr><td><b>The Platform</b></td><td>—</td><td>Diarises regularisation, runs the payroll computation</td></tr>
+</table>
+<hr/>
+<h2>3. Hiring</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>#</th><th>Lane</th><th>Action</th><th>Record → state</th><th>Gate</th><th>Deviation today</th></tr>
+<tr><td>7.1</td><td>Human Resource</td><td>Raise a headcount requisition</td><td><code>hr_requisitions</code> → <code>open</code></td><td>—</td><td>Optionally linked to a resource request from Part 5</td></tr>
+<tr><td>7.2</td><td>Human Resource</td><td>Add candidates</td><td><code>candidates</code> → <code>applied</code></td><td>—</td><td>Retention expiry is diarised on the candidate — correct</td></tr>
+<tr><td>7.3</td><td>Human Resource</td><td>Schedule and record interviews</td><td><code>interview_records</code></td><td>—</td><td><b>The record is hidden from the candidate until it is submitted — correct</b></td></tr>
+<tr><td>7.4</td><td>Human Resource</td><td>Create the offer</td><td><code>hr_offers</code> → <code>draft</code></td><td>—</td><td></td></tr>
+<tr><td>7.5</td><td>Executive</td><td>Record the approval and issue the offer</td><td>→ <code>issued</code></td><td><b>G24 · Human Resource Head · Director</b></td><td>The reference is <b>required and trimmed</b> — stricter than gates 11, 19 and 23. But G24 in the specification is <i>Role Assignment</i>, not an offer</td></tr>
+<tr><td>7.6</td><td>External</td><td>The candidate responds</td><td>→ <code>accepted</code> · <code>declined</code></td><td>—</td><td>The candidate status moves to hired or rejected in the same transaction — correct</td></tr>
+<tr><td>7.7</td><td>Human Resource</td><td>Create the employee record</td><td><code>employees</code></td><td>—</td><td>The employee record is separate from the person record, and <b>nothing links a hired candidate to it</b>. Someone re-types the name</td></tr>
+<tr><td>7.8</td><td>Platform</td><td><b>Automatic:</b> regularisation diarised at six months</td><td><code>regularization_records</code></td><td>—</td><td><b>A diary entry, never an automatic conversion.</b> Exactly right — the platform reminds, a person decides</td></tr>
+</table>
+<hr/>
+<h2>4. Managing</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>#</th><th>Lane</th><th>Action</th><th>Record → state</th><th>Deviation today</th></tr>
+<tr><td>7.9</td><td>Staff</td><td>An employee requests leave — seven types</td><td><code>leave_requests</code> → <code>pending</code></td><td></td></tr>
+<tr><td>7.10</td><td>Managers</td><td>The manager reviews it</td><td>→ <code>approved</code> · <code>declined</code></td><td><b>No same-person check — an employee can approve their own leave.</b> An over-application clamps the balance to zero rather than refusing, so ten days taken against a four-day balance silently becomes four</td></tr>
+<tr><td>7.11</td><td>Staff</td><td>The employee writes their own objectives</td><td><code>performance_objectives</code></td><td><b>Written by the person, not set for them — correct</b></td></tr>
+<tr><td>7.12</td><td>Managers</td><td>The manager acknowledges them</td><td>→ <code>acknowledged</code></td><td></td></tr>
+<tr><td>7.13</td><td>Human Resource</td><td>Quarterly review — self assessment, manager review, acknowledgement</td><td><code>performance_reviews</code></td><td><b>Reasons are required and there is no numeric score — correct.</b> A three-step review with the employee acknowledging at the end</td></tr>
+<tr><td>7.14</td><td>Staff</td><td>Engagement survey response</td><td><code>engagement_responses</code></td><td><b>Fully anonymous.</b> No person is stored, and <b>no audit entry is written either</b> — the code says so in a comment, because an audit row would break the anonymity. This is the most careful piece of privacy design in the platform</td></tr>
+</table>
+<hr/>
+<h2>5. Paying</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>#</th><th>Lane</th><th>Action</th><th>Record → state</th><th>Gate</th><th>Deviation today</th></tr>
+<tr><td>7.15</td><td>Human Resource</td><td>Enter the four statutory rate tables and their brackets</td><td><code>statutory_rate_tables</code> → <code>draft</code></td><td>—</td><td>Three bracket shapes: fixed, percentage, graduated. Correct for Philippine contributions and Bureau of Internal Revenue bands</td></tr>
+<tr><td>7.16</td><td>Payroll</td><td>Approve each table — <b>immutable afterwards</b></td><td>→ <code>approved</code></td><td>—</td><td>Refused without at least one bracket; the previous approved table is superseded in the same transaction. <b>Both correct.</b> The code names this G32, which the specification reserves for <i>Role Permission Change</i>, and nothing checks that a Finance role approves</td></tr>
+<tr><td>7.17</td><td>Payroll</td><td>Open the payroll period</td><td><code>payroll_periods</code> → <code>open</code></td><td>—</td><td><b>An overlapping open period is correctly refused</b></td></tr>
+<tr><td>7.18</td><td>Payroll</td><td>Add workers — never removed</td><td><code>payroll_lines</code> → <code>computed</code></td><td>—</td><td><b>Article 116 honoured: there is no remove mutation at all.</b> A days adjustment needs a reason of at least ten characters</td></tr>
+<tr><td>7.19</td><td>Platform</td><td><b>Automatic:</b> run payroll, three times</td><td>→ <code>running</code> → <code>ready_to_approve</code></td><td>—</td><td><b>Refused unless all four tables are approved</b>, with a message naming all four. The table versions are locked to the period on the first run and stamped on every line. <b>Nothing compares the three runs</b> — it is a count, not a reconciliation</td></tr>
+<tr><td>7.20</td><td>Executive</td><td>Approve the period</td><td>→ <code>approved</code></td><td><b>G30 · Chief Operating Officer · no alternate</b></td><td><b>Three runs are required first — enforced.</b> G30 in the specification is <i>Incident Investigation Closure</i></td></tr>
+<tr><td>7.21</td><td>Staff</td><td>The worker acknowledges the payslip</td><td><code>payroll_lines</code> → <code>acknowledged</code></td><td>—</td><td><b>Refused unless the period is approved — correct.</b> Signature, biometric or witness</td></tr>
+<tr><td>7.22</td><td>Executive</td><td>Disburse</td><td>→ <code>disbursed</code></td><td><b>G31 · Head of Finance · no alternate</b></td><td>G31 in the specification is <i>Threshold and Configuration Change</i></td></tr>
+<tr><td>7.23</td><td>Platform</td><td><b>The protocol can set any status directly</b></td><td>—</td><td>—</td><td><code>toolUpdatePayrollPeriod</code> writes the status straight through, and stamps <code>disbursedAt</code> and <code>disbursedBy</code> when it does</td></tr>
+</table>
+<h3>The protocol walks around every payroll control</h3>
+<p><code>convex/mcp/group3cInternals.ts</code> exposes <code>toolUpdatePayrollPeriod</code>, which takes a status string and patches it onto the period. One call moves a period from <code>open</code> to <code>disbursed</code>.</p>
+<p>That single call bypasses, in order:</p>
+<ol><li>the check that all four statutory rate tables are approved</li><li>the three parallel runs</li><li>gate 30, the period approval</li><li>every worker's acknowledgement</li><li>gate 31, the disbursement authorisation</li></ol>
+<p>The audit entry is written and says <code>arrivedChannel: "model_context_protocol"</code>, so it is visible afterwards. But nothing refuses it at the time. <b>The screen path is careful and the protocol path is not</b>, and both write to the same table.</p>
+<p>This belongs on Monday's list next to the two safety gates. The fix is the same shape: the internal mutation should call the same guarded path the screen calls, or refuse any status beyond <code>open</code> and <code>cancelled</code>.</p>
+<h3>The four fake rate tables are still in the live database</h3>
+<p>Agent 1 entered deliberately unmistakable statutory rates during the live sweep — one bracket per table, round wrong numbers, <code>Z1-TEST</code> in every free-text field — and warned at the top of its report that real payroll must not be run until they are replaced.</p>
+<p>Those four tables are <b>approved</b>, and approved tables are immutable. They cannot be edited. The only route is to enter four correct tables and approve them, which supersedes the test ones automatically — the superseding logic at 7.16 works and is the right mechanism.</p>
+<p><b>This has to happen before any payroll period is run, not before it is approved.</b> The first run locks the table versions onto the period and stamps them on every line. A period run against the test tables carries those numbers even if correct tables are approved afterwards.</p>
+<hr/>
+<h2>6. The RACI</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>Step</th><th>HR Head</th><th>Payroll Officer</th><th>Manager</th><th>Employee</th><th>COO</th><th>Head of Finance</th><th>Candidate</th></tr>
+<tr><td>7.1 Requisition</td><td><b>R / A</b></td><td></td><td><b>C</b></td><td></td><td>I</td><td>I</td><td></td></tr>
+<tr><td>7.2 Add candidates</td><td><b>R / A</b></td><td></td><td>C</td><td></td><td></td><td></td><td><b>I</b></td></tr>
+<tr><td>7.3 Interviews</td><td><b>A</b></td><td></td><td><b>R</b></td><td></td><td></td><td></td><td><b>C</b></td></tr>
+<tr><td>7.4 Create the offer</td><td><b>R / A</b></td><td></td><td>C</td><td></td><td>I</td><td>C</td><td>I</td></tr>
+<tr><td>7.5 Issue the offer (G24)</td><td><b>A</b></td><td></td><td>I</td><td></td><td>C</td><td>C</td><td><b>I</b></td></tr>
+<tr><td>7.6 Candidate responds</td><td><b>I</b></td><td></td><td>I</td><td></td><td></td><td></td><td><b>R / A</b></td></tr>
+<tr><td>7.7 Employee record</td><td><b>R / A</b></td><td><b>I</b></td><td>I</td><td><b>I</b></td><td></td><td></td><td></td></tr>
+<tr><td>7.8 Regularisation diarised</td><td><b>A</b></td><td></td><td><b>R</b></td><td><b>I</b></td><td>I</td><td></td><td></td></tr>
+<tr><td>7.9 Request leave</td><td>I</td><td></td><td><b>A</b></td><td><b>R</b></td><td></td><td></td><td></td></tr>
+<tr><td>7.10 Review the leave</td><td><b>C</b></td><td></td><td><b>R / A</b></td><td>I</td><td></td><td></td><td></td></tr>
+<tr><td>7.11 Write objectives</td><td>I</td><td></td><td><b>A</b></td><td><b>R</b></td><td></td><td></td><td></td></tr>
+<tr><td>7.12 Acknowledge objectives</td><td>I</td><td></td><td><b>R / A</b></td><td>I</td><td></td><td></td><td></td></tr>
+<tr><td>7.13 Quarterly review</td><td><b>A</b></td><td></td><td><b>R</b></td><td><b>R</b></td><td>I</td><td></td><td></td></tr>
+<tr><td>7.14 Engagement response</td><td><b>I</b></td><td></td><td></td><td><b>R / A</b></td><td>I</td><td></td><td></td></tr>
+<tr><td>7.15 Enter the rate tables</td><td><b>R / A</b></td><td>C</td><td></td><td></td><td></td><td><b>C</b></td><td></td></tr>
+<tr><td>7.16 Approve the tables</td><td>C</td><td><b>R</b></td><td></td><td></td><td>I</td><td><b>A</b></td><td></td></tr>
+<tr><td>7.17 Open the period</td><td>I</td><td><b>R / A</b></td><td>C</td><td>I</td><td></td><td>C</td><td></td></tr>
+<tr><td>7.18 Add workers</td><td>C</td><td><b>R / A</b></td><td><b>C</b></td><td>I</td><td></td><td></td><td></td></tr>
+<tr><td>7.19 Run payroll ×3</td><td>I</td><td><b>R / A</b></td><td>I</td><td></td><td></td><td><b>I</b></td><td></td></tr>
+<tr><td>7.20 Approve the period (G30)</td><td>C</td><td>I</td><td>I</td><td>I</td><td><b>A</b></td><td>C</td><td></td></tr>
+<tr><td>7.21 Acknowledge the payslip</td><td>I</td><td><b>I</b></td><td>C</td><td><b>R / A</b></td><td></td><td></td><td></td></tr>
+<tr><td>7.22 Disburse (G31)</td><td>I</td><td><b>R</b></td><td></td><td><b>I</b></td><td>C</td><td><b>A</b></td><td></td></tr>
+<tr><td>7.23 Protocol status change</td><td>I</td><td><b>A</b></td><td></td><td></td><td>I</td><td>I</td><td></td></tr>
+</table>
+<p><b>Reading the matrix.</b> The pay chain is the only place in the entire series where accountability genuinely moves between roles at each step: the Human Resource Head enters the tables, the Head of Finance approves them, the Payroll Officer runs, the Chief Operating Officer approves the period, the Head of Finance disburses. <b>Four different roles across five steps.</b> That is a real segregation of duties, and it is written into the specification rather than left to convention.</p>
+<p>Not one of those five steps checks the role of the person doing it. The design is right and the enforcement is absent — the same sentence that describes gates 28 and 29 in Part 5.</p>
+<p>The Employee appears as Responsible on four steps. Every one of them is self-service — their leave, their objectives, their survey answer, their payslip — which is what a person should own about themselves.</p>
+<hr/>
+<h2>7. Hand-offs</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>From → To</th><th>At step</th><th>What crosses</th><th>What stalls it</th></tr>
+<tr><td><b>Site → Payroll</b></td><td>Part 5 → 7.19</td><td><b>Toolbox attendance becomes days worked</b></td><td>Nothing. This is the join that makes L4 work — presence is never tracked and people are still paid correctly</td></tr>
+<tr><td>Candidate → Human Resource</td><td>7.6 → 7.7</td><td>An accepted offer</td><td>Nothing carries across. The employee record is typed again by hand</td></tr>
+<tr><td>Human Resource → Payroll</td><td>7.15 → 7.16</td><td>Draft rate tables</td><td>Nobody is told (RC-H)</td></tr>
+<tr><td>Payroll → Executive</td><td>7.19 → 7.20</td><td>A period ready to approve</td><td>Nobody is told</td></tr>
+<tr><td>Payroll → Staff</td><td>7.20 → 7.21</td><td>The payslip</td><td>There is no payslip document — the worker acknowledges a row on a screen. No print, no export, no file</td></tr>
+<tr><td>Payroll → Finance</td><td>7.22 → Part 6</td><td>The disbursement</td><td>Payroll is the <b>only outbound payment the platform has</b>. It does not appear in the cash forecast</td></tr>
+<tr><td>Human Resource → Part 9</td><td>7.16</td><td>Approved rate tables</td><td>The tables are configuration and are not in the configuration register</td></tr>
+</table>
+<hr/>
+<h2>8. Where the live build differs from this map</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th></th><th>Deviation</th><th>Step</th><th>Reference</th></tr>
+<tr><td>1</td><td><b>The protocol can set a payroll period to any status</b>, bypassing three runs and both gates</td><td>7.23</td><td>Structural</td></tr>
+<tr><td>2</td><td><b>The four statutory rate tables in the live database are Agent 1's deliberately fake ones</b>, and they are approved and immutable</td><td>7.15, 7.16</td><td>1-warning</td></tr>
+<tr><td>3</td><td><b>Gates 24, 30, 31 and 32 all mean something else in the specification</b></td><td>7.5, 7.16, 7.20, 7.22</td><td>Register</td></tr>
+<tr><td>4</td><td>An employee can approve their own leave</td><td>7.10</td><td>RC-A</td></tr>
+<tr><td>5</td><td>An over-application clamps the leave balance to zero instead of refusing</td><td>7.10</td><td>New</td></tr>
+<tr><td>6</td><td>No role check on any of the five pay-chain approvals</td><td>7.16–7.22</td><td>New</td></tr>
+<tr><td>7</td><td>The three parallel runs are counted, never compared</td><td>7.19</td><td>New</td></tr>
+<tr><td>8</td><td>A hired candidate does not become an employee record — it is re-typed</td><td>7.7</td><td>New</td></tr>
+<tr><td>9</td><td>There is no payslip document to give a worker</td><td>7.21</td><td>2-09</td></tr>
+<tr><td>10</td><td>Payroll disbursement does not appear in the cash forecast</td><td>7.22</td><td>New</td></tr>
+<tr><td>11</td><td>Nobody is notified at any hand-off</td><td>all</td><td>RC-H</td></tr>
+</table>
+<p><b>What stands out.</b> Every other part of this series has been a story of good intentions in the specification and missing checks in the code. Payroll is the reverse: <b>the checks are there.</b> Immutability, the four-table precondition, the three runs, Article 116, the ten-character reason, the acknowledgement precondition, the version stamping — someone built this carefully. The failure is not in the module; it is that a second door was left open beside it.</p>
+<hr/>
+<h2>9. What this part means for Tuesday</h2>
+<p>Three things follow directly from this map, and all three are onboarding decisions rather than build items:</p>
+<p><b>The toolbox meeting list is the pay record.</b> Part 5 established it; this part is where it lands. A crew member left off Tuesday's list is not paid for Tuesday, and the only correction is a days adjustment with a written reason. Say this out loud to the Persons In Charge before they file the first report.</p>
+<p><b>The four rate tables must be replaced before the first run, not before the first approval.</b> The run locks the versions. Replacing the tables after a run does not correct that period.</p>
+<p><b>Thirty-seven of the sixty-three people on the platform have no way to sign in.</b> Forty-five are marked as signing in; eight of those have a route — a linked identity or a pending invitation — and the other thirty-seven have neither. That is not a finding from the code; it is what today's data shows. Every one of them will fail at the door on Tuesday morning. This is the largest single onboarding blocker in front of you and it has nothing to do with any gate. Three of the thirty-seven were fixed while this part was being written.</p>
+<hr/>
+<h2>10. What is deliberately not in this part</h2>
+<ul><li><b>The site attendance that feeds payroll.</b> Part 5.</li><li><b>Paying suppliers.</b> Part 6 — and it does not exist.</li><li><b>Role assignment, which is what gate 24 actually governs.</b> Part 9.</li><li><b>The configuration register the rate tables ought to sit beside.</b> Part 9, gates 22 and 31.</li></ul></body></html>
