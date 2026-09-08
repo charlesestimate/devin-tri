@@ -1,0 +1,132 @@
+<html><body style='font-family:Arial;font-size:10.5pt'><h1>Part 4 of 10 — Buy and Store</h1>
+<p><b>Level-1 cross-functional map · as specified · 8 September 2026</b> <b>Companion files:</b> <code>Part 4 — Buy and Store (A3 landscape).pdf</code> and <code>.svg</code> in the same folder</p>
+<hr/>
+<h2>1. What this process is for</h2>
+<p>Two chains again, and this time they genuinely never meet.</p>
+<p><b>The buy chain</b> turns a bill of materials line into a purchase order, gets it approved on an amount band, issues it to the supplier, and records what arrives. Committed cost starts the moment the order is issued.</p>
+<p><b>The store chain</b> holds what the company already owns across three warehouses — Laguna, Sorsogon and Dumaguete — moves it between them and out to site, corrects it when it is wrong, and counts it.</p>
+<p><b>Starts:</b> an approved bill of materials from Part 3. <b>Ends:</b> material on site, and a stock position the company can trust.</p>
+<p><b>The structural finding of this part is that the two chains are not connected.</b> A goods receipt does not put anything into stock. Not one line of code moves a received quantity into a stock position. Procurement believes the material arrived; the warehouse has never heard of it. Every figure on the inventory screen was typed in by hand.</p>
+<hr/>
+<h2>2. Lanes in this map</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>Lane</th><th>Roles</th><th>What they do here</th></tr>
+<tr><td><b>External Suppliers</b></td><td>The supplier</td><td>Deliver. Drawn dashed: outside the company</td></tr>
+<tr><td><b>Executive</b></td><td>Procurement Head · Director · Chief Operating Officer · Warehouse Custodian as gate holder</td><td>Six gates in the specification: 4, 5, 25a, 25b, 26 and 27</td></tr>
+<tr><td><b>Procurement</b></td><td>Procurement Head · Procurement Officer</td><td>Responsible for the whole buy chain</td></tr>
+<tr><td><b>Warehouse and Logistics</b></td><td>Warehouse Custodian</td><td>Responsible for the whole store chain</td></tr>
+<tr><td><b>Projects and Site</b></td><td>Project Manager · Person In Charge</td><td>Receive transfers and draw material</td></tr>
+<tr><td><b>The Platform</b></td><td>—</td><td>Recomputes delivery status and material readiness</td></tr>
+</table>
+<hr/>
+<h2>3. The buy chain</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>#</th><th>Lane</th><th>Action</th><th>Record → state</th><th>Gate</th><th>Deviation today</th></tr>
+<tr><td>4.1</td><td>Procurement</td><td>Create the purchase order against a project and a supplier</td><td><code>purchase_orders</code> → <code>draft</code></td><td>—</td><td>The order number is <code>PO-YYYYMM-nnn</code>, counted from orders <b>on that project</b>, so two projects in the same month both produce <code>PO-202609-001</code></td></tr>
+<tr><td>4.2</td><td>Procurement</td><td>Add order lines, each optionally linked to a bill of materials line</td><td><code>purchase_order_lines</code> → <code>open</code></td><td>—</td><td>The link is optional, and material readiness only counts linked lines</td></tr>
+<tr><td>4.3</td><td>Procurement</td><td>Submit for approval</td><td>→ <code>pending_approval</code></td><td><b>G4 or G5</b> raised</td><td>Correctly refused unless the order has at least one line</td></tr>
+<tr><td>4.4</td><td>Executive</td><td>Approve the order</td><td>→ <code>approved</code></td><td><b>G4 ≤ ₱100,000 · Procurement Head · Director · 2 days</b> — <b>G5 &gt; ₱100,000 · Director · Chief Operating Officer · 2 days</b></td><td><b>The approval is not real.</b> The browser sends <code>manual-&lt;timestamp&gt;</code> as the approval reference. No approval request is created, no approver is named, no role is checked, and the amount is never looked at</td></tr>
+<tr><td>4.5</td><td>Procurement</td><td>Issue the order to the supplier — committed cost begins</td><td>→ <code>issued</code></td><td>—</td><td><b>HB6</b> is checked here, and passes on any non-empty reference</td></tr>
+<tr><td>4.6</td><td>External</td><td>The supplier delivers</td><td>—</td><td>—</td><td></td></tr>
+<tr><td>4.7</td><td>Warehouse</td><td>Record the goods receipt</td><td><code>goods_receipts</code> → <code>pending</code></td><td>—</td><td><b>Nothing enters stock.</b> Delivered quantity above ordered quantity is accepted. <code>accepted + rejected</code> is never checked against <code>delivered</code>. The three inspection statuses — accepted, partially accepted, rejected — cannot be reached: no mutation sets them</td></tr>
+<tr><td>4.8</td><td>Platform</td><td><b>Automatic:</b> delivery status recomputed</td><td>→ <code>partially_delivered</code> · <code>fully_delivered</code></td><td>—</td><td>Correct</td></tr>
+<tr><td>4.9</td><td>Platform</td><td><b>Automatic:</b> material readiness — computed on read, never stored</td><td>—</td><td>—</td><td>Counts only order lines linked to a bill of materials line. An unlinked line reads as zero readiness however much has arrived</td></tr>
+<tr><td>4.10</td><td>Procurement</td><td>Amend an issued order</td><td>—</td><td>—</td><td><b>Does not exist.</b> The schema reserves <code>gate5ApprovalId</code> for it; no mutation writes that field. An issued order is frozen — the error says <i>"Use an amendment (Gate 5)"</i> and there is nothing to use</td></tr>
+<tr><td>4.11</td><td>Procurement</td><td>Add the supplier's bank account</td><td><code>supplier_bank_accounts</code> → <code>confirmed = false</code></td><td>—</td><td></td></tr>
+<tr><td>4.12</td><td>Procurement</td><td><b>A second person</b> confirms the account</td><td>→ <code>confirmed = true</code></td><td>—</td><td><b>Enforced.</b> The person who added the account cannot confirm it. Adding a new account supersedes the old one</td></tr>
+</table>
+<h3>Two things worth stating plainly</h3>
+<p><b>The second-person rule on bank accounts works.</b> It is the second genuine control found so far, after gate 18. The refusal is specific and readable: <i>"The person who added the bank account cannot be the same person who confirms it. A second person must confirm."</i> This matters more than it looks — supplier bank fraud is the single most common way a construction company loses money, and this is the control that stops it.</p>
+<p><b>Gate 4 and gate 5 are not what the code thinks they are.</b> The specification says gate 4 is <i>Purchase Order Up To One Hundred Thousand Pesos</i> and gate 5 is <i>Purchase Order Above One Hundred Thousand Pesos</i> — an amount band, exactly like the finance gates. The procurement schema's own comment says gate 4 is "Purchase Order Issue" and gate 5 is "Purchase Order Amendment." The field is named <code>gate4ApprovalId</code> and there is only one of it, so every purchase order at every value is routed to gate 4. <b>A ₱5,000,000 order and a ₱50,000 order take the same approval path.</b> This is the same defect as the finance severity bug in <code>gateIdForSeverity</code>, in a second module, arrived at a different way: there the gate was derived from the wrong field, here the gate is hard-coded into the field name.</p>
+<hr/>
+<h2>4. The store chain</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>#</th><th>Lane</th><th>Action</th><th>Record → state</th><th>Gate</th><th>Deviation today</th></tr>
+<tr><td>4.13</td><td>Warehouse</td><td>Maintain locations and the item catalogue — seven categories</td><td><code>locations</code> · <code>items</code></td><td>—</td><td>Item code and location code are unique, and correctly refused on collision</td></tr>
+<tr><td>4.14</td><td>Warehouse</td><td>Create a stock transfer — four directions</td><td><code>stock_transfers</code> → <code>draft</code></td><td>—</td><td>Source and destination must differ; at least one line required. Both correct</td></tr>
+<tr><td>4.15</td><td>Warehouse</td><td>Dispatch</td><td>→ <code>dispatched</code></td><td><b>G25a</b> inter-island · <b>G25b</b> within-island &gt; ₱100,000</td><td><b>No stock check.</b> Dispatching more than exists drives on-hand negative with no warning. <b>Neither gate is raised anywhere</b></td></tr>
+<tr><td>4.16</td><td>Projects and Site</td><td>Receive at destination</td><td>→ <code>received</code> · <code>discrepancy</code></td><td>—</td><td></td></tr>
+<tr><td>4.17</td><td>Platform</td><td><b>Automatic:</b> discrepancy flagged</td><td><code>stock_positions</code> updated</td><td>—</td><td><b>The shortfall vanishes.</b> In-transit is reduced by the dispatched quantity, on-hand is increased by the received quantity, and the difference is written off silently — no quarantine, no variance record, no adjustment raised</td></tr>
+<tr><td>4.18</td><td>Warehouse</td><td>Raise a stock adjustment — write up or write off</td><td><code>stock_adjustments</code> → <code>pending_approval</code></td><td>—</td><td>Quantity must be positive. Correct</td></tr>
+<tr><td>4.19</td><td>Executive</td><td>Approve the adjustment</td><td>→ <code>approved</code>, stock moves</td><td><b>G26 · Warehouse Custodian · Project Manager</b></td><td><b>The only same-person refusal in the platform.</b> <i>"You cannot approve your own adjustment (Gate 26)"</i></td></tr>
+<tr><td>4.20</td><td>Warehouse</td><td>Open a physical count — stock is snapshotted into count lines</td><td><code>physical_counts</code> → <code>open</code></td><td><b>G27</b> opening stock lock</td><td><code>lockDate</code> is stored and locks nothing — transfers and adjustments can move stock while the count is open. <b>G27 has no code anywhere.</b> Only items that already have a stock position are snapshotted, so material physically present but never recorded cannot be counted in</td></tr>
+<tr><td>4.21</td><td>Warehouse</td><td>Submit the counted quantities</td><td>→ <code>submitted</code>, variance computed per line</td><td>—</td><td></td></tr>
+<tr><td>4.22</td><td>Warehouse</td><td>Close the count</td><td>→ <code>closed</code></td><td>—</td><td><b>Every variance is written straight into stock with no approval at all.</b> The same person can open, submit and close it</td></tr>
+<tr><td>4.23</td><td>Projects and Site</td><td>Issue material to site</td><td><code>stock_transfers</code> <code>warehouse_to_site</code></td><td>—</td><td><b>HB5</b> — quarantined material cannot be issued. The <code>quarantined</code> quantity <b>is never set by any code</b>, so the block can never fire</td></tr>
+</table>
+<h3>Gate 26 is attached to the wrong record</h3>
+<p>The specification is precise: gate 26 is <i>"Approve inventory physical count variance write-off at zero tolerance."</i> It belongs on the physical count — the moment a counted figure overwrites a system figure.</p>
+<p>In the build, gate 26 sits on the manual stock adjustment, which the specification does not gate, and the physical count, which the specification does gate, has no approval on it at all. So the one warehouse control the company wrote down is enforced on the path nobody uses and absent from the path that actually rewrites the books. A warehouse custodian who wants to make a shortfall disappear does not raise an adjustment and get refused — they open a count, type the number they want, and close it.</p>
+<p><b>This is the most consequential single finding in Part 4.</b> It is also the cheapest to fix: the refusal already exists twelve lines away, in <code>approveAdjustment</code>.</p>
+<hr/>
+<h2>5. The RACI</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>Step</th><th>Procurement Head</th><th>Procurement Officer</th><th>Warehouse Custodian</th><th>Project Manager</th><th>Director</th><th>Chief Operating Officer</th><th>Person In Charge</th><th>Supplier</th></tr>
+<tr><td>4.1 Create purchase order</td><td><b>A</b></td><td><b>R</b></td><td></td><td>C</td><td></td><td></td><td></td><td>I</td></tr>
+<tr><td>4.2 Add order lines</td><td><b>A</b></td><td><b>R</b></td><td>C</td><td>C</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>4.3 Submit for approval</td><td><b>A</b></td><td><b>R</b></td><td></td><td>I</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>4.4 Approve — G4 ≤ ₱100,000</td><td><b>A</b></td><td>I</td><td></td><td>I</td><td>C</td><td></td><td></td><td></td></tr>
+<tr><td>4.4 Approve — G5 &gt; ₱100,000</td><td>C</td><td>I</td><td></td><td>I</td><td><b>A</b></td><td>C</td><td></td><td></td></tr>
+<tr><td>4.5 Issue to supplier</td><td><b>A</b></td><td><b>R</b></td><td>I</td><td>I</td><td></td><td></td><td></td><td><b>I</b></td></tr>
+<tr><td>4.6 Supplier delivers</td><td>I</td><td>I</td><td>I</td><td></td><td></td><td></td><td></td><td><b>R</b></td></tr>
+<tr><td>4.7 Record goods receipt</td><td>I</td><td>C</td><td><b>R / A</b></td><td>I</td><td></td><td></td><td>C</td><td></td></tr>
+<tr><td>4.8 Delivery status recomputed</td><td>I</td><td>I</td><td>I</td><td>I</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>4.9 Material readiness</td><td>C</td><td>I</td><td>I</td><td><b>I</b></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>4.10 Amend an issued order</td><td><b>A</b></td><td><b>R</b></td><td></td><td>C</td><td>C</td><td></td><td></td><td>I</td></tr>
+<tr><td>4.11 Add bank account</td><td><b>A</b></td><td><b>R</b></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>4.12 Confirm bank account</td><td><b>R / A</b></td><td></td><td></td><td></td><td>C</td><td></td><td></td><td></td></tr>
+<tr><td>4.13 Locations and catalogue</td><td>C</td><td></td><td><b>R / A</b></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>4.14 Create stock transfer</td><td></td><td></td><td><b>R / A</b></td><td>C</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>4.15 Dispatch — G25a inter-island</td><td></td><td></td><td><b>R</b></td><td>C</td><td><b>A</b></td><td>C</td><td></td><td></td></tr>
+<tr><td>4.15 Dispatch — G25b within-island</td><td></td><td></td><td><b>R</b></td><td><b>A</b></td><td>C</td><td></td><td></td><td></td></tr>
+<tr><td>4.16 Receive at destination</td><td></td><td></td><td>I</td><td><b>A</b></td><td></td><td></td><td><b>R</b></td><td></td></tr>
+<tr><td>4.17 Discrepancy flagged</td><td>I</td><td></td><td><b>I</b></td><td><b>I</b></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>4.18 Raise stock adjustment</td><td></td><td></td><td><b>R</b></td><td>I</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>4.19 Approve adjustment — G26</td><td></td><td></td><td><b>A</b></td><td>C</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>4.20 Open physical count — G27</td><td></td><td></td><td><b>R / A</b></td><td>I</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>4.21 Submit counted quantities</td><td></td><td></td><td><b>R</b></td><td></td><td></td><td></td><td>C</td><td></td></tr>
+<tr><td>4.22 Close the count</td><td></td><td></td><td><b>R / A</b></td><td>I</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>4.23 Issue material to site</td><td></td><td></td><td><b>R</b></td><td><b>A</b></td><td></td><td></td><td>C</td><td></td></tr>
+</table>
+<p><b>Reading the matrix.</b> The Warehouse Custodian is Responsible or Accountable on eleven of the twenty-three steps and is the only role on eight of them. On the physical count — the one step that can silently rewrite the value of everything the company owns — they are both Responsible and Accountable, with nobody Consulted. That single cell is the control weakness of this part written down in one place.</p>
+<p>Procurement never appears in the store chain, and the warehouse never appears in the buy chain except at the goods receipt. That is the disconnect drawn as a matrix.</p>
+<hr/>
+<h2>6. Hand-offs</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>From → To</th><th>At step</th><th>What crosses</th><th>What stalls it</th></tr>
+<tr><td>Engineering → Procurement</td><td>Part 3 → 4.2</td><td>The bill of materials line</td><td>Nothing. The link auto-fills description, quantity and unit — one of the better joins in the product</td></tr>
+<tr><td>Procurement → Executive</td><td>4.3 → 4.4</td><td>An order awaiting approval</td><td>Nobody is told (RC-H)</td></tr>
+<tr><td>Procurement → Supplier</td><td>4.5 → 4.6</td><td>The issued order</td><td>There is no way to send it. No print, no export, no email — the order exists only on screen</td></tr>
+<tr><td>Supplier → Warehouse</td><td>4.6 → 4.7</td><td>The delivery</td><td></td></tr>
+<tr><td><b>Warehouse → Warehouse</b></td><td><b>4.7 → 4.13</b></td><td><b>Nothing — this is the break</b></td><td>Received material never becomes stock. Somebody has to notice the delivery and type it in as an adjustment or a count</td></tr>
+<tr><td>Warehouse → Site</td><td>4.15 → 4.16</td><td>Material in transit</td><td>The receiver has to be on the platform to close it. Sorsogon and Dumaguete work from phones</td></tr>
+<tr><td>Procurement → Finance</td><td>4.5 → Part 6</td><td>Committed cost</td><td>Committed cost is computed from issued orders only, and never compared against the contract value</td></tr>
+</table>
+<hr/>
+<h2>7. Where the live build differs from this map</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th></th><th>Deviation</th><th>Step</th><th>Reference</th></tr>
+<tr><td>1</td><td><b>A goods receipt does not move stock.</b> Procurement and inventory share no data at all</td><td>4.7</td><td>Structural</td></tr>
+<tr><td>2</td><td><b>The gate 4 approval is a string the browser invents.</b> No approval request, no approver, no role check</td><td>4.4</td><td>RC-A</td></tr>
+<tr><td>3</td><td><b>Gates 4 and 5 are collapsed into one field</b>, so the ₱100,000 band is never applied</td><td>4.4</td><td>Register</td></tr>
+<tr><td>4</td><td><b>Closing a physical count rewrites stock with no approval</b>, by one person, unopposed</td><td>4.22</td><td>New</td></tr>
+<tr><td>5</td><td><b>Gate 26 sits on the adjustment, not on the count</b> — the specification puts it on the count</td><td>4.19, 4.22</td><td>Register</td></tr>
+<tr><td>6</td><td><b>The quarantined quantity is never set by any code</b>, so hard block 5 can never fire</td><td>4.23</td><td>Register</td></tr>
+<tr><td>7</td><td><b>Gates 25a, 25b and 27 have no code anywhere</b> — transfers need no approval at any value</td><td>4.15, 4.20</td><td>Register</td></tr>
+<tr><td>8</td><td>Dispatching more than exists drives on-hand negative with no warning</td><td>4.15</td><td>2-04</td></tr>
+<tr><td>9</td><td>A transfer discrepancy writes the shortfall off silently</td><td>4.17</td><td>New</td></tr>
+<tr><td>10</td><td>Over-receipt is accepted; the three goods-receipt inspection statuses are unreachable</td><td>4.7</td><td>New</td></tr>
+<tr><td>11</td><td>An issued order cannot be amended, and the error tells you to use the amendment that does not exist</td><td>4.10</td><td>New</td></tr>
+<tr><td>12</td><td>Order numbers are counted per project, so two projects collide in the same month</td><td>4.1</td><td>New</td></tr>
+<tr><td>13</td><td>An issued order cannot be sent to the supplier — no print, no export, no attachment</td><td>4.5</td><td>2-09</td></tr>
+<tr><td>14</td><td>Nobody is notified at any hand-off</td><td>all</td><td>RC-H</td></tr>
+</table>
+<p><b>What stands out.</b> Part 3 had one strong control and one missing gate. Part 4 has two strong controls — the second-person bank rule and the gate 26 self-approval refusal — sitting beside the largest structural hole found anywhere in the platform: <b>buying and storing are two separate systems that happen to share a menu.</b></p>
+<hr/>
+<h2>8. Three corrections to earlier work</h2>
+<p><b>Gates 25a and 25b are claimed by two modules.</b> Part 0 assigned them here, from the specification: 25a is <i>Inter-Island Inventory Transfer</i>, 25b is <i>Within-Island Inventory Transfer Above One Hundred Thousand Pesos</i>. But <code>convex/schema/finance.ts</code> documents 25a as the gate for submitting a progress claim to the client and 25b as the gate for recording certification. Neither module raises them in code, so nothing is broken today — but the two readings cannot both be right, and <b>this has to be settled before Part 6 is drawn.</b> It goes to the plan's register item 12 alongside the label conflict.</p>
+<p><b>There is already a button that fixes the register conflict — partly.</b> Administration → Setup and Migration → <b>Run Hard Block Migration</b> rewrites all six live hard block rows to the specification wording and corrects seven gate labels, including gate 5 to <i>Purchase Order Above One Hundred Thousand Pesos</i> and gate 25a to <i>Inter-Island Inventory Transfer</i>. It is idempotent and nobody has ever run it. It does not touch the other eighteen labels that differ, so it narrows the two-register problem rather than closing it.</p>
+<p><b>Hard block 6 is not what Part 0 said it was.</b> The specification's HB6 is <i>"No Signed Contract — Funds Blocked"</i>, releasing on a signed contract document. The code's HB6 blocks issuing a purchase order without a gate 4 approval. Those are two different rules with one number. The contract check the specification asks for does not exist; what exists is an approval check that passes on a made-up string. This is why Agent 1's Experiment B found a refusal that did not mention a contract.</p>
+<hr/>
+<h2>9. What is deliberately not in this part</h2>
+<ul><li><b>Paying the supplier.</b> Part 6 — the invoice, the fund request and the disbursement.</li><li><b>Material consumed on site.</b> Part 5 — issue against a block, and the daily site report.</li><li><b>The contract that should gate the first purchase order.</b> Part 2 raised it; Part 6 spends it.</li><li><b>Warehouse staffing and shifts.</b> Part 7.</li></ul></body></html>

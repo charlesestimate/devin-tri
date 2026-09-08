@@ -31,7 +31,7 @@ class Map:
         ncol=max(s["col"] for s in self.steps)+1
         col_w=min(self.col_w,(right-left-6)/ncol); box_w=min(self.box_w,col_w-10)
         nret=sum(1 for e in self.edges if e[3]=="return")
-        body_top=title_h+6+(9*nret+10 if nret else 0)
+        body_top=title_h+6+(11*nret+12 if nret else 0)
         # lane heights: proportional to max stack in lane
         def parts(s):
             lab=wrap(s["label"],max(10,int(box_w/5.4)))
@@ -87,8 +87,9 @@ class Map:
             if s["gate"]:
                 g,p,a,w=s["gate"]; txt=f"G{g} {p}"+(f"·{a}" if a else "")+(f"·{w}" if w else "")
                 tw=min(box_w,4.9*len(txt)+10); gx=x+(box_w-tw)/2
+                gfs=min(7.6,7.6*(tw-8)/max(1.0,4.9*len(txt)))
                 svg.append(f'<rect x="{gx:.1f}" y="{yy:.1f}" width="{tw:.1f}" height="13" rx="6.5" fill="{GREEN}"/>')
-                svg.append(f'<text x="{x+box_w/2:.1f}" y="{yy+9.6:.1f}" font-size="7.6" font-weight="bold" text-anchor="middle" fill="#fff">{esc(txt)}</text>'); yy+=16
+                svg.append(f'<text x="{x+box_w/2:.1f}" y="{yy+9.6:.1f}" font-size="{gfs:.1f}" font-weight="bold" text-anchor="middle" fill="#fff">{esc(txt)}</text>'); yy+=16
             if s["hb"]:
                 hl=wrap(f"{s['hb'][0]} — {s['hb'][1]}",max(12,int(box_w/4.9))); hh=len(hl)*9.6+6
                 svg.append(f'<rect x="{x:.1f}" y="{yy:.1f}" width="{box_w}" height="{hh}" rx="3" fill="#FDECEA" stroke="{RED}" stroke-width="1.3"/>')
@@ -113,7 +114,7 @@ class Map:
                     svg.append(f'<text x="{midx+3:.1f}" y="{(y1+y2)/2-3:.1f}" font-size="7.4" fill="{colr}">{esc(label)}</text>')
             else:  # backward / return: dedicated channel above every lane
                 self._retn=getattr(self,"_retn",0)+1
-                top=body_top-6-self._retn*9
+                top=body_top-6-self._retn*11
                 d=f'M{xa+wa/2:.1f},{ya:.1f} L{xa+wa/2:.1f},{top:.1f} L{xb+wb/2:.1f},{top:.1f} L{xb+wb/2:.1f},{yb-5:.1f}'
                 svg.append(f'<path d="{d}" fill="none" stroke="{colr}" stroke-width="1.2"{dash}/>')
                 svg.append(f'<polygon points="{xb+wb/2-3.5:.1f},{yb-6:.1f} {xb+wb/2:.1f},{yb:.1f} {xb+wb/2+3.5:.1f},{yb-6:.1f}" fill="{colr}"/>')

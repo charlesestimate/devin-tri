@@ -1,0 +1,219 @@
+<!doctype html><html><head><meta charset="utf-8"><style>@page{size:A3 landscape;margin:5mm} html,body{margin:0;background:#fff} svg{width:2200px;height:743px;display:block}</style></head><body><svg xmlns="http://www.w3.org/2000/svg" width="2200" height="743" viewBox="0 0 2200 743" font-family="Arial, Helvetica, sans-serif">
+<rect width="2200" height="743" fill="#fff"/>
+<text x="12" y="20" font-size="16" font-weight="bold" fill="#1F2A24">Part 4 — Buy and Store</text>
+<text x="12" y="36" font-size="9.6" fill="#5B6B62">Level-1 cross-functional map · as specified · purchase order to goods receipt, and the warehouse chain · gates 4, 5, 25a, 25b, 26, 27 · hard blocks 5 and 6 · 8 September 2026</text>
+<text x="2188" y="20" font-size="9.6" text-anchor="end" fill="#5B6B62">Magnus Workspace Platform · Process Maps and RACI</text>
+<rect x="8" y="84.0" width="2184" height="46.0" fill="#FFFFFF" stroke="#D6DED9"/>
+<rect x="8" y="84.0" width="124" height="46.0" fill="#154D2C"/>
+<text x="70.0" y="104.5" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">External</text>
+<text x="70.0" y="117.5" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">Suppliers</text>
+<rect x="8" y="130.0" width="2184" height="119.6" fill="#F3F6F4" stroke="#D6DED9"/>
+<rect x="8" y="130.0" width="124" height="119.6" fill="#154D2C"/>
+<text x="70.0" y="193.8" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">Executive</text>
+<rect x="8" y="249.6" width="2184" height="95.0" fill="#FFFFFF" stroke="#D6DED9"/>
+<rect x="8" y="249.6" width="124" height="95.0" fill="#154D2C"/>
+<text x="70.0" y="301.1" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">Procurement</text>
+<rect x="8" y="344.6" width="2184" height="103.6" fill="#F3F6F4" stroke="#D6DED9"/>
+<rect x="8" y="344.6" width="124" height="103.6" fill="#154D2C"/>
+<text x="70.0" y="393.9" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">Warehouse and</text>
+<text x="70.0" y="406.9" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">Logistics</text>
+<rect x="8" y="448.2" width="2184" height="107.6" fill="#FFFFFF" stroke="#D6DED9"/>
+<rect x="8" y="448.2" width="124" height="107.6" fill="#154D2C"/>
+<text x="70.0" y="499.5" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">Projects and</text>
+<text x="70.0" y="512.5" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">Site</text>
+<rect x="8" y="555.8" width="2184" height="95.2" fill="#EAF1EC" stroke="#D6DED9"/>
+<rect x="8" y="555.8" width="124" height="95.2" fill="#3C5A48"/>
+<text x="70.0" y="607.4" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">The Platform</text>
+<rect x="147.0" y="280.3" width="132" height="31.6" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="213.0" y="292.8" font-size="9" text-anchor="middle" fill="#1F2A24">Create purchase order</text>
+<text x="213.0" y="303.8" font-size="7.4" text-anchor="middle" fill="#5B6B62">purchase_orders [draft]</text>
+<rect x="297.0" y="274.8" width="132" height="42.6" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="363.0" y="287.3" font-size="9" text-anchor="middle" fill="#1F2A24">Add order lines against</text>
+<text x="363.0" y="298.3" font-size="9" text-anchor="middle" fill="#1F2A24">the bill of materials</text>
+<text x="363.0" y="309.3" font-size="7.4" text-anchor="middle" fill="#5B6B62">purchase_order_lines [open]</text>
+<rect x="447.0" y="265.1" width="132" height="40.2" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="513.0" y="277.6" font-size="9" text-anchor="middle" fill="#1F2A24">Submit for approval</text>
+<text x="513.0" y="288.6" font-size="7.4" text-anchor="middle" fill="#5B6B62">purchase_orders</text>
+<text x="513.0" y="297.2" font-size="7.4" text-anchor="middle" fill="#5B6B62">[pending_approval]</text>
+<text x="513.0" y="317.1" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">⚠ refused unless the order</text>
+<text x="513.0" y="326.5" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">has at least one line</text>
+<rect x="597.0" y="140.0" width="132" height="31.6" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="663.0" y="152.5" font-size="9" text-anchor="middle" fill="#1F2A24">Approve the order</text>
+<text x="663.0" y="163.5" font-size="7.4" text-anchor="middle" fill="#5B6B62">purchase_orders [approved]</text>
+<rect x="606.5" y="174.6" width="112.9" height="13" rx="6.5" fill="#1F6F3F"/>
+<text x="663.0" y="184.2" font-size="7.6" font-weight="bold" text-anchor="middle" fill="#fff">G4 or 5 set by amount</text>
+<text x="663.0" y="199.4" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">⚠ the browser invents the</text>
+<text x="663.0" y="208.8" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">reference</text>
+<text x="663.0" y="218.2" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">manual-&lt;timestamp&gt;; no</text>
+<text x="663.0" y="227.6" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">approval request, no</text>
+<text x="663.0" y="237.0" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">approver, no amount band</text>
+<rect x="747.0" y="261.7" width="132" height="42.6" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="813.0" y="274.2" font-size="9" text-anchor="middle" fill="#1F2A24">Issue the order to the</text>
+<text x="813.0" y="285.2" font-size="9" text-anchor="middle" fill="#1F2A24">supplier</text>
+<text x="813.0" y="296.2" font-size="7.4" text-anchor="middle" fill="#5B6B62">purchase_orders [issued]</text>
+<rect x="747.0" y="307.3" width="132" height="25.2" rx="3" fill="#FDECEA" stroke="#B3261E" stroke-width="1.3"/>
+<text x="813.0" y="317.9" font-size="7.8" font-weight="bold" text-anchor="middle" fill="#B3261E">HB6 — checks only that a</text>
+<text x="813.0" y="327.5" font-size="7.8" font-weight="bold" text-anchor="middle" fill="#B3261E">reference string exists</text>
+<rect x="897.0" y="96.0" width="132" height="20.0" rx="5" fill="#fff" stroke="#8A6D3B" stroke-width="1.3" stroke-dasharray="4,3"/>
+<text x="963.0" y="108.5" font-size="9" text-anchor="middle" fill="#1F2A24">Supplier delivers</text>
+<rect x="1047.0" y="359.3" width="132" height="31.6" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="1113.0" y="371.8" font-size="9" text-anchor="middle" fill="#1F2A24">Record goods receipt</text>
+<text x="1113.0" y="382.8" font-size="7.4" text-anchor="middle" fill="#5B6B62">goods_receipts [pending]</text>
+<text x="1113.0" y="402.7" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">⚠ nothing enters stock;</text>
+<text x="1113.0" y="412.1" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">over-receipt accepted; the</text>
+<text x="1113.0" y="421.5" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">three inspection statuses</text>
+<text x="1113.0" y="430.9" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">are unreachable</text>
+<rect x="1197.0" y="572.5" width="132" height="59.8" rx="5" fill="#F6F8F6" stroke="#5B6B62" stroke-width="1.3"/>
+<text x="1263.0" y="585.0" font-size="9" text-anchor="middle" fill="#1F2A24">Delivery status</text>
+<text x="1263.0" y="596.0" font-size="9" text-anchor="middle" fill="#1F2A24">recomputed</text>
+<text x="1263.0" y="607.0" font-size="7.4" text-anchor="middle" fill="#5B6B62">purchase_orders</text>
+<text x="1263.0" y="615.6" font-size="7.4" text-anchor="middle" fill="#5B6B62">[partially_delivered |</text>
+<text x="1263.0" y="624.2" font-size="7.4" text-anchor="middle" fill="#5B6B62">fully_delivered]</text>
+<rect x="1347.0" y="565.8" width="132" height="42.0" rx="5" fill="#F6F8F6" stroke="#5B6B62" stroke-width="1.3"/>
+<text x="1413.0" y="578.3" font-size="9" text-anchor="middle" fill="#1F2A24">Material readiness —</text>
+<text x="1413.0" y="589.3" font-size="9" text-anchor="middle" fill="#1F2A24">computed on read, never</text>
+<text x="1413.0" y="600.3" font-size="9" text-anchor="middle" fill="#1F2A24">stored</text>
+<text x="1413.0" y="619.6" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">⚠ counts only order lines</text>
+<text x="1413.0" y="629.0" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">linked to a bill of</text>
+<text x="1413.0" y="638.4" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">materials line</text>
+<rect x="1497.0" y="265.8" width="132" height="20.0" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="1563.0" y="278.3" font-size="9" text-anchor="middle" fill="#1F2A24">Amend an issued order</text>
+<text x="1563.0" y="297.6" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">⚠ the schema reserves</text>
+<text x="1563.0" y="307.0" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">gate5ApprovalId; no mutation</text>
+<text x="1563.0" y="316.4" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">writes it — an issued order</text>
+<text x="1563.0" y="325.8" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">cannot be changed at all</text>
+<rect x="1647.0" y="270.5" width="132" height="51.2" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="1713.0" y="283.0" font-size="9" text-anchor="middle" fill="#1F2A24">Add supplier bank</text>
+<text x="1713.0" y="294.0" font-size="9" text-anchor="middle" fill="#1F2A24">account</text>
+<text x="1713.0" y="305.0" font-size="7.4" text-anchor="middle" fill="#5B6B62">supplier_bank_accounts</text>
+<text x="1713.0" y="313.6" font-size="7.4" text-anchor="middle" fill="#5B6B62">[confirmed = false]</text>
+<rect x="1797.0" y="259.6" width="132" height="51.2" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="1863.0" y="272.1" font-size="9" text-anchor="middle" fill="#1F2A24">A second person confirms</text>
+<text x="1863.0" y="283.1" font-size="9" text-anchor="middle" fill="#1F2A24">the account</text>
+<text x="1863.0" y="294.1" font-size="7.4" text-anchor="middle" fill="#5B6B62">supplier_bank_accounts</text>
+<text x="1863.0" y="302.7" font-size="7.4" text-anchor="middle" fill="#5B6B62">[confirmed = true]</text>
+<text x="1863.0" y="322.6" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">⚠ enforced — the person who</text>
+<text x="1863.0" y="332.0" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">added it cannot confirm it</text>
+<rect x="147.0" y="374.1" width="132" height="42.6" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="213.0" y="386.6" font-size="9" text-anchor="middle" fill="#1F2A24">Maintain locations and</text>
+<text x="213.0" y="397.6" font-size="9" text-anchor="middle" fill="#1F2A24">item catalogue</text>
+<text x="213.0" y="408.6" font-size="7.4" text-anchor="middle" fill="#5B6B62">locations · items</text>
+<rect x="297.0" y="379.6" width="132" height="31.6" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="363.0" y="392.1" font-size="9" text-anchor="middle" fill="#1F2A24">Create stock transfer</text>
+<text x="363.0" y="403.1" font-size="7.4" text-anchor="middle" fill="#5B6B62">stock_transfers [draft]</text>
+<rect x="447.0" y="364.0" width="132" height="31.6" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="513.0" y="376.5" font-size="9" text-anchor="middle" fill="#1F2A24">Dispatch</text>
+<text x="513.0" y="387.5" font-size="7.4" text-anchor="middle" fill="#5B6B62">stock_transfers [dispatched]</text>
+<text x="513.0" y="407.4" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">⚠ no stock check — on hand</text>
+<text x="513.0" y="416.8" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">goes negative; G25a and G25b</text>
+<text x="513.0" y="426.2" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">are never raised</text>
+<rect x="597.0" y="480.9" width="132" height="40.2" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="663.0" y="493.4" font-size="9" text-anchor="middle" fill="#1F2A24">Receive at destination</text>
+<text x="663.0" y="504.4" font-size="7.4" text-anchor="middle" fill="#5B6B62">stock_transfers [received |</text>
+<text x="663.0" y="513.0" font-size="7.4" text-anchor="middle" fill="#5B6B62">discrepancy]</text>
+<rect x="747.0" y="566.3" width="132" height="31.6" rx="5" fill="#F6F8F6" stroke="#5B6B62" stroke-width="1.3"/>
+<text x="813.0" y="578.8" font-size="9" text-anchor="middle" fill="#1F2A24">Discrepancy flagged</text>
+<text x="813.0" y="589.8" font-size="7.4" text-anchor="middle" fill="#5B6B62">stock_positions</text>
+<text x="813.0" y="609.7" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">⚠ the shortfall simply</text>
+<text x="813.0" y="619.1" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">vanishes — no quarantine, no</text>
+<text x="813.0" y="628.5" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">write-off, no variance</text>
+<text x="813.0" y="637.9" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">record</text>
+<rect x="897.0" y="375.3" width="132" height="40.2" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="963.0" y="387.8" font-size="9" text-anchor="middle" fill="#1F2A24">Raise stock adjustment</text>
+<text x="963.0" y="398.8" font-size="7.4" text-anchor="middle" fill="#5B6B62">stock_adjustments</text>
+<text x="963.0" y="407.4" font-size="7.4" text-anchor="middle" fill="#5B6B62">[pending_approval]</text>
+<rect x="1047.0" y="149.4" width="132" height="31.6" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="1113.0" y="161.9" font-size="9" text-anchor="middle" fill="#1F2A24">Approve the adjustment</text>
+<text x="1113.0" y="172.9" font-size="7.4" text-anchor="middle" fill="#5B6B62">stock_adjustments [approved]</text>
+<rect x="1047.0" y="184.0" width="132.0" height="13" rx="6.5" fill="#1F6F3F"/>
+<text x="1113.0" y="193.6" font-size="7.4" font-weight="bold" text-anchor="middle" fill="#fff">G26 Warehouse Custodian·PM</text>
+<text x="1113.0" y="208.8" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">⚠ the only same-person</text>
+<text x="1113.0" y="218.2" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">refusal in the platform;</text>
+<text x="1113.0" y="227.6" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">stock moves on approval</text>
+<rect x="1197.0" y="363.2" width="132" height="42.6" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="1263.0" y="375.7" font-size="9" text-anchor="middle" fill="#1F2A24">Open a physical count —</text>
+<text x="1263.0" y="386.7" font-size="9" text-anchor="middle" fill="#1F2A24">stock snapshotted</text>
+<text x="1263.0" y="397.7" font-size="7.4" text-anchor="middle" fill="#5B6B62">physical_counts [open]</text>
+<text x="1263.0" y="417.6" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">⚠ lockDate is stored but</text>
+<text x="1263.0" y="427.0" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">locks nothing</text>
+<rect x="1347.0" y="374.1" width="132" height="42.6" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="1413.0" y="386.6" font-size="9" text-anchor="middle" fill="#1F2A24">Submit counted</text>
+<text x="1413.0" y="397.6" font-size="9" text-anchor="middle" fill="#1F2A24">quantities</text>
+<text x="1413.0" y="408.6" font-size="7.4" text-anchor="middle" fill="#5B6B62">physical_counts [submitted]</text>
+<rect x="1497.0" y="354.6" width="132" height="31.6" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="1563.0" y="367.1" font-size="9" text-anchor="middle" fill="#1F2A24">Close the count</text>
+<text x="1563.0" y="378.1" font-size="7.4" text-anchor="middle" fill="#5B6B62">physical_counts [closed]</text>
+<text x="1563.0" y="398.0" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">⚠ every variance written to</text>
+<text x="1563.0" y="407.4" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">stock with no approval; G26</text>
+<text x="1563.0" y="416.8" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">belongs here in the</text>
+<text x="1563.0" y="426.2" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">specification; G27 opening</text>
+<text x="1563.0" y="435.6" font-size="7.6" font-style="italic" text-anchor="middle" fill="#E4702A">stock lock has no code</text>
+<rect x="1647.0" y="458.2" width="132" height="40.2" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/>
+<text x="1713.0" y="470.7" font-size="9" text-anchor="middle" fill="#1F2A24">Issue material to site</text>
+<text x="1713.0" y="481.7" font-size="7.4" text-anchor="middle" fill="#5B6B62">stock_transfers</text>
+<text x="1713.0" y="490.3" font-size="7.4" text-anchor="middle" fill="#5B6B62">[warehouse_to_site]</text>
+<rect x="1647.0" y="501.4" width="132" height="54.0" rx="3" fill="#FDECEA" stroke="#B3261E" stroke-width="1.3"/>
+<text x="1713.0" y="512.0" font-size="7.8" font-weight="bold" text-anchor="middle" fill="#B3261E">HB5 — quarantined material</text>
+<text x="1713.0" y="521.6" font-size="7.8" font-weight="bold" text-anchor="middle" fill="#B3261E">— the quarantined quantity</text>
+<text x="1713.0" y="531.2" font-size="7.8" font-weight="bold" text-anchor="middle" fill="#B3261E">is never set by any code,</text>
+<text x="1713.0" y="540.8" font-size="7.8" font-weight="bold" text-anchor="middle" fill="#B3261E">so the block can never</text>
+<text x="1713.0" y="550.4" font-size="7.8" font-weight="bold" text-anchor="middle" fill="#B3261E">fire</text>
+<path d="M279.0,296.1 L288.0,296.1 L288.0,296.1 L292.0,296.1" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="291.0,292.6 297.0,296.1 291.0,299.6" fill="#3C5A48"/>
+<path d="M429.0,296.1 L438.0,296.1 L438.0,285.2 L442.0,285.2" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="441.0,281.7 447.0,285.2 441.0,288.7" fill="#3C5A48"/>
+<path d="M579.0,285.2 L588.0,285.2 L588.0,155.8 L592.0,155.8" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="591.0,152.3 597.0,155.8 591.0,159.3" fill="#3C5A48"/>
+<path d="M729.0,155.8 L738.0,155.8 L738.0,283.0 L742.0,283.0" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="741.0,279.5 747.0,283.0 741.0,286.5" fill="#3C5A48"/>
+<path d="M879.0,283.0 L888.0,283.0 L888.0,106.0 L892.0,106.0" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="891.0,102.5 897.0,106.0 891.0,109.5" fill="#3C5A48"/>
+<path d="M1029.0,106.0 L1038.0,106.0 L1038.0,375.1 L1042.0,375.1" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="1041.0,371.6 1047.0,375.1 1041.0,378.6" fill="#3C5A48"/>
+<path d="M1179.0,375.1 L1188.0,375.1 L1188.0,602.4 L1192.0,602.4" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="1191.0,598.9 1197.0,602.4 1191.0,605.9" fill="#3C5A48"/>
+<path d="M1329.0,602.4 L1338.0,602.4 L1338.0,586.8 L1342.0,586.8" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="1341.0,583.3 1347.0,586.8 1341.0,590.3" fill="#3C5A48"/>
+<path d="M1479.0,586.8 L1488.0,586.8 L1488.0,275.8 L1492.0,275.8" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="1491.0,272.3 1497.0,275.8 1491.0,279.3" fill="#3C5A48"/>
+<path d="M1629.0,275.8 L1638.0,275.8 L1638.0,296.1 L1642.0,296.1" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="1641.0,292.6 1647.0,296.1 1641.0,299.6" fill="#3C5A48"/>
+<path d="M1779.0,296.1 L1788.0,296.1 L1788.0,285.2 L1792.0,285.2" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="1791.0,281.7 1797.0,285.2 1791.0,288.7" fill="#3C5A48"/>
+<path d="M279.0,395.4 L288.0,395.4 L288.0,395.4 L292.0,395.4" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="291.0,391.9 297.0,395.4 291.0,398.9" fill="#3C5A48"/>
+<path d="M429.0,395.4 L438.0,395.4 L438.0,379.8 L442.0,379.8" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="441.0,376.3 447.0,379.8 441.0,383.3" fill="#3C5A48"/>
+<path d="M579.0,379.8 L588.0,379.8 L588.0,501.0 L592.0,501.0" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="591.0,497.5 597.0,501.0 591.0,504.5" fill="#3C5A48"/>
+<path d="M729.0,501.0 L738.0,501.0 L738.0,582.1 L742.0,582.1" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="741.0,578.6 747.0,582.1 741.0,585.6" fill="#3C5A48"/>
+<path d="M879.0,582.1 L888.0,582.1 L888.0,395.4 L892.0,395.4" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="891.0,391.9 897.0,395.4 891.0,398.9" fill="#3C5A48"/>
+<path d="M1029.0,395.4 L1038.0,395.4 L1038.0,165.2 L1042.0,165.2" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="1041.0,161.7 1047.0,165.2 1041.0,168.7" fill="#3C5A48"/>
+<path d="M1179.0,165.2 L1188.0,165.2 L1188.0,384.5 L1192.0,384.5" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="1191.0,381.0 1197.0,384.5 1191.0,388.0" fill="#3C5A48"/>
+<path d="M1329.0,384.5 L1338.0,384.5 L1338.0,395.4 L1342.0,395.4" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="1341.0,391.9 1347.0,395.4 1341.0,398.9" fill="#3C5A48"/>
+<path d="M1479.0,395.4 L1488.0,395.4 L1488.0,370.4 L1492.0,370.4" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="1491.0,366.9 1497.0,370.4 1491.0,373.9" fill="#3C5A48"/>
+<path d="M1629.0,370.4 L1638.0,370.4 L1638.0,478.3 L1642.0,478.3" fill="none" stroke="#3C5A48" stroke-width="1.2"/>
+<polygon points="1641.0,474.8 1647.0,478.3 1641.0,481.8" fill="#3C5A48"/>
+<path d="M1113.0,359.3 L1113.0,67.0 L813.0,67.0 L813.0,256.7" fill="none" stroke="#E4702A" stroke-width="1.2" stroke-dasharray="4,3"/>
+<polygon points="809.5,255.7 813.0,261.7 816.5,255.7" fill="#E4702A"/>
+<text x="963.0" y="64.0" font-size="7.4" text-anchor="middle" fill="#E4702A">partial delivery: the order stays open</text>
+<path d="M1113.0,149.4 L1113.0,56.0 L963.0,56.0 L963.0,370.3" fill="none" stroke="#E4702A" stroke-width="1.2" stroke-dasharray="4,3"/>
+<polygon points="959.5,369.3 963.0,375.3 966.5,369.3" fill="#E4702A"/>
+<text x="1038.0" y="53.0" font-size="7.4" text-anchor="middle" fill="#E4702A">rejected: the adjustment is closed, stock unchanged</text>
+<rect x="8" y="657" width="2184" height="26" fill="#FFF4E5" stroke="#E4702A"/>
+<text x="16" y="673" font-size="9" fill="#1F2A24"><tspan font-weight="bold" fill="#E4702A">⚠ Live build deviates here today:</tspan> Hard block 6 is enforced against a reference the browser invents, so it always passes · gates 4 and 5 are collapsed into one field, so the amount band is never applied · closing a physical count rewrites stock with no approval at all · the quarantined quantity is never set, so hard block 5 can never fire</text>
+<text x="12" y="696" font-size="9.6" font-weight="bold" fill="#1F2A24">How to read</text>
+<rect x="92" y="686" width="46" height="13" rx="5" fill="#fff" stroke="#1F6F3F" stroke-width="1.3"/><text x="144" y="696" font-size="8.8" fill="#1F2A24">A step by a person, with the record and its new state beneath.</text>
+<polygon points="115,702 138,710 115,718 92,710" fill="#fff" stroke="#E4702A" stroke-width="1.3"/><text x="144" y="713" font-size="8.8" fill="#1F2A24">A decision the process branches on.   </text>
+<rect x="422" y="686" width="46" height="13" rx="5" fill="#F6F8F6" stroke="#5B6B62" stroke-width="1.3"/><text x="474" y="696" font-size="8.8" fill="#1F2A24">Automatic — the platform acts, nobody is Responsible.</text>
+<rect x="422" y="703" width="46" height="13" rx="5" fill="#fff" stroke="#8A6D3B" stroke-width="1.3" stroke-dasharray="4,3"/><text x="474" y="713" font-size="8.8" fill="#1F2A24">Outside the company — client, supplier, authority.</text>
+<rect x="792" y="686" width="72" height="13" rx="6.5" fill="#1F6F3F"/><text x="796" y="695.5" font-size="7.4" font-weight="bold" fill="#fff">G6 Director·COO</text><text x="870" y="696" font-size="8.8" fill="#1F2A24">Gate: number · primary (Accountable) · alternate (Consulted) · window.</text>
+<rect x="792" y="703" width="46" height="13" rx="3" fill="#FDECEA" stroke="#B3261E" stroke-width="1.3"/><text x="798" y="713" font-size="7.8" font-weight="bold" fill="#B3261E">HB6</text><text x="870" y="713" font-size="8.8" fill="#1F2A24">Hard block: cannot proceed until the precondition exists.  <tspan fill="#E4702A">⚠ live deviation</tspan>  <tspan fill="#E4702A" stroke-dasharray="4,3">- - orange: return path</tspan></text>
+<text x="2188" y="727" font-size="8" text-anchor="end" fill="#5B6B62">Key: CEO Chief Executive Officer · COO Chief Operating Officer · PM Project Manager · PIC Person In Charge · 2d/3d working-day window · [state] from the schema</text>
+</svg></body></html>
