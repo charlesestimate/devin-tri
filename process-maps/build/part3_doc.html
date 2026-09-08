@@ -1,0 +1,113 @@
+<html><body style='font-family:Arial;font-size:10.5pt'><h1>Part 3 of 10 — Design and Permit</h1>
+<p><b>Level-1 cross-functional map · as specified · 8 September 2026</b> <b>Companion files:</b> <code>Part 3 — Design and Permit (A3 landscape).pdf</code> and <code>.svg</code> in the same folder</p>
+<hr/>
+<h2>1. What this process is for</h2>
+<p>Two chains run in parallel from the moment a project leaves setup.</p>
+<p><b>The design chain</b> turns an approved sale into a package a crew can build from: deliverables drawn, sealed by a licensed engineer, reviewed, frozen, and released as <b>issued for construction</b>. The bill of materials falls out of it, and Part 4 buys from that.</p>
+<p><b>The permit chain</b> identifies what the site legally needs, gathers the requirements, submits to the authority, and holds the approved permit that <b>mobilisation will check for</b> in Part 5.</p>
+<p><b>Starts:</b> the project is in <code>design</code>. <b>Ends:</b> a design package at <code>issued_for_construction</code> with a bill of materials, and a permit at <code>approved</code>. Neither chain waits for the other, but construction cannot begin without both.</p>
+<hr/>
+<h2>2. Lanes in this map</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>Lane</th><th>Roles</th><th>What they do here</th></tr>
+<tr><td><b>External Authorities</b></td><td>Distribution utility · local government · Professional Regulation Commission</td><td>Decide the permit. Drawn dashed: outside the company</td></tr>
+<tr><td><b>Executive</b></td><td>Chief Operating Officer · Director · Design Engineer as gate holder</td><td>Two gates: the design freeze and the permit consultant</td></tr>
+<tr><td><b>Engineering</b></td><td>Design Manager · Design Engineer · Process Engineer</td><td>Responsible for the whole design chain</td></tr>
+<tr><td><b>Administration and Permits</b></td><td>Permit Liaison · Document Controller</td><td>Responsible for the whole permit chain</td></tr>
+<tr><td><b>Projects and Site</b></td><td>Project Manager</td><td>Receives both outputs; mobilisation depends on them</td></tr>
+<tr><td><b>The Platform</b></td><td>—</td><td>Releases the package once the freeze is approved, and accumulates the requirement library</td></tr>
+</table>
+<hr/>
+<h2>3. The design chain</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>#</th><th>Lane</th><th>Action</th><th>Record → state</th><th>Gate</th><th>Deviation today</th></tr>
+<tr><td>3.1</td><td>Engineering</td><td>Create design package — one of ten disciplines</td><td><code>design_packages</code> → <code>draft</code></td><td>—</td><td></td></tr>
+<tr><td>3.2</td><td>Engineering</td><td>Work the package</td><td>→ <code>in_progress</code></td><td>—</td><td></td></tr>
+<tr><td>3.3</td><td>Engineering</td><td>Add deliverables — nine types, from layout plan to commissioning checklist</td><td><code>design_deliverables</code> → <code>draft</code></td><td>—</td><td></td></tr>
+<tr><td>3.4</td><td>Engineering</td><td>Record professional seal — engineer, licence, expiry, discipline</td><td><code>professional_seals</code></td><td>—</td><td>Recorded, then <b>never displayed back</b>. No badge on the deliverable, and a second contradictory seal can be added on top (2-13)</td></tr>
+<tr><td>3.5</td><td>Engineering</td><td>Issue for review</td><td>→ <code>issued_for_review</code></td><td>—</td><td></td></tr>
+<tr><td>3.6</td><td>Engineering</td><td>Deliverable review</td><td><code>design_deliverables</code> → <code>in_review</code> → <code>approved</code></td><td>—</td><td>A deliverable can go <b>straight from draft to approved</b> by the person who drew it. <code>in_review</code> can be skipped and no reviewer is named (2-06)</td></tr>
+<tr><td>3.7</td><td>Engineering</td><td>Issue for approval</td><td>→ <code>issued_for_approval</code></td><td>—</td><td></td></tr>
+<tr><td>3.8</td><td>Engineering</td><td>Submit design freeze</td><td><code>approval_requests</code> → <code>pending</code></td><td><b>G18</b> raised</td><td>Refused unless the package is at <code>issued_for_approval</code> — a correct precondition</td></tr>
+<tr><td>3.9</td><td>Executive</td><td>Approve the design freeze</td><td><code>approval_requests</code> → <code>approved</code></td><td><b>G18 · Design Engineer · — · —</b></td><td><b>RC-A</b> the raiser can approve their own request</td></tr>
+<tr><td>3.10</td><td>Platform</td><td><b>Automatic:</b> package released</td><td>→ <code>issued_for_construction</code></td><td>—</td><td><b>This is the one gate fully enforced in the product.</b> <code>updateDesignPackage</code> refuses to set <code>issued_for_construction</code> without an approved gate 18</td></tr>
+<tr><td>3.11</td><td>Engineering</td><td>Bill of materials — seven categories</td><td><code>bill_of_materials_lines</code></td><td>—</td><td>Item code is free text, not a picker from the catalogue. Nothing checks a line against stock on hand (2-02)</td></tr>
+</table>
+<p><b>Worth stating plainly: gate 18 works.</b> Of the thirty gates in the specification, this is the first I have found that is raised, checked, and enforced end to end — the package cannot reach issued for construction by any route without an approved design freeze. It is the model the other gates should follow.</p>
+<p><b>One correction to an earlier finding.</b> Last week's sweep reported that the platform has no "issued for construction" status. That was about <b>deliverables</b>, whose six statuses end at <code>approved</code>. <b>Packages do have it</b>, and it is the gated end state of this chain. The gap is real but narrower than reported: it is the individual drawing that cannot be marked as the one to build from, not the package.</p>
+<hr/>
+<h2>4. The permit chain</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>#</th><th>Lane</th><th>Action</th><th>Record → state</th><th>Gate</th><th>Deviation today</th></tr>
+<tr><td>3.12</td><td>Administration</td><td>Maintain the permit type library</td><td><code>permit_types</code></td><td>—</td><td>A negative default duration is accepted, so a permit type can expire before it is issued (1-17). The library ships empty, so every customer types the same Philippine permit set from memory (2-28)</td></tr>
+<tr><td>3.13</td><td>Administration</td><td>Raise a project permit</td><td><code>project_permits</code> → <code>draft</code></td><td>—</td><td></td></tr>
+<tr><td>3.14</td><td>Administration</td><td>Set requirements from the library</td><td><code>project_permit_requirements</code> → <code>open</code></td><td>—</td><td></td></tr>
+<tr><td>3.15</td><td>Platform</td><td><b>Automatic:</b> requirement observed — the library accumulates</td><td><code>permit_requirements.timesObserved</code></td><td>—</td><td>The raw field name <code>timesObserved</code> is printed to the user (1-18). <b>The behaviour is correct</b> — this is L5, accumulate rather than maintain — only the wording is wrong</td></tr>
+<tr><td>3.16</td><td>Administration</td><td>Requirements ready</td><td>→ <code>requirements_set</code></td><td>—</td><td>Refused unless the permit is in <code>draft</code></td></tr>
+<tr><td>3.17</td><td>Executive</td><td>Engage a permit consultant</td><td>—</td><td><b>G20 · COO · Director · —</b></td><td><b>G20 is specified but no code raises it anywhere.</b> The only occurrence of gate 20 in the whole codebase is the seed definition</td></tr>
+<tr><td>3.18</td><td>Administration</td><td>Submit to the authority</td><td>→ <code>submitted</code></td><td>—</td><td></td></tr>
+<tr><td>3.19</td><td>External</td><td>The authority decides</td><td>→ <code>approved</code> · <code>rejected</code></td><td>—</td><td></td></tr>
+<tr><td>3.20</td><td>Administration</td><td>Record the decision</td><td>→ <code>approved</code> · <code>rejected</code></td><td>—</td><td></td></tr>
+<tr><td>3.21</td><td>Administration</td><td>Close the permit</td><td>→ <code>closed</code></td><td>—</td><td>Correctly refused unless the permit is approved</td></tr>
+<tr><td>3.22</td><td>Projects</td><td>The approved permit is what mobilisation checks for</td><td><code>project_permits</code> at <code>approved</code></td><td>—</td><td><b>HB4 fires in Part 5, not here</b></td></tr>
+</table>
+<p><b>A correction to Part 0.</b> The plan listed hard block 4 as belonging to this part. It does not. HB4 — <i>prerequisite permit required before mobilisation</i> — is checked at mobilisation, which is Part 5. What Part 3 produces is the record HB4 looks for. The map shows it at 3.22 as a hand-off, not as a block in this process.</p>
+<hr/>
+<h2>5. The RACI</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>Step</th><th>Design Engineer</th><th>Design Manager</th><th>Permit Liaison</th><th>Doc Controller</th><th>COO</th><th>Director</th><th>Project Manager</th><th>Authority</th></tr>
+<tr><td>3.1 Create package</td><td><b>R</b></td><td><b>A</b></td><td></td><td></td><td></td><td></td><td>I</td><td></td></tr>
+<tr><td>3.2 Work the package</td><td><b>R</b></td><td><b>A</b></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>3.3 Add deliverables</td><td><b>R</b></td><td><b>A</b></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>3.4 Professional seal</td><td><b>R / A</b></td><td>C</td><td></td><td>I</td><td></td><td></td><td>I</td><td></td></tr>
+<tr><td>3.5 Issue for review</td><td><b>R</b></td><td><b>A</b></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>3.6 Deliverable review</td><td>C</td><td><b>R / A</b></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>3.7 Issue for approval</td><td><b>R</b></td><td><b>A</b></td><td></td><td></td><td></td><td></td><td>I</td><td></td></tr>
+<tr><td>3.8 Submit design freeze</td><td><b>R</b></td><td>I</td><td></td><td></td><td></td><td></td><td>I</td><td></td></tr>
+<tr><td>3.9 Approve freeze (G18)</td><td><b>A</b></td><td>C</td><td></td><td></td><td></td><td></td><td>I</td><td></td></tr>
+<tr><td>3.10 Package released</td><td>I</td><td>I</td><td></td><td>I</td><td></td><td></td><td><b>I</b></td><td></td></tr>
+<tr><td>3.11 Bill of materials</td><td><b>R</b></td><td><b>A</b></td><td></td><td></td><td></td><td></td><td>C</td><td></td></tr>
+<tr><td>3.12 Permit type library</td><td></td><td></td><td><b>R / A</b></td><td>C</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>3.13 Raise project permit</td><td></td><td></td><td><b>R / A</b></td><td></td><td></td><td></td><td>I</td><td></td></tr>
+<tr><td>3.14 Set requirements</td><td></td><td></td><td><b>R / A</b></td><td>C</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>3.15 Library accumulates</td><td></td><td></td><td>I</td><td>I</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>3.16 Requirements ready</td><td></td><td></td><td><b>R / A</b></td><td></td><td></td><td></td><td>I</td><td></td></tr>
+<tr><td>3.17 Engage consultant (G20)</td><td></td><td></td><td><b>R</b></td><td></td><td><b>A</b></td><td>C</td><td>I</td><td></td></tr>
+<tr><td>3.18 Submit permit</td><td></td><td></td><td><b>R / A</b></td><td></td><td></td><td></td><td>I</td><td><b>I</b></td></tr>
+<tr><td>3.19 Authority decides</td><td></td><td></td><td>I</td><td></td><td></td><td></td><td>I</td><td><b>R</b></td></tr>
+<tr><td>3.20 Record decision</td><td></td><td></td><td><b>R / A</b></td><td>I</td><td></td><td></td><td><b>I</b></td><td></td></tr>
+<tr><td>3.21 Close permit</td><td></td><td></td><td><b>R / A</b></td><td></td><td></td><td></td><td>I</td><td></td></tr>
+<tr><td>3.22 Permit available to mobilisation</td><td></td><td></td><td>I</td><td></td><td></td><td></td><td><b>R / A</b></td><td></td></tr>
+</table>
+<p><b>Reading the matrix.</b> The two chains barely touch. Engineering is Responsible for eleven steps and never consults Administration; the Permit Liaison is Responsible for eight and never consults Engineering. <b>The Project Manager is the only role Informed on both</b> — and is the person who cannot mobilise until each has finished. That is the structural risk in this part: two independent chains, one shared deadline, and no step where they check each other.</p>
+<p>The Design Engineer is Accountable for the gate on their own department's work (G18). That is deliberate in the specification — the design freeze is an engineering judgement, not a commercial one — but it is also why the same-person guard matters more here than almost anywhere else.</p>
+<hr/>
+<h2>6. Hand-offs</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>From → To</th><th>At step</th><th>What crosses</th><th>What stalls it</th></tr>
+<tr><td>Engineering → Executive</td><td>3.8 → 3.9</td><td>A design freeze awaiting approval</td><td>Nobody is told (RC-H)</td></tr>
+<tr><td>Platform → Procurement</td><td>3.11 → Part 4</td><td>The bill of materials</td><td>Nothing. Part 4's purchase order links to a bill of materials line and auto-fills from it — one of the better joins in the product</td></tr>
+<tr><td>Administration → Executive</td><td>3.16 → 3.17</td><td>A consultant engagement decision</td><td>The gate does not exist, so in practice this step is skipped entirely</td></tr>
+<tr><td>Administration → Authority</td><td>3.18 → 3.19</td><td>The permit application</td><td>The authority's own timeline. There is no expected-decision date on the record</td></tr>
+<tr><td>Authority → Administration</td><td>3.19 → 3.20</td><td>The decision</td><td>Someone remembering to check</td></tr>
+<tr><td>Both chains → Projects</td><td>3.10, 3.22 → Part 5</td><td>An issued-for-construction package and an approved permit</td><td>Either one being late. <b>Mobilisation needs both</b></td></tr>
+</table>
+<hr/>
+<h2>7. Where the live build differs from this map</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th></th><th>Deviation</th><th>Step</th><th>Reference</th></tr>
+<tr><td>1</td><td><b>G20 permit consultant is specified and never raised.</b> Its only appearance in the codebase is the seed row</td><td>3.17</td><td>Register</td></tr>
+<tr><td>2</td><td>A deliverable goes draft → approved with no reviewer named</td><td>3.6</td><td>2-06</td></tr>
+<tr><td>3</td><td>A professional seal is recorded and never displayed; a second can be layered on top</td><td>3.4</td><td>2-13</td></tr>
+<tr><td>4</td><td>The bill of materials item code is free text, disconnected from the catalogue and from stock</td><td>3.11</td><td>2-02</td></tr>
+<tr><td>5</td><td>Permit types accept a negative default duration</td><td>3.12</td><td>1-17</td></tr>
+<tr><td>6</td><td>The permit type library ships empty</td><td>3.12</td><td>2-28</td></tr>
+<tr><td>7</td><td><code>timesObserved</code> is printed to the user</td><td>3.15</td><td>1-18</td></tr>
+<tr><td>8</td><td>The raiser can approve their own design freeze</td><td>3.9</td><td>RC-A</td></tr>
+<tr><td>9</td><td>No file can be attached to a deliverable or a permit — the only upload in the product is the chat composer</td><td>3.3, 3.14</td><td>2-09</td></tr>
+<tr><td>10</td><td>Nobody is notified at any hand-off</td><td>all</td><td>RC-H</td></tr>
+</table>
+<p><b>What stands out.</b> This part has the healthiest control in the platform and one of the weakest side by side. Gate 18 is fully enforced. Gate 20 does not exist. And the deliverable — the actual drawing a crew builds from — can be approved by its author, carries a seal nobody can see, and has no file attached to it.</p>
+<hr/>
+<h2>8. What is deliberately not in this part</h2>
+<ul><li><b>Mobilisation and hard block 4.</b> The permit is produced here; the block fires in Part 5.</li><li><b>Purchasing from the bill of materials.</b> Part 4.</li><li><b>Document register and revision control.</b> Part 9 — the design deliverable and the controlled document are two different records today, which is itself a finding recorded there.</li><li><b>As-built.</b> A package status this part can reach, but the work happens at handover in Part 8.</li></ul></body></html>
