@@ -1,0 +1,166 @@
+<html><body style='font-family:Arial;font-size:10.5pt'><h1>Part 5 of 10 — Build Safely</h1>
+<p><b>Level-1 cross-functional map · as specified · 8 September 2026</b> <b>Companion files:</b> <code>Part 5 — Build Safely (A3 landscape).pdf</code> and <code>.svg</code> in the same folder</p>
+<hr/>
+<h2>1. What this process is for</h2>
+<p>This is the part the company exists to do, and the part where people can be hurt.</p>
+<p>Three chains run at once. <b>Getting on site</b> turns a resource request into crews and equipment at a location. <b>The daily loop</b> is one site report per project per day, with a toolbox meeting, activities against blocks, submission and approval. <b>The safety chain</b> runs continuously alongside: permits to work, safety stops, incidents, near misses, inspections, corrective actions and non-conformance reports.</p>
+<p><b>Starts:</b> an issued-for-construction design package and an approved permit from Part 3. <b>Ends:</b> blocks complete, incidents closed, non-conformance reports closed.</p>
+<p>Four of the company's six hard blocks live in this part — HB1 insurance, HB2 safety and health programme, HB3 block B0, HB4 prerequisite permit — and locked principle L8 says <b>safety approvals are never automated</b>.</p>
+<p><b>None of the four hard blocks has any code. Neither of the two safety gates checks that the approver is a Safety Officer.</b> Anyone signed in can issue a hot-work permit, and the person who raises a safety stop can lift it themselves.</p>
+<hr/>
+<h2>2. Lanes in this map</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>Lane</th><th>Roles</th><th>What they do here</th></tr>
+<tr><td><b>External Authorities</b></td><td>Department of Labor and Employment</td><td>Approve the Construction Safety and Health Program. Drawn dashed: outside the company</td></tr>
+<tr><td><b>Executive</b></td><td>Project Manager · Director as gate holders</td><td>One gate: closing a non-conformance report</td></tr>
+<tr><td><b>Safety</b></td><td>Safety Officer</td><td>Owns the permit to work, the safety stop, incidents and inspections</td></tr>
+<tr><td><b>Projects</b></td><td>Project Manager</td><td>Approves the day's report; reviews non-conformance</td></tr>
+<tr><td><b>Site Execution</b></td><td>Person In Charge · crews</td><td>Files the report, raises stops and non-conformance</td></tr>
+<tr><td><b>Human Resource and Manpower</b></td><td>Human Resource Head · Project Manager</td><td>Requests, deploys and mobilises people and equipment</td></tr>
+<tr><td><b>The Platform</b></td><td>—</td><td>Computes block completion and days worked; should hold the hard blocks</td></tr>
+</table>
+<hr/>
+<h2>3. Getting on site, then the daily loop</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>#</th><th>Lane</th><th>Action</th><th>Record → state</th><th>Gate or block</th><th>Deviation today</th></tr>
+<tr><td>5.1</td><td>Manpower</td><td>Raise a resource request</td><td><code>resource_requests</code> → <code>open</code></td><td>—</td><td>A request can be declined but never formally accepted — allocation happens by deploying against it</td></tr>
+<tr><td>5.2</td><td>Manpower</td><td>Create the deployment</td><td><code>deployments</code> → <code>planned</code></td><td>—</td><td>The workforce person is marked deployed and the request allocation advances. Nothing checks they are at this project's site</td></tr>
+<tr><td>5.3</td><td>Manpower</td><td>Mobilise the deployment</td><td>→ <code>mobilised</code></td><td><b>HB1</b> · <b>HB4</b></td><td><b>Checks only that the deployment is <code>planned</code>.</b> HB1 insurance certificate and HB4 prerequisite permit belong here and neither exists in code</td></tr>
+<tr><td>5.4</td><td>Site</td><td>Assign equipment to the project</td><td><code>equipment_deployments</code></td><td>—</td><td>Assign and return only. No condition on return, no calibration date, no operator</td></tr>
+<tr><td>5.5</td><td>Platform</td><td><b>Automatic:</b> the project stage should become construction</td><td><code>projects</code></td><td>—</td><td><b>The only stage mutation in the platform is setup → design.</b> No code sets a project to procurement, construction, commissioning or handover. A project can never leave design</td></tr>
+<tr><td>5.6</td><td>Site</td><td>Open the site report for the day</td><td><code>site_reports</code> → <code>draft</code></td><td>—</td><td>One per project per day, correctly refused on a duplicate. A date in the future is accepted. <code>createdOnDevice</code> is recorded but never surfaced</td></tr>
+<tr><td>5.7</td><td>Site</td><td>Record the toolbox meeting and who attended</td><td><code>toolbox_meetings</code></td><td>—</td><td><code>photographRef</code> is in the schema and <b>no screen uses it</b> — the toolbox photograph cannot be attached</td></tr>
+<tr><td>5.8</td><td>Site</td><td>Add the day's activities against blocks</td><td><code>site_report_activities</code></td><td>—</td><td>Every activity must name a block — correct. Cumulative percent complete is never checked against the previous entry, so progress can go backwards without comment</td></tr>
+<tr><td>5.9</td><td>Site</td><td>Submit the report</td><td>→ <code>submitted</code></td><td>—</td><td><b>Refused without a toolbox meeting.</b> The one enforced safety precondition in this part</td></tr>
+<tr><td>5.10</td><td>Projects</td><td>Approve the report</td><td>→ <code>approved</code></td><td>—</td><td>No role check and no same-person check — the person who submitted can approve</td></tr>
+<tr><td>5.11</td><td>Platform</td><td><b>Automatic:</b> block completion computed on read</td><td><code>project_blocks</code></td><td>—</td><td>Correct — never stored. This is L5 working as designed</td></tr>
+<tr><td>5.12</td><td>Platform</td><td><b>Automatic:</b> days worked derived from toolbox attendance</td><td>payroll</td><td>—</td><td><b>Correct, and important.</b> Presence is never tracked; a person is paid for a day because their name is on that day's toolbox meeting</td></tr>
+</table>
+<h3>The toolbox meeting is the most consequential record on site</h3>
+<p>Two rules meet here and both are honoured. <b>L4 — presence is never tracked:</b> there is no clock-in anywhere in the platform. <b>L3 — capture must have consequence:</b> the attendance list on the toolbox meeting is what the payroll module counts to work out how many days a person worked.</p>
+<p>That makes one small form do three jobs at once. It is the safety briefing, it is the attendance record, and it is the pay record. It is also the only thing standing between a crew and an unsubmitted report, because a site report cannot be submitted without it.</p>
+<p><b>Two consequences to be deliberate about before Tuesday.</b> A worker left off the list is not paid for that day, and there is no other route to correct it. And the photograph that would evidence the briefing actually happened has a field in the database and no way to attach it.</p>
+<hr/>
+<h2>4. The safety chain</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>#</th><th>Lane</th><th>Action</th><th>Record → state</th><th>Gate or block</th><th>Deviation today</th></tr>
+<tr><td>5.13</td><td>External</td><td>The Department of Labor and Employment approves the Construction Safety and Health Program</td><td>—</td><td><b>HB2</b></td><td><b>No code checks it, and the programme has no record in the platform at all</b> — there is nowhere to file the approval</td></tr>
+<tr><td>5.14</td><td>Safety</td><td>Create a permit to work — six types</td><td><code>permits_to_work</code> → <code>draft</code></td><td>—</td><td>The issuer is <b>supplied by the caller</b>, not taken from the person acting. The same-day rule the schema promises is not enforced, and <code>expired</code> is unreachable — no code ever sets it</td></tr>
+<tr><td>5.15</td><td>Safety</td><td>Issue the permit</td><td>→ <code>issued</code></td><td><b>G28 · Safety Officer · no alternate</b></td><td><b>No Safety Officer check.</b> <code>issuePermitToWork</code> verifies only that the permit is a draft. Anyone signed in can issue a hot-work or confined-space permit. The competency list the schema names <b>does not exist anywhere</b></td></tr>
+<tr><td>5.16</td><td>Site</td><td>Any person raises a safety stop</td><td><code>safety_stops</code> → <code>active</code></td><td>—</td><td><b>Correct.</b> Any person may raise it and the actor is recorded from the session</td></tr>
+<tr><td>5.17</td><td>Safety</td><td>Lift the safety stop</td><td>→ <code>cleared</code></td><td><b>G29 · Safety Officer · no alternate</b></td><td><b>No Safety Officer check and no same-person check.</b> The person who raised the stop can lift it. The clearance note is optional</td></tr>
+<tr><td>5.18</td><td>Safety</td><td>Record an incident — eighteen fields</td><td><code>incidents</code> → <code>open</code></td><td>—</td><td>The statutory deadline is <b>typed by hand</b>, never derived from type or severity</td></tr>
+<tr><td>5.19</td><td>Safety</td><td>Report a near miss</td><td><code>near_misses</code> → <code>open</code></td><td>—</td><td><b>Genuinely anonymous.</b> There is no reporter field on the record at all — not hidden, absent. Correct, and rare</td></tr>
+<tr><td>5.20</td><td>Safety</td><td>Safety inspection — pre-work, weekly, incident-triggered</td><td><code>safety_inspections</code> → <code>open</code></td><td>—</td><td>Findings are free text</td></tr>
+<tr><td>5.21</td><td>Safety</td><td>Corrective action — hierarchy of controls</td><td><code>corrective_actions</code> → <code>open</code></td><td>—</td><td><b>Must link to an incident or an inspection — enforced.</b> The five levels of the hierarchy of controls are recorded properly</td></tr>
+<tr><td>5.22</td><td>Site</td><td>Raise a non-conformance report</td><td><code>non_conformance_reports</code> → <code>open</code></td><td>—</td><td></td></tr>
+<tr><td>5.23</td><td>Projects</td><td>Review the report</td><td>→ <code>pending_closure_approval</code></td><td>—</td><td>Transitions are validated against a state table — correct</td></tr>
+<tr><td>5.24</td><td>Executive</td><td>Close the report</td><td>→ <code>closed</code></td><td><b>G19 · Project Manager · Director · 3 days</b></td><td><b>The approval reference is a string the caller supplies.</b> The same pattern as gate 4: the check is that the string is not empty</td></tr>
+<tr><td>5.25</td><td>Platform</td><td><b>Automatic:</b> no project reaches commissioning with an open report</td><td>—</td><td><b>HB3</b></td><td><b>The mutation the schema names does not exist.</b> And there is no block B0 — the spine starts at Mobilization, and blocks have no status, so "B0 signed off" is not a state anything can be in</td></tr>
+</table>
+<h3>The two safety gates are the most serious finding in the series so far</h3>
+<p>Locked principle L8 says safety approvals are never automated. The platform honours the letter of that — nothing is automated — while leaving the door open entirely:</p>
+<ul><li><b>Gate 28, permit to work.</b> The specification says <i>Safety Officer of record on the project, same-day validity, no alternate</i>. The code checks that the permit is in draft. Nothing else. Any signed-in person can issue a permit for hot work, working at height, confined space, electrical isolation, excavation or chemical handling.</li><li><b>Gate 29, safety stop lift.</b> The specification says <i>Safety Officer of record, reason required, no alternate</i>. The code checks that the stop is not already cleared. The reason is optional and the person who raised the stop can lift it.</li></ul>
+<p>The record of <i>who</i> did it is captured correctly in both cases — the actor comes from the session and the audit entry is written. What is missing is the check on <i>whether they may</i>. That is a smaller fix than it sounds: the role is already on the person, and the refusal pattern already exists in <code>approveAdjustment</code>.</p>
+<p><b>These two belong at the top of Monday's list, above everything commercial.</b> A wrong purchase order costs money. A hot-work permit issued by someone who is not a safety officer is how a person gets burned.</p>
+<hr/>
+<h2>5. The RACI</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>Step</th><th>Safety Officer</th><th>Person In Charge</th><th>Project Manager</th><th>Human Resource Head</th><th>Director</th><th>Warehouse Custodian</th><th>Department of Labor and Employment</th></tr>
+<tr><td>5.1 Raise resource request</td><td></td><td>C</td><td><b>R</b></td><td><b>A</b></td><td></td><td></td><td></td></tr>
+<tr><td>5.2 Create deployment</td><td></td><td>I</td><td>C</td><td><b>R / A</b></td><td></td><td></td><td></td></tr>
+<tr><td>5.3 Mobilise (HB1, HB4)</td><td>C</td><td>I</td><td><b>A</b></td><td><b>R</b></td><td>I</td><td></td><td></td></tr>
+<tr><td>5.4 Assign equipment</td><td></td><td><b>R</b></td><td><b>A</b></td><td></td><td></td><td>C</td><td></td></tr>
+<tr><td>5.5 Stage becomes construction</td><td>I</td><td>I</td><td><b>A</b></td><td>I</td><td>I</td><td></td><td></td></tr>
+<tr><td>5.6 Open the site report</td><td></td><td><b>R / A</b></td><td>I</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>5.7 Toolbox meeting</td><td><b>C</b></td><td><b>R / A</b></td><td>I</td><td>I</td><td></td><td></td><td></td></tr>
+<tr><td>5.8 Day's activities</td><td></td><td><b>R / A</b></td><td>C</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>5.9 Submit the report</td><td>I</td><td><b>R / A</b></td><td>I</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>5.10 Approve the report</td><td></td><td>I</td><td><b>R / A</b></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>5.11 Block completion</td><td>I</td><td>I</td><td><b>I</b></td><td></td><td>I</td><td></td><td></td></tr>
+<tr><td>5.12 Days worked</td><td></td><td>I</td><td>C</td><td><b>I</b></td><td></td><td></td><td></td></tr>
+<tr><td>5.13 Safety and Health Program (HB2)</td><td><b>R</b></td><td>I</td><td><b>A</b></td><td>I</td><td>C</td><td></td><td><b>R</b></td></tr>
+<tr><td>5.14 Create permit to work</td><td><b>R / A</b></td><td>C</td><td>I</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>5.15 Issue the permit (G28)</td><td><b>A</b></td><td>I</td><td>I</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>5.16 Raise a safety stop</td><td><b>I</b></td><td><b>R</b></td><td><b>I</b></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>5.17 Lift the safety stop (G29)</td><td><b>A</b></td><td>I</td><td><b>I</b></td><td></td><td>I</td><td></td><td></td></tr>
+<tr><td>5.18 Record an incident</td><td><b>R / A</b></td><td>C</td><td><b>I</b></td><td>I</td><td><b>I</b></td><td></td><td>I</td></tr>
+<tr><td>5.19 Report a near miss</td><td><b>A</b></td><td><b>R</b></td><td>I</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>5.20 Safety inspection</td><td><b>R / A</b></td><td>C</td><td>I</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>5.21 Corrective action</td><td><b>A</b></td><td><b>R</b></td><td>C</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>5.22 Raise non-conformance</td><td>C</td><td><b>R</b></td><td><b>A</b></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>5.23 Review the report</td><td>C</td><td>I</td><td><b>R / A</b></td><td></td><td>I</td><td></td><td></td></tr>
+<tr><td>5.24 Close the report (G19)</td><td>C</td><td>I</td><td><b>A</b></td><td></td><td>C</td><td></td><td></td></tr>
+<tr><td>5.25 No commissioning with an open report</td><td>I</td><td>I</td><td><b>A</b></td><td></td><td><b>I</b></td><td></td><td></td></tr>
+</table>
+<p><b>Reading the matrix.</b> The Safety Officer is Accountable on five steps and shares none of them with anyone — every one of gate 28, gate 29, the incident, the near miss and the inspection sits with a single role and no alternate. That is deliberate and right: safety authority should not be delegable. It is also precisely why the missing role check matters so much. The matrix says one person decides; the code says anyone does.</p>
+<p>The Person In Charge is Responsible on eight steps, more than any other role in the series so far, and every one of them happens on a phone in Sorsogon or Dumaguete.</p>
+<hr/>
+<h2>6. Hand-offs</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>From → To</th><th>At step</th><th>What crosses</th><th>What stalls it</th></tr>
+<tr><td>Part 3 → Site</td><td>→ 5.3</td><td>The approved permit and the issued-for-construction package</td><td>Nothing checks either. HB4 has no code</td></tr>
+<tr><td>Manpower → Site</td><td>5.3 → 5.4</td><td>Crews on site</td><td></td></tr>
+<tr><td>Site → Projects</td><td>5.9 → 5.10</td><td>The day's report</td><td>Nobody is told (RC-H). A report can sit submitted indefinitely</td></tr>
+<tr><td><b>Site → Payroll</b></td><td><b>5.7 → 5.12</b></td><td><b>The attendance list</b></td><td>Nothing. This join works — and it is the reason the toolbox meeting matters</td></tr>
+<tr><td>Site → Safety</td><td>5.16 → 5.17</td><td>An active safety stop</td><td>Nobody is told, and work does not actually stop — nothing in the platform blocks on an active stop</td></tr>
+<tr><td>Safety → Executive</td><td>5.23 → 5.24</td><td>A report awaiting closure</td><td>Nobody is told</td></tr>
+<tr><td>Site → Part 8</td><td>5.11 → handover</td><td>Block completion</td><td>The stage cannot advance, so handover is unreachable</td></tr>
+</table>
+<hr/>
+<h2>7. Where the live build differs from this map</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th></th><th>Deviation</th><th>Step</th><th>Reference</th></tr>
+<tr><td>1</td><td><b>Gate 28 has no Safety Officer check</b> — anyone can issue a permit to work</td><td>5.15</td><td>New</td></tr>
+<tr><td>2</td><td><b>Gate 29 has no Safety Officer check and no same-person check</b> — the raiser can lift their own stop</td><td>5.17</td><td>New</td></tr>
+<tr><td>3</td><td><b>Hard blocks 1, 2, 3 and 4 have no code anywhere.</b> The hard-block helper functions exist and <b>nothing calls them</b></td><td>5.3, 5.13, 5.25</td><td>Structural</td></tr>
+<tr><td>4</td><td><b>A project can never leave design</b> — the only stage mutation is setup → design</td><td>5.5</td><td>Structural</td></tr>
+<tr><td>5</td><td><b>There is no block B0.</b> The spine starts at Mobilization and blocks have no status</td><td>5.25</td><td>Register</td></tr>
+<tr><td>6</td><td>The competency list the schema names does not exist</td><td>5.15</td><td>New</td></tr>
+<tr><td>7</td><td>The same-day rule on permits is not enforced; <code>expired</code> is unreachable</td><td>5.14</td><td>New</td></tr>
+<tr><td>8</td><td>The permit issuer is supplied by the caller rather than taken from the actor</td><td>5.14</td><td>New</td></tr>
+<tr><td>9</td><td>Gate 19's approval reference is a string the caller supplies</td><td>5.24</td><td>RC-A</td></tr>
+<tr><td>10</td><td>An active safety stop blocks nothing — work can continue and be reported</td><td>5.16</td><td>New</td></tr>
+<tr><td>11</td><td>The statutory reporting deadline on an incident is typed by hand</td><td>5.18</td><td>New</td></tr>
+<tr><td>12</td><td>The toolbox photograph has a field and no way to attach a file</td><td>5.7</td><td>2-09</td></tr>
+<tr><td>13</td><td>A site report can be filed for a date in the future</td><td>5.6</td><td>New</td></tr>
+<tr><td>14</td><td>The person who submits a site report can approve it</td><td>5.10</td><td>RC-A</td></tr>
+<tr><td>15</td><td>Nobody is notified at any hand-off</td><td>all</td><td>RC-H</td></tr>
+</table>
+<p><b>What stands out.</b> Three things in this part are genuinely well built — the anonymous near miss, the hierarchy of controls on corrective actions, and the toolbox meeting doing the work of an attendance system without ever tracking presence. All three are about <i>recording</i> things honestly. Everything that is missing is about <i>refusing</i> things: not one safety approval checks who is approving.</p>
+<hr/>
+<h2>8. The third register — and why item 12 is now urgent</h2>
+<p>Part 4 found gates 25a and 25b claimed by two modules. Part 5 shows that this is not an isolated slip. There are <b>three registers of gate meanings</b> in this system, and they disagree:</p>
+<ol><li><b>The specification</b> — the thirty rows in <code>convex/foundation/seed.ts</code>.</li><li><b>The live rows</b> — what the database actually holds, which the seeder never updates.</li><li><b>The schema comments</b> — what each module's author believed the gate number meant when they wrote that module.</li></ol>
+<p>Here is register three against register one, for every gate a module claims:</p>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>Gate</th><th>The specification says</th><th>The module's comment says</th><th></th></tr>
+<tr><td>4</td><td>Purchase Order Up To ₱100,000</td><td>"Purchase Order Issue"</td><td><b>differs</b></td></tr>
+<tr><td>5</td><td>Purchase Order Above ₱100,000</td><td>"Purchase Order Amendment"</td><td><b>differs</b></td></tr>
+<tr><td>8</td><td>Variation Order</td><td>"Contract Execution"</td><td><b>differs</b></td></tr>
+<tr><td>9</td><td>Signed Customer Agreement</td><td>"Contract or Agreement Variation"</td><td><b>differs</b></td></tr>
+<tr><td>10</td><td>Contract Risk Review</td><td>"Risk Register Review"</td><td>same control, different words</td></tr>
+<tr><td>18</td><td>Design Package Release For Permitting</td><td>"Design Freeze"</td><td>same control, different words</td></tr>
+<tr><td>19</td><td>Non-Conformance Report Closure</td><td>Non-conformance closure</td><td>same</td></tr>
+<tr><td>20</td><td>Permit Consultant Engagement</td><td>"authorises permit submission"</td><td><b>differs</b></td></tr>
+<tr><td>23</td><td>Fund Request Release</td><td>Fund request approval and release</td><td>same</td></tr>
+<tr><td>24</td><td>Role Assignment</td><td>"formal offer" (Human Resource)</td><td><b>differs</b></td></tr>
+<tr><td>25a</td><td>Inter-Island Inventory Transfer</td><td>progress claim submission (Finance)</td><td><b>differs</b></td></tr>
+<tr><td>25b</td><td>Within-Island Transfer Above ₱100,000</td><td>claim certification (Finance)</td><td><b>differs</b></td></tr>
+<tr><td>26</td><td>Inventory Variance Write-Off</td><td>on stock adjustments, not counts</td><td><b>wrong record</b></td></tr>
+<tr><td>28</td><td>Permit To Work Issue</td><td>Permit to work issue</td><td>same</td></tr>
+<tr><td>29</td><td>Safety Stop Lift</td><td>Safety stop clearance</td><td>same</td></tr>
+<tr><td>30</td><td><b>Incident Investigation Closure</b></td><td>Service Report Sign-Off (O&amp;M) <b>and</b> Payroll certification (Payroll)</td><td><b>differs twice</b></td></tr>
+<tr><td>31</td><td>Threshold and Configuration Change</td><td>Disbursement authorisation (Payroll)</td><td><b>differs</b></td></tr>
+<tr><td>32</td><td>Role Permission Change</td><td>Access review</td><td>same control, different words</td></tr>
+<tr><td>33</td><td>Document Classification</td><td>document publication</td><td><b>differs</b></td></tr>
+</table>
+<p><b>Eleven gate numbers mean something different in the module that uses them than in the specification you wrote.</b> Gate 30 — which the specification reserves for closing an incident investigation, the most serious approval in the company — is used by two other modules for unrelated things, and the incident closure it was meant for has no approval at all.</p>
+<p><b>This is why register item 12 cannot wait.</b> It is not a labelling tidy-up. Until it is settled, every gate Hercules builds will be built against whichever register that module's author happened to read, and the same numbers will keep drifting apart. The decision you need to make is one sentence long: <i>the thirty rows in <code>seed.ts</code> are the register, and every module comment and live row that disagrees is wrong.</i> Once that is stated, the fixes are mechanical.</p>
+<hr/>
+<h2>9. Two corrections to earlier parts</h2>
+<p><b>Part 3 was slightly wrong about gate 20.</b> I said its only occurrence in the codebase was the seed definition. That is not quite right: <code>convex/schema/permits.ts</code> mentions Gate 20 twice in comments, describing it as authorising permit <i>submission</i> rather than consultant <i>engagement</i>. The substantive finding stands — <b>no code raises gate 20</b> — but the gate is not entirely absent from the source, and the comment that does mention it describes a different control. It belongs in the table above.</p>
+<p><b>Part 0 placed hard block 3 in this part, and that is correct — but it cannot fire.</b> HB3 requires "Block B0 Site Safety Infrastructure" to reach the state <i>signed off</i>. The block spine has nine blocks beginning at Mobilization; there is no B0. And <code>project_blocks</code> has no status column at all — completion is computed from site report activities, so a block cannot be signed off. HB3 is not merely unimplemented; the data model has no place for it.</p>
+<hr/>
+<h2>10. What is deliberately not in this part</h2>
+<ul><li><b>Payroll itself.</b> Part 7 — this part produces the attendance that feeds it.</li><li><b>Commissioning, handover and turnover.</b> Part 8, with gates 21 and 34.</li><li><b>Paying subcontractors and claiming progress.</b> Part 6.</li><li><b>The document register that should hold the safety and health programme.</b> Part 9, gate 33.</li></ul></body></html>
