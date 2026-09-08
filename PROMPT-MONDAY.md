@@ -114,6 +114,16 @@ requires before they submit.
 `convex/mcp/group3bInternals.ts`. **Fix the domain rule first, then make the protocol layer call
 it** — do not leave two copies.
 
+**2e. A caution before you touch the gate rows.** The live `gates` table was seeded from an older
+definition. `convex/foundation/seed.ts` now carries amount-banded labels (*"Write-Off Up To Fifty
+Thousand Pesos"*, *"Purchase Order Up To One Hundred Thousand Pesos"*) plus `primaryRoleName`,
+`alternateRoleName` and `windowWorkingDays` — and the live rows carry the old severity labels and
+**none of those three fields**, because the seeder skips rows that already exist. That is why
+`proposals.ts:353` resolves every approver to `"unassigned"`. **Take the amount thresholds for 2a
+from the seed definitions, not from the live rows.** Do not attempt to re-seed or relabel the
+thirty gates in this prompt — 25 of 30 live labels differ from the seed and the code references
+gate numbers by their live meaning, so that reconciliation is a separate, decided piece of work.
+
 ## 3. Five validations that let impossible things through on Saturday
 
 Each of these was accepted by the live platform. Fix these five only.
