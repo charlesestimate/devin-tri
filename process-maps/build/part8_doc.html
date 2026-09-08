@@ -1,0 +1,130 @@
+<html><body style='font-family:Arial;font-size:10.5pt'><h1>Part 8 of 10 — Operate and Maintain</h1>
+<p><b>Level-1 cross-functional map · as specified · 8 September 2026</b> <b>Companion files:</b> <code>Part 8 — Operate and Maintain (A3 landscape).pdf</code> and <code>.svg</code> in the same folder</p>
+<hr/>
+<h2>1. What this process is for</h2>
+<p>The system is built. This part hands it to the client, starts the clocks that run from that moment — retention, warranty — and then looks after it.</p>
+<p>Three chains. <b>Hand over</b> turns a finished build into a turnover date, and that date derives the retention release and warranty expiry. <b>Maintain</b> runs scheduled visits: activities, readings, defects, sign-off. <b>Warranty</b> is what the company owes the client afterwards.</p>
+<p><b>Starts:</b> commissioning and snagging complete in Part 5. <b>Ends:</b> a warranty that expires, and a retention that should have been invoiced.</p>
+<p>This is the last operational part, and it is where the most important finding of the whole series turned up — not in operations at all, but underneath it.</p>
+<hr/>
+<h2>2. The finding that reframes Parts 3 to 7</h2>
+<p><b>The platform already has a complete and correct approval engine, and almost nothing calls it.</b></p>
+<p><code>convex/foundation/gates.ts</code> contains everything the specification asks for:</p>
+<ul><li><code>submitApprovalRequest</code> reads the gate row, refuses if the gate is inactive, refuses if it has no primary approver assigned, and copies the primary and alternate role onto the request.</li><li><code>approveRequest</code> <b>refuses self-approval in the specification's own words</b> — <i>"The person who raised a request cannot approve it (refusal R6)."</i> — then checks that the deciding person actually holds the primary or alternate role, respects <code>noAlternate</code>, and records the decider's name for the audit trail.</li><li><code>rejectRequest</code> applies both checks and requires a reason.</li><li><code>passToAlternate</code> refuses on a gate with no alternate path.</li><li><code>getMyApprovals</code> filters out your own requests and matches on role.</li></ul>
+<p>R6 is implemented. Role authority is implemented. The alternate path is implemented. It is good code.</p>
+<p><b>And twelve approval points across six modules take the approval reference as a plain string and never touch it:</b></p>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>Module</th><th>Approval points that take a string</th></tr>
+<tr><td><code>finance/finance.ts</code></td><td>6 — claim submission, certification, milestone submission and certification, fund request, write-off</td></tr>
+<tr><td><code>payroll/payroll.ts</code></td><td>3 — rate table, period approval, disbursement</td></tr>
+<tr><td><code>hr/hr.ts</code></td><td>1 — the offer</td></tr>
+<tr><td><code>construction/reports.ts</code></td><td>1 — non-conformance closure</td></tr>
+<tr><td><code>procurement/orders.ts</code></td><td>1 — purchase order approval</td></tr>
+</table>
+<p>Three modules do create real approval requests — design, pipeline and operations — and then <b>approve them with their own patch</b>, which carries neither the R6 refusal nor the role check. No screen in the platform calls <code>approveRequest</code> at all; the only references to the gates module from the interface are three read-only queries.</p>
+<p><b>This changes what Monday's list is.</b> Every part of this series has reported the same defect in different clothes: gate 4's invented string, gate 19's unchecked reference, gates 28 and 29 with no Safety Officer check, five pay-chain approvals with no role check. They are not twelve separate bugs. <b>They are one decision, made twelve times, to write a shortcut instead of calling the engine that was already there.</b></p>
+<p>The instruction to Hercules is therefore much smaller than the finding count suggests: <i>route every gate through <code>foundation/gates.ts</code>.</i> The refusal, the role check, the alternate path and the audit record all come for free the moment a module stops taking a string.</p>
+<p><b>A refinement to Part 3.</b> I called gate 18 "the one gate fully enforced in the product". The precondition is genuinely enforced — <code>updateDesignPackage</code> refuses to release a package as issued for construction without an approved gate 18, and nothing else in the platform does anything that careful. But <code>approveDesignFreeze</code> approves that request with its own patch and no R6 check. <b>The consequence of the approval is enforced; the approval itself is not.</b> That is a narrower claim than I made, and it is the accurate one.</p>
+<hr/>
+<h2>3. Lanes in this map</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>Lane</th><th>Roles</th><th>What they do here</th></tr>
+<tr><td><b>External: Client</b></td><td>The client</td><td>Accept the system. Drawn dashed: outside the company</td></tr>
+<tr><td><b>Executive</b></td><td>Director · Chief Operating Officer · Operations and Maintenance Lead</td><td>Two gates: the turnover date and the visit sign-off</td></tr>
+<tr><td><b>Operations and Maintenance</b></td><td>Service Technician · O&amp;M Lead</td><td>Schedules, visits, readings, defects</td></tr>
+<tr><td><b>Projects</b></td><td>Project Manager</td><td>Completes the build and hands it over</td></tr>
+<tr><td><b>Finance</b></td><td>Finance Officer</td><td>The retention invoice that should follow the release date</td></tr>
+<tr><td><b>The Platform</b></td><td>—</td><td>Derives the retention and warranty dates; holds the gate engine</td></tr>
+</table>
+<hr/>
+<h2>4. Handing over</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>#</th><th>Lane</th><th>Action</th><th>Record → state</th><th>Gate</th><th>Deviation today</th></tr>
+<tr><td>8.1</td><td>Projects</td><td>Commissioning and snagging complete</td><td><code>project_blocks</code> 8 and 9</td><td>—</td><td>Completion is computed from site activities — correct. <b>The project stage still cannot move</b>; it is stuck in <code>design</code> from Part 5</td></tr>
+<tr><td>8.2</td><td>External</td><td>The client accepts the system</td><td>—</td><td>—</td><td><b>There is no acceptance record.</b> No certificate, no signature, no date, nothing to attach</td></tr>
+<tr><td>8.3</td><td>Executive</td><td>Record the turnover date</td><td><code>projects.turnoverDate</code></td><td><b>G21 · Director · Chief Operating Officer</b></td><td><b>G21 has no code anywhere.</b> <code>recordTurnoverDate</code> is ungated and any signed-in person can call it</td></tr>
+<tr><td>8.4</td><td>Platform</td><td><b>Automatic:</b> retention release and warranty expiry derived</td><td><code>projects</code></td><td>—</td><td><b>Both dates are derived from the contract in a single transaction — correct</b>, and one of the cleanest pieces of code in the product</td></tr>
+<tr><td>8.5</td><td>Finance</td><td>Raise the retention invoice at the release date</td><td>—</td><td><b>G12</b></td><td>No record exists — Part 6. The release date is derived correctly and then nothing reads it</td></tr>
+</table>
+<h3>The turnover date is the most consequential ungated field in the platform</h3>
+<p>One value sets two clocks. <code>retentionReleaseDate</code> decides when the last five to ten per cent of the contract becomes billable. <code>warrantyExpiryDate</code> decides when the company's obligation ends — and, in this build, when a maintenance visit stops being recordable at all.</p>
+<p>The derivation is right. The three dates are written together in one transaction, exactly as the specification asks. What is missing is any check on who may enter the date it derives from, or that it is plausible. A turnover date typed a year early shortens the warranty by a year and brings the retention invoice forward into a period where the work is not finished.</p>
+<hr/>
+<h2>5. Maintaining</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>#</th><th>Lane</th><th>Action</th><th>Record → state</th><th>Gate</th><th>Deviation today</th></tr>
+<tr><td>8.6</td><td>Operations</td><td>Create the maintenance schedule</td><td><code>om_schedules</code></td><td>—</td><td>Frequency in calendar days; a next visit date is set once</td></tr>
+<tr><td>8.7</td><td>Operations</td><td>Create a visit</td><td><code>om_visits</code> → <code>draft</code></td><td>—</td><td><b>Refused after warranty expiry</b>, with a readable message naming the date. The schema calls this <i>hard block 5</i> — <b>a fourth meaning of that number</b></td></tr>
+<tr><td>8.8</td><td>Operations</td><td>Work the visit — nine activity types</td><td>→ <code>in_progress</code> → <code>completed</code></td><td>—</td><td>Three outcomes per activity: satisfactory, requires attention, not applicable</td></tr>
+<tr><td>8.9</td><td>Operations</td><td>Record readings</td><td><code>om_readings</code></td><td>—</td><td>Reading type and unit are free text. Energy, irradiation and performance ratio are not a fixed list, so nothing can be trended reliably</td></tr>
+<tr><td>8.10</td><td>Operations</td><td>Raise a defect</td><td><code>om_defects</code> → <code>open</code> → <code>acknowledged</code> → <code>in_repair</code> → <code>resolved</code> · <code>escalated</code></td><td>—</td><td>Four severities and five states — and <b>no gate on escalation</b>, including for a critical defect</td></tr>
+<tr><td>8.11</td><td>Operations</td><td>Submit the visit for sign-off</td><td><code>approval_requests</code> → <code>pending</code></td><td>—</td><td><b>A real approval request</b>, built from the gate row with the approver role copied onto it. This is the right pattern and one of only three places it is used</td></tr>
+<tr><td>8.12</td><td>Executive</td><td>Approve the sign-off</td><td><code>om_visits</code> → <code>signed_off</code></td><td><b>G34 · O&amp;M Lead · no alternate</b></td><td>Approved by its own patch: <b>no R6 refusal and no role check</b>. The field is <code>gate30ApprovalId</code>, the request is raised against gate 34, and the specification calls neither of them a service report sign-off</td></tr>
+<tr><td>8.13</td><td>Platform</td><td><b>Automatic:</b> the next visit date advances</td><td><code>om_schedules</code></td><td>—</td><td><b>Never happens.</b> The schema says it is updated after each visit and no code does it. Nothing ever falls due</td></tr>
+</table>
+<h3>Three problems that compound</h3>
+<p><b>The schedule never rolls forward.</b> <code>nextVisitDate</code> is set when the schedule is created and is only ever changed by hand or over the protocol. A quarterly maintenance schedule shows one date, that date passes, and nothing marks it overdue or moves it on. The maintenance module cannot tell anybody that a visit is due.</p>
+<p><b>Warranty expiry ends the record, not the obligation.</b> Blocking a new visit after warranty expiry is defensible as written. But a solar company does not stop maintaining a site when the warranty ends — it moves to a paid maintenance contract. Today that is impossible: the customer keeps the system, the company keeps servicing it, and there is nowhere to record the visit.</p>
+<p><b>Readings are free text.</b> With no fixed reading types and no units enforced, the one thing this module exists to produce — a performance history that shows a system degrading — cannot be assembled.</p>
+<hr/>
+<h2>6. Warranty</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>#</th><th>Lane</th><th>Action</th><th>Gate</th><th>Deviation today</th></tr>
+<tr><td>8.14</td><td>Operations</td><td>Submit a warranty claim</td><td><b>G34 · Warranty Claim Submission</b></td><td><b>There is no warranty claim record anywhere.</b> <code>warranty_claim</code> exists only as a document category in the file module. The gate reserved for it is being consumed by the visit sign-off at 8.12</td></tr>
+<tr><td>8.15</td><td>Platform</td><td>The gate engine</td><td>—</td><td>See section 2</td></tr>
+</table>
+<hr/>
+<h2>7. The RACI</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>Step</th><th>Service Technician</th><th>O&amp;M Lead</th><th>Project Manager</th><th>Director</th><th>COO</th><th>Finance Officer</th><th>Client</th></tr>
+<tr><td>8.1 Commissioning complete</td><td>I</td><td><b>I</b></td><td><b>R / A</b></td><td>I</td><td>I</td><td>I</td><td><b>I</b></td></tr>
+<tr><td>8.2 Client accepts</td><td>I</td><td>I</td><td><b>R</b></td><td><b>A</b></td><td>C</td><td>I</td><td><b>R</b></td></tr>
+<tr><td>8.3 Turnover date (G21)</td><td>I</td><td><b>I</b></td><td><b>R</b></td><td><b>A</b></td><td>C</td><td><b>I</b></td><td>I</td></tr>
+<tr><td>8.4 Dates derived</td><td>I</td><td><b>I</b></td><td>I</td><td>I</td><td>I</td><td><b>I</b></td><td>I</td></tr>
+<tr><td>8.5 Retention invoice (G12)</td><td></td><td>I</td><td>C</td><td>C</td><td>I</td><td><b>R / A</b></td><td><b>I</b></td></tr>
+<tr><td>8.6 Maintenance schedule</td><td>C</td><td><b>R / A</b></td><td>I</td><td>I</td><td></td><td></td><td>I</td></tr>
+<tr><td>8.7 Create a visit</td><td><b>R</b></td><td><b>A</b></td><td>I</td><td></td><td></td><td></td><td>I</td></tr>
+<tr><td>8.8 Work the visit</td><td><b>R</b></td><td><b>A</b></td><td>I</td><td></td><td></td><td></td><td><b>C</b></td></tr>
+<tr><td>8.9 Record readings</td><td><b>R</b></td><td><b>A</b></td><td>I</td><td></td><td></td><td></td><td>I</td></tr>
+<tr><td>8.10 Raise a defect</td><td><b>R</b></td><td><b>A</b></td><td><b>C</b></td><td>I</td><td>I</td><td></td><td><b>I</b></td></tr>
+<tr><td>8.11 Submit for sign-off</td><td><b>R</b></td><td><b>I</b></td><td>I</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>8.12 Approve the sign-off (G34)</td><td>I</td><td><b>A</b></td><td>I</td><td>I</td><td></td><td></td><td><b>I</b></td></tr>
+<tr><td>8.13 Next visit date</td><td>I</td><td><b>I</b></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>8.14 Warranty claim (G34)</td><td>C</td><td><b>R</b></td><td>C</td><td><b>A</b></td><td>C</td><td>I</td><td><b>I</b></td></tr>
+<tr><td>8.15 The gate engine</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</table>
+<p><b>Reading the matrix.</b> The O&amp;M Lead is Accountable on eight of the fourteen steps and, on the sign-off, is the sole approver with no alternate — deliberately, because a service report is a technical judgement. The Client appears on six steps, more than in any other part except Part 6: this is the phase where the company is visibly working for someone who is watching.</p>
+<p>And the client has no record of their own anywhere in it. No acceptance certificate, no countersigned service report, no warranty claim. Every interaction with them in this part happens off the platform.</p>
+<hr/>
+<h2>8. Hand-offs</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th>From → To</th><th>At step</th><th>What crosses</th><th>What stalls it</th></tr>
+<tr><td>Site → Projects</td><td>Part 5 → 8.1</td><td>Block completion</td><td>Nothing — it is computed</td></tr>
+<tr><td>Projects → Executive</td><td>8.2 → 8.3</td><td>A handed-over system</td><td>No acceptance record to carry</td></tr>
+<tr><td><b>Platform → Finance</b></td><td><b>8.4 → 8.5</b></td><td><b>The retention release date</b></td><td><b>Nothing reads it.</b> The date is derived correctly and no record can bill against it</td></tr>
+<tr><td>Projects → Operations</td><td>8.3 → 8.6</td><td>A site to maintain</td><td>The warranty expiry now gates every visit</td></tr>
+<tr><td>Operations → Executive</td><td>8.11 → 8.12</td><td>A visit awaiting sign-off</td><td>Nobody is told (RC-H)</td></tr>
+<tr><td>Operations → Client</td><td>8.12 → —</td><td>The signed-off service report</td><td>There is no document to send</td></tr>
+<tr><td>Operations → Procurement</td><td>8.10 → Part 4</td><td>A defect needing parts</td><td>No link at all — a defect cannot become a purchase order or a stock issue</td></tr>
+</table>
+<hr/>
+<h2>9. Where the live build differs from this map</h2>
+<table border='1' cellpadding='4' style='border-collapse:collapse;font-size:9pt'>
+<tr><th></th><th>Deviation</th><th>Step</th><th>Reference</th></tr>
+<tr><td>1</td><td><b>Twelve approval points bypass the working gate engine</b></td><td>8.15</td><td>Structural</td></tr>
+<tr><td>2</td><td><b>Gate 21, the turnover date, has no code</b> — the field that sets retention and warranty is ungated</td><td>8.3</td><td>Register</td></tr>
+<tr><td>3</td><td><b>Gate 34 is consumed by the visit sign-off</b>, and the warranty claim it names has no record</td><td>8.12, 8.14</td><td>Register</td></tr>
+<tr><td>4</td><td>The visit sign-off is approved by its own patch — no R6, no role check</td><td>8.12</td><td>RC-A</td></tr>
+<tr><td>5</td><td><b>The next visit date never advances</b> — nothing ever falls due</td><td>8.13</td><td>New</td></tr>
+<tr><td>6</td><td>There is no client acceptance record</td><td>8.2</td><td>New</td></tr>
+<tr><td>7</td><td>Warranty expiry blocks recording a visit, with no paid-maintenance path afterwards</td><td>8.7</td><td>New</td></tr>
+<tr><td>8</td><td>Reading types and units are free text</td><td>8.9</td><td>New</td></tr>
+<tr><td>9</td><td>A critical defect can be escalated with no approval</td><td>8.10</td><td>New</td></tr>
+<tr><td>10</td><td>A defect cannot become a purchase order or a stock issue</td><td>8.10</td><td>New</td></tr>
+<tr><td>11</td><td>The derived retention release date is read by nothing</td><td>8.4, 8.5</td><td>Register</td></tr>
+<tr><td>12</td><td>Nobody is notified at any hand-off</td><td>all</td><td>RC-H</td></tr>
+</table>
+<p><b>What stands out.</b> The date derivation at 8.4 is exemplary and feeds nothing. The approval request at 8.11 is built exactly right and is then decided by a patch that skips every check the engine would have applied. This part is a small module sitting on top of a large, correct foundation that the rest of the platform declined to use.</p>
+<hr/>
+<h2>10. What is deliberately not in this part</h2>
+<ul><li><b>The retention invoice itself.</b> Part 6, gate 12.</li><li><b>The documents that should hold the acceptance certificate and the service report.</b> Part 9, gate 33.</li><li><b>Role assignment and the configuration behind the gates.</b> Part 9, gates 22, 24, 31 and 32.</li><li><b>The consolidated matrix.</b> Part 10.</li></ul></body></html>
