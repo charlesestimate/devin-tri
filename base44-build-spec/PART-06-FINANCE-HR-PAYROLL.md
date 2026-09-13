@@ -116,7 +116,7 @@
 
 **`onboarding`** — person_id · pre-arrival checklist (equipment, access, personal protective equipment — completed before day one) · day-one items (account, roles under gate 24, capability tags, **a first task**) · buddy · 30/60/90 check-ins as `recurring_definition` rows on the manager · **regularization decision: a task diarised well before `regularization_due`; the decision is recorded, never defaulted.** Onboarding completion by manager is reported.
 
-**`exit`** — person_id · resignation_date · notice · reason_category · **exit interview conducted by someone other than the manager (refused otherwise)** · knowledge handover task (with a deliverable) · regretted. Offboarding is the access event of Part 08 §C: it blocks on unreassigned work (refusal 4). Attrition by tenure, role, region, and **by manager as a Check for the department head, never a manager score.**
+**`exit`** — person_id · resignation_date · notice · reason_category · **exit interview conducted by someone other than the manager (refused otherwise)** · knowledge handover task (with a deliverable) · regretted. Offboarding is the access event of Part 08 §G: it blocks on unreassigned work (refusal 4). Attrition by tenure, role, region, and **by manager as a Check for the department head, never a manager score.**
 
 **Career structures — built and left empty:** `career_path` (dual track: engineering and management at equal level and band) and `compensation_band`. Until Magnus defines them, self-service shows *no path defined yet*.
 

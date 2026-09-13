@@ -2,7 +2,7 @@
 
 ## Part 02 · The commercial chain: Pipeline, Project and Contract, Design and Engineering, Procurement
 
-**Prerequisite: Part 01 built and its twelve checks passed.** This part is the critical path of the whole build and is internally serial: an opportunity becomes a contract, a contract produces a design, the design produces the bill of materials, procurement buys against it. **Publish `project_id`, `project_block_id` and the block spine (Part 03 section 1) on the first day of this part** — Parts 04 and 05 wait on nothing else.
+**Prerequisite: Part 01 built and its twelve checks passed.** This part is the critical path of the whole build and is internally serial: an opportunity becomes a contract, a contract produces a design, the design produces the bill of materials, procurement buys against it. **Publish `project_id`, `project_block_id` and the block spine (Part 03 §A1) on the first day of this part** — Parts 04 and 05 wait on nothing else.
 
 ---
 
@@ -25,7 +25,7 @@ Every table below also carries `created_at`, `created_by`, `updated_at`, `update
 
 # A. PIPELINE — CUSTOMER RELATIONSHIP MANAGEMENT
 
-**`account`** — account_id · account_name · industry · active. **Creating an account creates its account space (Part 05 §A2) in the same transaction.**
+**`account`** — account_id · account_name · industry · active. **Creating an account creates its account space (Part 05 §A3) in the same transaction.**
 
 **`site`** — site_id · account_id · site_name · address · province · **region (derived from province, never typed)** · **local_government_unit** · distribution_utility · host_party · emergency card fields (nearest hospital, ambulance number, evacuation point, client site contact).
 
@@ -41,7 +41,7 @@ Every table below also carries `created_at`, `created_by`, `updated_at`, `update
 
 **`proposal`** — proposal_id · opportunity_id · version · capacity_kilowatt_peak · markup_major_applied · markup_balance_of_system_applied · **contingency_percentage** · system_constant_versions_used (the identifiers of the constant rows in force when the version was built) · state (`draft`/`awaiting_approval`/`issued`/`superseded`/`won`/`lost`) · **frozen_at** · block lines (one per included block: block_code · quantity · cost · price).
 
-- The proposal is **structured on the block spine** (Part 03 §1), which is what lets it become block value weights without re-costing.
+- The proposal is **structured on the block spine** (Part 03 §A1), which is what lets it become block value weights without re-costing.
 - **`contingency_percentage` is internal and appears on no client-facing output** — not the proposal document, not an export, not a printed view.
 - Sizing uses the Specific Yield and Area Per Kilowatt Peak constants in force on the day the version is built, and records which versions were used.
 - **Gate 6** applies to every quotation release, no threshold. **Gate 7** applies when the applied markup is more than 5 percentage points below policy (system constants Markup Major Equipment 115 and Markup Balance Of System 130): a Director may approve down to 110 major and 125 balance of system; below that only the Chief Executive Officer, no alternate.
