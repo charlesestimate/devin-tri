@@ -18,7 +18,7 @@ No scheduler, timer or automation; derived values are computed on read; same-tra
 
 # A. WHAT THIS ROUND DOES NOT INCLUDE
 
-Operations and Maintenance beyond what exists, the offline field path re-test on a real rooftop, migration loading, and the second test tenant are not in this round. They stay on the register and follow once Parts 1 to 4 have reported. Nothing here widens the platform: every item is a gap in something already specified.
+Operations and Maintenance beyond what exists, the offline field path re-test on a real rooftop, the **loading of real migration data**, and the second test tenant are not in this round. They stay on the register and follow once Parts 1 to 4 have reported. **The migration import tools themselves are in this round (§D8)** — checked on 17 September, none of the twenty-five exists in the export, and neither does most of the propose-then-confirm tool set. Nothing here widens the platform: every item is a gap in something already specified.
 
 ---
 
@@ -93,6 +93,17 @@ One component: upload (camera-only where the object requires it; file otherwise)
 - **Audit chain panel** shows the true last sequence and the exact range verified.
 - **Every summary and exception figure returns `sources`**; no exception domain evaluates zero rules.
 - **Hard block 6 flag** on every project read: `fundsBlockedNoContract` true while `contractId` is empty.
+- **`client` on the project.** `convex/schema/projects.ts` line 97 carries `siteId` (optional); no client party reference exists. Add `clientPartyId`, populate both from the opportunity on every existing project, make both required on the `won` handover, and return both from every project read and tool.
+
+## D8 · The protocol surface that the 3 September prompt specified and the export does not contain — verified 17 September
+
+A search of `convex/mcp/*.ts` finds **no `import_*` tool**, a single `propose_decision` where the specification names eleven propose-and-confirm pairs, no generated tool enumeration document, and no one-time action moving previously stored files into Drive. These were instructed on 3 September (sections B and C of the protocol prompt, section B7 of the chat and Drive prompt) and are owed:
+
+1. **Four session scopes** — `read` (90 days, any account holder), `write` (14 days, any account holder), `decide` (12 hours, console holders only, second holder notified), `migrate` (until the cutover date, console holders only) — fixed at creation, stored on the session, stamped on every audit entry, shown on the Agent Sessions tab with expiry; self-approval refused across a person's tokens. The `mcp_sessions` schema already carries a confirmation code for `decide`; confirm the four scopes and their expiries are enforced on every call.
+2. **Propose-then-confirm, one pair each:** `propose_approval` / `confirm_approval` · `propose_threshold_change` / `confirm_threshold_change` (gate 31) · `propose_gate_change` / `confirm_gate_change` (gate 31; never gate 32; R3 and R5 enforced) · `propose_system_constant` / `confirm_system_constant` (gate 22, versioned) · `propose_controlled_list_change` / `confirm_controlled_list_change` · `propose_push_list_change` / `confirm_push_list_change` (the three cannot be removed) · `propose_hard_block_value` / `confirm_hard_block_value` (value only) · `propose_role_assignment` / `confirm_role_assignment` (gate 24, row `pending_approval`) · `propose_document_classification` / `confirm_document_classification` (gate 33) · `propose_publish_revision` / `confirm_publish_revision` · `propose_legal_hold` / `confirm_legal_hold` · `propose_statutory_rate` with **no** `confirm_statutory_rate` — the second person confirms on screen. `propose_*` writes nothing and returns the change in full sentences with a ten-minute code; `confirm_*` applies it under the same gate and the same audit entry as the screen plus channel, session and scope; a reused, expired or foreign code refuses.
+3. **The twenty-five import tools**, `migrate` scope only, in loading order: `import_roles` · `import_persons` (aliases collapse; role assignments arrive as pending gate 24 requests) · `import_parties` · `import_accounts` · `import_sites` · `import_contacts` · `import_items` · `import_equipment` · `import_locations` · `import_opening_stock` · `import_projects` (`active` requires the signed contract; workday counter seeded) · `import_contracts` · `import_project_parties` · `import_project_blocks` (weights computed; position seeded as one migration activity, never typed) · `import_bill_of_materials` · `import_open_purchase_orders` · `import_project_permits` · `import_billing_milestones` · `import_service_agreements` (no document → `draft`, no charge) · `import_service_level_terms` · `import_serviced_assets` · `import_asset_equipment` · `import_maintenance_plans` · `import_open_work_orders` · `import_open_warranty_claims` — plus `validate_import`, `list_import_batches`, `reverse_import` (until the opening lock or the cutover date), `request_opening_stock_lock` (gate 27), `upload_migration_document`. Every imported row carries `migrated`, `import_batch_id`, `source_reference` and one audit entry; a batch that fails validation writes nothing; no import creates an approved state that was not in the row. The Migration and Cutover screen shows batches, refusals, reversals and the cutover date, and has no button that approves anything.
+4. **The generated tool enumeration document** — every tool and parameter with its scope, reachable from Administration, regenerated on deploy — and the **build-failing test that walks it and finds no path to a hard block's existence.**
+5. **Move existing files into Drive** — the one-time console-holder action on Integrations that moves every file still in platform storage into the derived folder tree, hashing before and verifying after, stopping on the first discrepancy, re-runnable.
 
 ---
 
@@ -133,7 +144,10 @@ Tests from the master specification are cited by their original number; new test
 - **R4** The person card opens from six different places; the photograph lands under Human Resource / People in Drive; edits are audited; a person edits their own card.
 - **R5** Each object in D5 accepts an upload through the one control; a purchase order's Send and a claim's Print produce `files` rows in the right folders; no Drive link is issued (tests 252, 254, 256).
 - **R6** A supplier invoice is matched to a receipt and paid; a payment after a bank change is flagged (test 57).
-- **R7** Sidebar in the specified order with no ampersand; `local_government_unit` on the site form; the chain panel shows the true last sequence; every figure returns `sources`; `fundsBlockedNoContract` reads true then false (tests 226, 227).
+- **R7** Sidebar in the specified order with no ampersand; `local_government_unit` on the site form; the chain panel shows the true last sequence; every figure returns `sources`; `fundsBlockedNoContract` reads true then false; every project read returns `siteId` and `clientPartyId` (tests 226, 227).
+- **R8** Protocol: a `read` token cannot write; a `write` token cannot decide; a non-console-holder cannot create `decide` or `migrate`; `propose_threshold_change` writes nothing; `confirm_threshold_change` applies once and refuses a reused, expired or foreign code; `propose_statutory_rate` has no protocol confirm; the enumeration document exists and the build-failing test passes (tests 215–225, 168).
+- **R9** Import: three spellings of one person become one record; a project imported `active` without its contract is refused naming hard block 6; a block at 55 percent reads 55 from the migration activity; counter 62 files workday 63; an agreement without its document loads `draft` with no charge; reverse before the lock succeeds and after refuses; the `migrate` scope ends on the cutover date; every imported row carries the three migration fields; no import decides (tests 228–236).
+- **R10** Run the Drive move on the current store: every file moves, verifies, and every record still opens its file (test 258).
 
 **The test of the whole platform**
 - **Test 8** — leave the deployed platform twenty-four hours with nobody connected; the audit log for the period is empty.
@@ -149,4 +163,36 @@ Tests from the master specification are cited by their original number; new test
 5. The file control's component and its placements, with one `files` row from a purchase order Send and one from a claim Print.
 6. One supplier invoice through received → matched → approved_for_payment → paid, and one flagged payment.
 7. The sidebar as rendered; the site form; the chain panel; one `get_project` response.
-8. Section F in full — every test, result pasted, no summaries.
+8. The tool enumeration document; one `propose_*` / `confirm_*` round trip with the refusal of the reused code; one `import_persons` batch result with a refused row and its reason; the Drive move's progress and final count.
+9. Section F in full — every test, result pasted, no summaries.
+
+---
+
+# H. COVERAGE CHECK — EVERY ITEM ASKED FOR, AND WHERE IT LIVES
+
+Checked on 17 September against the four parts. Nothing asked for since 2 September is outside them; three items are deliberately deferred and named as such.
+
+| Source | Item | Where |
+|---|---|---|
+| Karl, 14–17 September | Message notifications not sent; some received, others not | Part 1 A1, A2 |
+| | Outsider sees modules when not logged out | Part 2 B2 |
+| | Dashboard with my tasks, awaiting my approvals, notifications | Part 2 B3 |
+| | Messages not accessible to new users, even General | Part 1 A3; Part 2 B1 |
+| | General search box not functioning | Part 2 B4 |
+| | Notification icon does not open the notification | Part 1 A4 |
+| | Reactions cannot be undone; reactor list not visible | Part 1 A5, A6 |
+| | Task indicator on profile shows no task | Part 2 B5; Part 1 C3 |
+| | Direct messages need two attempts | Part 1 A7 |
+| | Cannot access full configuration | Part 2 B6 |
+| | Granting access does not work — the priority | Part 2 A, B1, D |
+| Karl, 8 September (A1–A5) | Archive · unread numbers · Task (X) · Announcement beside General, admin-only, editable · person card with photograph on Drive | Part 1 C1 · A2 · C3 · C2 · Part 4 D4 |
+| Pending list, 8 September (B1–B16) | Gate approvers · engine unused · grant before decision · ungated erasure · export fallback · registers · project stage · goods receipt · accounts payable · hard blocks · two data corrections · protocol reimplementing · no hand-off notifications · nothing attachable · console holder guards · smaller items | Part 3 C1 · C2 · C2.4 · C5 · C9 · B · Part 4 D1 · D2 · D6 · Part 3 C7 · C8 · C10 · Part 4 D3 · D5 · Part 3 C4 · C11 |
+| Protocol prompt, 3 September (A1–A6) | Hard block 6 flag · site and client on project · sources on figures · zero-rule domains · chain panel · sidebar drift | Part 4 D7 |
+| Protocol prompt (B, C) | Four scopes · propose-then-confirm · tool enumeration · twenty-five import tools | Part 4 D8 |
+| Chat and Drive prompt (A, B) | Messages screen, account space, groups, direct, `get_account_activity` · Drive connection through folder tree · move existing files | Part 1 C5, C6 (verify) · live and working · Part 4 D8.5 |
+| Archive prompt | Archive, restore, automatic restore, Archived section, protocol tools | Part 1 C1 |
+| Naming and groups prompt | Derived project name · `local_government_unit` · group panel · rename · member tools | Part 4 D1 (verify) · D7 · Part 1 C5 · C5 · C6 |
+| Theme prompt | Three themes | Built — `ThemePicker` exists in `AppLayout.tsx`; no work |
+| Pilot ground rules | Withdrawal of rules 2 and 3 | Part 3 E.10 |
+| Found in this audit | `deleteThread` exists · `list_gates` hides approvers · gate reconfiguration unguarded · `signsIn` flag without a grant · silent `catch` on channel join | Part 1 A8 · Part 3 A, C10 · Part 3 C3 · Part 2 B1 · Part 1 A3 |
+| **Deferred, by name** | Loading real migration data · rooftop field test of the offline path · the second test tenant · Operations and Maintenance beyond what exists | Section A of this part |
